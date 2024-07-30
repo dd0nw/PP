@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  </head>
+  <body>
+    <form id="loginForm">
+      <label for="id">ID:</label>
+      <input type="text" id="id" name="id" required />
+      <br />
+      <label for="pw">Password:</label>
+      <input type="password" id="pw" name="pw" required />
+      <br />
+      <button type="submit">Login</button>
+    </form>
+
+    <button id="getAnalysis">Get Analysis Data</button>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const id = document.getElementById("id").value;
+          const pw = document.getElementById("pw").value;
+          console.log(id, pw);
+          const response = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id, pw }), // 서버로 id와 pw 전송
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert("Login successful! Token: " + result.token);
+            localStorage.setItem("token", result.token); // 토큰을 로컬 스토리지에 저장
+          } else {
+            alert("Login failed: " + result.message);
+          }
+        });
+
+      document
+        .getElementById("getAnalysis")
+        .addEventListener("click", async function () {
+          const token = localStorage.getItem("token"); // 저장된 토큰 가져오기
+          const response = await fetch("http://localhost:3000/analysis", {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token, // 토큰을 Authorization 헤더에 포함
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data); // 서버로부터 받은 데이터 출력
+          } else {
+            console.error("Failed to fetch analysis data");
+          }
+        });
+    </script>
+  </body>
+</html>
