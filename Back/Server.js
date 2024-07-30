@@ -4,12 +4,9 @@ const express = require("express");
 const oracledb = require("oracledb");
 const cors = require("cors");
 const app = express();
+const crypto = require("crypto");
 const port = 3000;
 
-oracledb.autoCommit = true;
-oracledb.initOracleClient({
-  libDir: "C:/Users/smhrd/Desktop/instantclient_11_2",
-});
 
 const router = require("./routes/router");
 app.use(cors()); // cors
