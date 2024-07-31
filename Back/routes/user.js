@@ -61,10 +61,6 @@ router.post("/register", async (req, res) => {
   // 비밀번호 암호화
   const hashedPw = bcrypt.hashSync(pw, 10);
   
-  // 기타 개인정보 암호화
-  const encryptedName = encrypt(name);
-  const encryptedGender = encrypt(gender);
-
   const connection = await connectToOracle();
   if (connection) {
     try {
@@ -74,9 +70,9 @@ router.post("/register", async (req, res) => {
         {
           id,
           password: hashedPw,
-          name: encryptedName,
+          name: name,
           birth: birth,
-          gender: encryptedGender,
+          gender: gender,
           height: height,
           weight: weight,
           heartrate: heartRate
