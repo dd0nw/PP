@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login and Register</title>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form id="loginForm">
+      <label for="loginId">ID:</label>
+      <input type="text" id="loginId" name="id" required />
+      <br />
+      <label for="loginPw">Password:</label>
+      <input type="password" id="loginPw" name="pw" required />
+      <br />
+      <button type="submit">Login</button>
+    </form>
+
+    <h1>Register</h1>
+    <form id="registerForm">
+      <label for="regId">ID:</label>
+      <input type="text" id="regId" name="id" required />
+      <br />
+      <label for="regPw">Password:</label>
+      <input type="password" id="regPw" name="pw" required />
+      <br />
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <br />
+      <label for="birth">Birth Date:</label>
+      <input type="date" id="birth" name="birth" required />
+      <br />
+      <label for="gender">Gender:</label>
+      <select id="gender" name="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <br />
+      <label for="height">Height (cm):</label>
+      <input type="number" id="height" name="height" required />
+      <br />
+      <label for="weight">Weight (kg):</label>
+      <input type="number" id="weight" name="weight" required />
+      <br />
+      <label for="heartRate">Heart Rate:</label>
+      <input type="number" id="heartRate" name="heartRate" required />
+      <br />
+      <button type="submit">Register</button>
+    </form>
+
+    <button id="getAnalysis">Get Analysis Data</button>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const id = document.getElementById("loginId").value;
+          const pw = document.getElementById("loginPw").value;
+          console.log(id, pw);
+          const response = await fetch("http://localhost:3000/user/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id, pw }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert("Login successful! Token: " + result.token);
+            localStorage.setItem("token", result.token);
+          } else {
+            alert("Login failed: " + result.message);
+          }
+        });
+
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const id = document.getElementById("regId").value;
+          const pw = document.getElementById("regPw").value;
+          const name = document.getElementById("name").value;
+          const birth = document.getElementById("birth").value;
+          const gender = document.getElementById("gender").value;
+          const height = document.getElementById("height").value;
+          const weight = document.getElementById("weight").value;
+          const heartRate = document.getElementById("heartRate").value;
+
+          const response = await fetch("http://localhost:3000/user/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id,
+              pw,
+              name,
+              birth,
+              gender,
+              height,
+              weight,
+              heartRate,
+            }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert("Registration successful! Token: " + result.token);
+            localStorage.setItem("token", result.token);
+          } else {
+            alert("Registration failed: " + result.message);
+          }
+        });
+
+      document
+        .getElementById("getAnalysis")
+        .addEventListener("click", async function () {
+          const token = localStorage.getItem("token");
+          const response = await fetch("http://localhost:3000/analysis", {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+          } else {
+            console.error("Failed to fetch analysis data");
+          }
+        });
+    </script>
+  </body>
+</html>
