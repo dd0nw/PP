@@ -1,0 +1,28 @@
+아두이노 #include <ArduinoBLE.h>
+서비스, 특성 UUID생성
+블루투스 초기화
+블루투스 장치 이름 설정
+데이터 전송
+----------------------------------
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_blue_plus: ^1.0.0
+  fl_chart: ^0.40.0
+  permission_handler: ^10.0.0
+-----
+AndroidManifest.xml
+ <!-- Bluetooth 권한 추가 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+-------
+build.gradle
+ minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+        minSdk = 21

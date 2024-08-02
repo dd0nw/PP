@@ -1,0 +1,38 @@
+가치창조기술
+ADS1292R 심전도/호흡 측정 센서 (ADS1292R ECG/Respiration Breakout)
+1개
+https://vctec.co.kr/product/ads1292r-심전도호흡-측정-센서-ads1292r-ecgrespiration-breakout/18565/
+
+가치창조기술
+센서 케이블 -일렉트로드 패드(3커넥터) (Sensor Cable - Electrode Pads (3 connector))
+1개
+https://vctec.co.kr/product/센서-케이블-일렉트로드-패드3커넥터-sensor-cable-electrode-pads-3-connector/5095/category/145/display/1/
+
+가치창조기술
+생체의료 센서 패드 10개 (Biomedical Sensor Pad (10 pack))
+2세트(20개)
+https://vctec.co.kr/product/생체의료-센서-패드-10개-biomedical-sensor-pad-10-pack/5094/category/145/display/1/
+
+네이버
+ESP32-C3-DevKitM-1U
+1개
+https://smartstore.naver.com/makeitfun/products/6341338942?NaPm=ct%3Dlvk7w8ag|ci%3D21791cf48a6413acdc7c158754258246b7bd4995|tr%3Dslsl|sn%3D361723|hk%3D3a842e78a62fde5f3ef18bafc6692c9cb1906964
+
+
+디바이스 마트
+리튬 폴리머 배터리  3.7v, 500mah (TW-503035)
+2개
+https://www.devicemart.co.kr/goods/view?no=1360753
+
+아이씨뱅큐
+리튬배터리 1A 충전모듈 (Mini-5P) [SZH-EK027]
+2개
+https://www.icbanq.com/P008113806?utm_source=google&utm_medium=cpc&utm_campaign=쇼핑_PerformanceMax&utm_id=쇼핑_PerformanceMax&utm_term=notset&utm_content=notset&gad_source=1&gclid=CjwKCAjw9IayBhBJEiwAVuc3fsEeo4SNA832dATugZWgq1l_cziYQQiAXtPXCUg8pOdkL4xayo70khoCDR0QAvD_BwE
+
+에듀이노
+아두이노 심박 및 산소포화도 측정 센서 Max30102 Heart Rate and Oximeter Sensor
+1개
+https://eduino.kr/product/detail.html?product_no=3129&nbsrc=adwords_x&nbkw=&gad_source=4&gclid=Cj0KCQjwkdO0BhDxARIsANkNcrdNzCayPa53cdjgq7MgnH6Or-t7GY-nISDKvRbP8A7NlW4iJOyYA6UaAt0XEALw_wcB
+
+3.7v to 3.3v regulrator
+https://www.devicemart.co.kr/goods/view?no=1321251
