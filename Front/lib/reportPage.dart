@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'api_service.dart'; // ApiService가 정의된 파일을 import
 
 class ReportPage extends StatefulWidget {
   const ReportPage({super.key});
@@ -8,10 +9,45 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
+
+  // flutter - Node.js연결
+  final ApiService apiService = ApiService();
+  String _text = '변경되기 전!';
+
+  Future<void> _fetchData() async {
+    try {
+      String data = await apiService.fetchData();
+      setState(() {
+        _text = data;
+      });
+    } catch (e) {
+      print('Failed to fetch data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+//         title: Text('New Page'),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             Text('Server data: $_text'),
+//           ],
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: _fetchData,
+//         child: Icon(Icons.add),
+//       ),
+//     );
+//   }
+// }
+// DB연결확인!
+
         backgroundColor: Colors.pink,
         centerTitle: true, // 타이틀 중앙에 배치
         elevation: 0.0, // 그림자 효과 제거
@@ -294,6 +330,14 @@ class _ReportPageState extends State<ReportPage> {
                       _buildHealthCard('Stress', '31 %', Colors.pink[50]),
                     ],
                   ),
+
+
+
+
+
+
+
+
                 ],
               )
             ],
