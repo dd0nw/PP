@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-
 const router = require("./routes/router");
 app.use(cors()); // cors
 app.use(bodyParser.json({ limit: '10mb' })); // json 파싱
