@@ -7,7 +7,6 @@ const app = express();
 const crypto = require("crypto");
 const port = 3000;
 
-
 const router = require("./routes/router");
 app.use(cors()); // cors
 app.use(express.json()); //json 요청 바디 파싱

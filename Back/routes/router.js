@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const userRoutes = require("./user");
 const analysisRoutes = require("./analysis");
+const memoRoutes = require("./memo");
 
 router.use("/user", userRoutes);
 router.use("/analysis", analysisRoutes);
+router.use("/memo", memoRoutes);
 
 router.get("/", async (req, res) => {
   const connection = await connectToOracle();
