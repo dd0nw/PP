@@ -11,7 +11,7 @@ router.get("/analysis", AuthToken, async (req, res) => {
   if (connection) {
     try {
       const result = await connection.execute(
-        "SELECT * FROM TB_ANALYSIS WHERE ID = :id",
+        "SELECT * FROM TB_ANALYSIS WHERE ID = :id ORDER BY CREATED_AT DESC",
         { id }
       );
       res.status(200).json(result.rows);
