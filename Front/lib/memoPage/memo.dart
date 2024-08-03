@@ -1,25 +1,17 @@
-// 메모 모델 생성
-
 class Memo {
-  final String title; // 메모 제목
   final String content; // 메모 내용
-  final DateTime timestamp; // 메모 생성 시간
 
-  Memo({required this.title, required this.content, required this.timestamp});
+  Memo({required this.content});
 
-  // Json 데이터 -> memo객체 변환
+  // Json 데이터 -> Memo 객체 변환
   factory Memo.fromJson(Map<String, dynamic> json) {
     return Memo(
-      title: json['title'],
-      content: json['content'],
-      timestamp: DateTime.parse(json['timestamp']),
+      content: json['ANALISYS_ETC'],
     );
   }
 
-  // memo객체 -> Json형태 변환
+  // Memo 객체 -> Json 형태 변환
   Map<String, dynamic> toJson() => {
-    'title': title,
-    'content': content,
-    'timestamp': timestamp.toIso8601String(),
+    'ANALISYS_ETC': content,
   };
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:front/memoPage.dart';
+import 'package:front/memoPage/memo_service.dart';
 import 'package:front/reportPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -9,6 +11,7 @@ import 'Calendar.dart';
 import 'Listtile.dart';
 import 'bottomPage.dart';
 import 'mainPage.dart';
+import 'memoPage/memo.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
 
-        home: ReportPage(),
+        home: MemoPage(),
     );
   }
 }
