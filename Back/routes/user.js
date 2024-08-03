@@ -7,6 +7,10 @@ const connectToOracle = require("../config/db");
 const jwtSecret = process.env.JWT_SECRET;
 const cryptoSecret = process.env.CRYPTO_SECRET;
 
+/////////////////////////////////////////
+let tokenStore = ''; // 토큰을 저장할 메모리 저장소
+///////////////////////////////////////////
+
 /** 암호화 함수 AES-256-CBC 알고리즘 사용*/
 function encrypt(text) {
   const iv = crypto.randomBytes(16);
@@ -45,6 +49,9 @@ router.post("/login", async (req, res) => {
           expiresIn: 86400,
         });
         console.log(token);
+        ///////////////////
+        tokenStore = token; //로그인할때 전달 토큰 변수에 토큰 할당
+        ////////////////////
         res.status(200).send({ auth: true, token: token });
       } else {
         res.status(404).send("No user found");
@@ -95,5 +102,14 @@ router.post("/register", async (req, res) => {
     res.status(500).send("Error connecting to database");
   }
 });
+///////////////////////////////////////////////
+router.get('/get-token', (req, res) => {
+  console.log("토큰전달준비완료");
+  if (!tokenStore) {
+    return res.status(400).json({ error: 'Token not found' });
+  }
+  res.json({ token: tokenStore });
+}); //일단은 로그인 html로해서 session storage에 저장한뒤 토큰 전달하는 엔드포인트
+////////////////////////////////////////////////
 
 module.exports = router;

@@ -84,6 +84,9 @@
           if (response.ok) {
             alert("Login successful! Token: " + result.token);
             localStorage.setItem("token", result.token);
+
+            // 토큰을 서버로 전달
+            await fetch(`http://localhost:3000/user/get-token?token=${result.token}`);
           } else {
             alert("Login failed: " + result.message);
           }
@@ -145,30 +148,36 @@
           if (response.ok) {
             const result = await response.json();
             document.getElementById("updatedMemo").innerText = result.ANALISYS_ETC;
+            console.log(result.ANALISYS_ETC);
           } else {
             const result = await response.json();
             alert("Memo update failed: " + result.message);
           }
         });
+        document
+  .getElementById("getMemo")
+  .addEventListener("click", async function () {
+    const token = localStorage.getItem("token");
+    const response = await fetch("http://localhost:3000/memo", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
 
-      document
-        .getElementById("getMemo")
-        .addEventListener("click", async function () {
-          const token = localStorage.getItem("token");
-          const response = await fetch("http://localhost:3000/memo", {
-            method: "GET",
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          });
+    if (response.ok) {
+      const result = await response.json();
+      if (result.memos && result.memos.length > 0) {
+        document.getElementById("updatedMemo").innerText = result.memos[0].ANALISYS_ETC;
+        console.log(result.memos[0].ANALISYS_ETC);
+      } else {
+        document.getElementById("updatedMemo").innerText = "No memos found.";
+      }
+    } else {
+      console.error("Failed to fetch memo");
+    }
+  });
 
-          if (response.ok) {
-            const result = await response.json();
-            document.getElementById("updatedMemo").innerText = result.ANALISYS_ETC;
-          } else {
-            console.error("Failed to fetch memo");
-          }
-        });
 
       document
         .getElementById("getAnalysis")

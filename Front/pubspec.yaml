@@ -31,7 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.2                # node.js연결
-  provider: ^6.1.2            # 메모
+  provider: ^6.1.2  # 메모
+  flutter_secure_storage: ^9.2.2 #html에서 로컬스토리지에 저장한 토큰값 가져오기
 
 
 
