@@ -3,7 +3,8 @@ const PDFDocument = require('pdfkit');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const connectToOracle = require('../config/db'); // 경로에 맞게 수정
 const path = require('path');
-const fs = require('fs');
+const AuthToken = require('../AuthToken');
+const fs = require('fs'); // 파일 시스템 모듈 추가
 
 const router = express.Router();
 
@@ -24,6 +25,40 @@ async function clobToString(clob) {
     });
   });
 }
+
+// ECG 데이터를 전송하는 엔드포인트 추가
+router.post('/ecg-data', AuthToken, async (req, res) => {
+  const id = req.user.id;
+  console.log("전송준비");
+  let connection;
+  try {
+    connection = await connectToOracle();
+
+    const result = await connection.execute(
+        `SELECT ECG FROM TB_ANALYSIS WHERE ID = :id`,
+        { id }
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Analysis not found');
+    }
+
+    const ecgData = result.rows[0][0];
+    res.json({ ecgData });
+  } catch (error) {
+    console.error('Error processing request:', error);
+    res.status(500).send('Error processing request');
+  } finally {
+    if (connection) {
+      console.log("전송준비완");
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error('Error closing connection:', err);
+      }
+    }
+  }
+});
 
 // ECG 그래프 생성 함수
 async function generateECGChart(ecgData) {
@@ -84,20 +119,19 @@ async function generateECGChart(ecgData) {
   return await chartJSNodeCanvas.renderToBuffer(configuration);
 }
 
-
 /** 분석 결과를 pdf로 변환하고 다운로드 */
-router.post('/downloadPdf', async (req, res) => {
-  const { analysisId } = req.body;
+router.post('/downloadPdf', AuthToken, async (req, res) => {
+  const userId = req.user.id;  // 여기서 userId로 변경
 
   let connection;
   try {
     connection = await connectToOracle();
 
     const result = await connection.execute(
-        `SELECT ID, BG_AVG, BP_MIN, BP_MAX, PR, QT, RR, QRS, QR, CREATED_AT, ANALISYS_RESULT, ANALISYS_ETC, ECG
+       `SELECT ID, BG_AVG, BP_MIN, BP_MAX, PR, QT, RR, QRS, QR, CREATED_AT, ANALISYS_RESULT, ANALISYS_ETC, ECG
         FROM TB_ANALYSIS
-        WHERE ANALYSIS_IDX = :analysisId`,
-       [analysisId]
+        WHERE ID = :id`,
+       { id: userId }  // 여기서 userId 사용
     );
 
     if (result.rows.length === 0) {
@@ -142,6 +176,8 @@ router.post('/downloadPdf', async (req, res) => {
     doc.on('data', chunk => chunks.push(chunk));
     doc.on('end', () => {
       pdfBuffer = Buffer.concat(chunks);
+      const filePath = path.join(__dirname, `../uploads/analysis_${userId}.pdf`);
+      fs.writeFileSync(filePath, pdfBuffer); // PDF 파일을 서버의 로컬 디렉토리에 저장
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'attachment; filename=analysis.pdf');
       res.send(pdfBuffer);
@@ -171,19 +207,19 @@ router.post('/downloadPdf', async (req, res) => {
 
     // 검사결과 심박수 및 산소포화도
     // 아이콘을 그립니다.
-doc.image(iconPath, doc.x, doc.y, {width: 15});
+    doc.image(iconPath, doc.x, doc.y, {width: 15});
 
-// 아이콘의 높이를 계산합니다.
-const iconHeight = 15; // 아이콘의 높이 (픽셀)
+    // 아이콘의 높이를 계산합니다.
+    const iconHeight = 15; // 아이콘의 높이 (픽셀)
 
-// 텍스트의 y 좌표를 아이콘의 y 좌표와 일치하게 조정합니다.
-// 텍스트의 y 좌표는 아이콘의 중앙에 맞추기 위해 조정됩니다.
-const textY = doc.y + (iconHeight - 16) / 2 - 2; // 16은 텍스트의 폰트 크기
+    // 텍스트의 y 좌표를 아이콘의 y 좌표와 일치하게 조정합니다.
+    // 텍스트의 y 좌표는 아이콘의 중앙에 맞추기 위해 조정됩니다.
+    const textY = doc.y + (iconHeight - 16) / 2 - 2; // 16은 텍스트의 폰트 크기
 
-doc.font('NanumGothicBold')
-   .fontSize(16)
-   .fillColor('black')
-   .text('검사결과 심박수', doc.x + 25, textY);
+    doc.font('NanumGothicBold')
+      .fontSize(16)
+      .fillColor('black')
+      .text('검사결과 심박수', doc.x + 25, textY);
     doc.moveDown();
     doc.font('NanumGothic').fontSize(12).text(`평균 심박수: ${avgHeartRate} BPM`);
     doc.text(`최저 심박수: ${minHeartRate} BPM`);

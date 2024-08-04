@@ -9,7 +9,7 @@ class MemoService {
 
   Future<String> getToken() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/get-token'));
+      final response = await http.get(Uri.parse('$baseUrl/user/get-token'));
       print('Server response: ${response.body}'); // 서버 응답을 출력하여 디버깅
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
