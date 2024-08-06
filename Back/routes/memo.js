@@ -3,7 +3,11 @@ const router = express.Router();
 const connectToOracle = require("../config/db");
 const AuthToken = require("../AuthToken");
 
+
 /** 메모 수정 및 정보 불러오기 */
+
+/** 메모 수정 */
+
 router.post("/memo", AuthToken, async (req, res) => {
   console.log(AuthToken);
   const id = req.user.id;
@@ -18,6 +22,33 @@ router.post("/memo", AuthToken, async (req, res) => {
         { autoCommit: true } // 업데이트 후 커밋
       );
       // 업데이트된 메모 정보 조회 쿼리
+      const result = await connection.execute(
+        "SELECT ANALISYS_ETC FROM TB_ANALYSIS WHERE ID = :id",
+        { id }
+      );
+      if (result.rows.length > 0) {
+        const memo = result.rows[0][0]; // 첫 번째 행의 첫 번째 열 데이터
+        res.status(200).json({ ANALISYS_ETC: memo });
+      } else {
+        res.status(404).json({ message: "No memo found for this ID" });
+      }
+      await connection.close();
+    } catch (err) {
+      res.status(500).send("Error executing query");
+      console.error("Error executing query: ", err);
+    }
+  } else {
+    res.status(500).send("Error connecting to database");
+  }
+});
+
+/** 메모 조회 */
+router.get("/memo", AuthToken, async (req, res) => {
+  const id = req.user.id;
+  const connection = await connectToOracle();
+  if (connection) {
+    try {
+      // 메모 정보 조회 쿼리
       const result = await connection.execute(
         "SELECT ANALISYS_ETC FROM TB_ANALYSIS WHERE ID = :id",
         { id }
