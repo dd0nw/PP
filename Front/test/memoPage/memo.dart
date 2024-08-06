@@ -1,5 +1,5 @@
 class Memo {
-  final String id;
+  final int id;
   final String content;
 
   Memo({
