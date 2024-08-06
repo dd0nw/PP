@@ -1,12 +1,7 @@
 import 'dart:convert'; //Json인코딩 및 디코딩
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'memo.dart';
 
-void main(){
-  runApp(MemoService() as Widget);
-
-}
 class MemoService {
   final String baseUrl = "http://192.168.219.230:3000"; // 서버 주소
 
@@ -49,10 +44,8 @@ class MemoService {
     );
 
     if (response.statusCode != 200) {
-      print(response.statusCode);
       print("Failed to update memo: ${response.body}"); // 실패한 경우 로그 출력
       throw Exception('Failed to update memo');
-
     } else {
       print("Update memo success: ${response.body}");
     }
