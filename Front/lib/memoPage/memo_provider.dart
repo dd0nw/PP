@@ -21,11 +21,18 @@ class MemoProvider with ChangeNotifier {
 
   // <메모 추가 및 업데이트>
   void addOrUpdateMemo(Memo memo) async {
-    if (memo.id == 0) {
-      await _memoService.createMemo(memo);
-    } else {
-      await _memoService.updateMemo(memo);
+    try {
+      if (memo.id == 0) {
+        await _memoService.createMemo(memo);
+      } else {
+        await _memoService.updateMemo(memo);
+      }
+      fetchMemos(); // 최신 메모 데이터를 가져와 리스트 갱신
+    } catch (e) {
+      // 예외 처리 로직 추가
+      print('Failed to add or update memo: $e');
+      // 추가적인 사용자 알림 또는 에러 핸들링
     }
-    fetchMemos(); //최신메모데이터 가져와 리스트갱신
   }
+
 }

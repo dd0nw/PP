@@ -3,7 +3,7 @@
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String _url = "http://192.168.219.49:3000";
+  final String _url = "http://192.168.219.230:3000";
 
   Future<String> fetchData() async {
     http.Response response = await http.get(Uri.parse("$_url/"));

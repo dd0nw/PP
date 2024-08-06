@@ -43,7 +43,7 @@ class _MemoPageState extends State<MemoPage> {
                     String content = _memoController.text;
                     if (content.isNotEmpty) {
                       Memo newMemo = Memo(
-                        id: _currentMemo?.id ?? 0,
+                        id: _currentMemo?.id ?? 'djf',
                         content: content,
                       );
                       // 반환값을 사용하지 않도록 수정
