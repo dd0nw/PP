@@ -6,11 +6,11 @@ const connectToOracle = require("../config/db.js");
 const resultRoutes = require("./result");
 const memoRoutes = require("./memo");
 
-router.use("/user", userRoutes);
-router.use("/analysis", analysisRoutes);
+router.use("/", userRoutes);
+router.use("/", analysisRoutes);
 
 router.use("/", memoRoutes);
-router.use("/result", resultRoutes);
+router.use("/", resultRoutes);
 
 router.get("/", async (req, res) => {
   const connection = await connectToOracle();
