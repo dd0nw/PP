@@ -169,29 +169,32 @@ router.post('/downloadPdf', async (req, res) => {
       console.error('Error generating ECG chart:', err);
     }
 
-    // 검사결과 심박수 및 산소포화도
-    // 아이콘을 그립니다.
-doc.image(iconPath, doc.x, doc.y, {width: 15});
+    const startX = doc.x;
 
-// 아이콘의 높이를 계산합니다.
-const iconHeight = 15; // 아이콘의 높이 (픽셀)
-
-// 텍스트의 y 좌표를 아이콘의 y 좌표와 일치하게 조정합니다.
-// 텍스트의 y 좌표는 아이콘의 중앙에 맞추기 위해 조정됩니다.
-const textY = doc.y + (iconHeight - 16) / 2 - 2; // 16은 텍스트의 폰트 크기
-
-doc.font('NanumGothicBold')
-   .fontSize(16)
-   .fillColor('black')
-   .text('검사결과 심박수', doc.x + 25, textY);
+    // 심박수 및 산소포화도
+    doc.image(iconPath, startX, doc.y, { width: 15 });
+    const iconHeight = 15;
+    let textY = doc.y + (iconHeight - 16) / 2 - 2;
+    doc.font('NanumGothicBold')
+      .fontSize(16)
+      .fillColor('black')
+      .text('심박수', startX + 25, textY);
     doc.moveDown();
     doc.font('NanumGothic').fontSize(12).text(`평균 심박수: ${avgHeartRate} BPM`);
     doc.text(`최저 심박수: ${minHeartRate} BPM`);
     doc.text(`최고 심박수: ${maxHeartRate} BPM`);
+    doc.moveDown(2);
+
+    // 산소포화도 위치 조정
+    doc.moveDown(); // 심박수와 산소포화도 사이의 간격을 추가
+    doc.image(iconPath, startX, doc.y, { width: 15 }); // 저장된 x 좌표를 사용
+    textY = doc.y + (iconHeight - 16) / 2 - 2; // 새로운 textY 계산
+    doc.font('NanumGothicBold')
+        .fontSize(16)
+        .fillColor('black')
+        .text('산소포화도', startX + 25, textY); // 저장된 x 좌표를 기준으로 텍스트 위치 계산
     doc.moveDown();
-    doc.fontSize(15).fillColor('black').text('산소포화도');
-    doc.moveDown();
-    doc.fontSize(12).text(`HRV: ${rr} %`);
+    doc.font('NanumGothic').fontSize(12).text(`HRV: ${rr} %`);
     doc.moveDown();
 
     // 심전도 섹션의 시작 좌표 설정
