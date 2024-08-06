@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   http: ^1.2.2                # node.js연결
   provider: ^6.1.2            # 메모
+  flutter_blue_plus: ^1.32.11
+  fl_chart: ^0.68.0
+  permission_handler: ^11.3.1
 
 
 

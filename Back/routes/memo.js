@@ -4,7 +4,7 @@ const connectToOracle = require("../config/db");
 const AuthToken = require("../AuthToken");
 
 /** 메모 수정 및 정보 불러오기 */
-router.post("/", AuthToken, async (req, res) => {
+router.post("/memo", AuthToken, async (req, res) => {
   console.log(AuthToken);
   const id = req.user.id;
   const { memoContent } = req.body; // 프론트엔드에서 memoContent를 전송해야 함
