@@ -31,11 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.2                # node.js연결
-  provider: ^6.1.2  # 메모
-  flutter_secure_storage: ^9.2.2 #html에서 로컬스토리지에 저장한 토큰값 가져오기
-  fl_chart: ^0.68.0 # 그래프 그리기
-  path_provider: ^2.1.4 # 파일 저장 및 열때 필요
-
+  provider: ^6.1.2            # 메모
 
 
 

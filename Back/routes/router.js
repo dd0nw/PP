@@ -7,10 +7,10 @@ const memoRoutes = require("./memo");
 const authRoutes = require("./auth");
 
 router.use("/user", userRoutes);
-router.use("/", analysisRoutes);
+router.use("/analysis", analysisRoutes);
+
 router.use("/", memoRoutes);
 router.use("/result", resultRoutes);
-router.use("/auth", authRoutes);
 
 router.get("/", async (req, res) => {
   res.sendFile(__dirname + '/test.html');
