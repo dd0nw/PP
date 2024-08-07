@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front/bt.dart';
 import 'package:front/reportPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -11,9 +10,6 @@ import 'Calendar.dart';
 import 'Listtile.dart';
 import 'bottomPage.dart';
 import 'mainPage.dart';
-import 'memoPage/memo_provider.dart';
-import 'memoPage/memopage.dart';
-
 
 void main() {
   runApp(
