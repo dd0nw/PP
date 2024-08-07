@@ -8,6 +8,7 @@ const jwtSecret = process.env.JWT_SECRET;
 const cryptoSecret = process.env.CRYPTO_SECRET;
 const AuthToken = require('../AuthToken');
 const {disconnectKakao} = require('../passport/disconnectKakao');
+const { kakaoAccessTokenStore } = require('../passport/kakaoStrategy');
 
 /////////////////////////////////////////
 let tokenStore = ''; // 토큰을 저장할 메모리 저장소
@@ -114,28 +115,29 @@ router.get('/get-token', (req, res) => {
 }); //session storage에 저장한뒤 토큰 전달하는 엔드포인트
 ////////////////////////////////////////////////
 
-/** 로그아웃 */
-router.post('/logout', async (req, res) => {
+// 로그아웃
+router.post('/logout', AuthToken, async (req, res) => {
   console.log("Logging out");
+  const userId = req.user.id;
+  
+  // 메모리 저장소에서 액세스 토큰 가져오기
+  const accessToken = kakaoAccessTokenStore[userId];
+
   // 카카오 소셜 로그아웃 처리
   try {
-    if (true) {
-      console.log("진행중")
-      const kakaoLogoutUrl = `https://kapi.kakao.com/v1/user/logout`;
-
-      await axios.post(kakaoLogoutUrl, null, {
-        headers: {
-          Authorization: `Bearer ${tokenStore}`
-        }
-      });
-
+    if (accessToken) {
+      console.log("진행중");
+      await disconnectKakao(accessToken); // 카카오 언링크 함수 호출
       console.log("Kakao user logged out");
     }
   } catch (error) {
     console.error("Error logging out from Kakao:", error.message);
   }
 
-  tokenStore = ''; // 메모리 저장소에서 토큰 삭제
+  // 토큰 저장소 초기화
+  tokenStore = ''; // 메모리 저장소에서 JWT 토큰 삭제
+  delete kakaoAccessTokenStore[userId]; // 메모리 저장소에서 액세스 토큰 삭제
+  
   res.status(200).send({ auth: false, token: null, message: "Logged out" });
 });
 
