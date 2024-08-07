@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const connectToOracle = require("../config/db");
-const { sendEmail } = require('../config/email');
-const { autoCommit } = require("oracledb");
+const sendmail  = require('../config/email');
+
 const jwtSecret = process.env.JWT_SECRET;
 const cryptoSecret = process.env.CRYPTO_SECRET;
 
@@ -83,7 +83,8 @@ router.post("/register", async (req, res) => {
           height: height,
           weight: weight,
           heartrate: heartRate,
-        }
+        },
+        {autoCommit:true}
       );
       await connection.commit();
       res.status(200).send({ auth: true });
@@ -99,7 +100,7 @@ router.post("/register", async (req, res) => {
 });
 
 
-/** 이메일 코드 전송(중복 검사) */
+/** 이메일 코드 전송(중복 검사 포함) */
 router.post('/snedEmail', async (req, res) => {
   const {email} = req.body;
   const code = crypto.randomBytes(3).toString('hex');
@@ -123,7 +124,7 @@ router.post('/snedEmail', async (req, res) => {
         const lastRequestTime = result.rows[0][0];
         const diffMinutes = (now - lastRequestTime) / 60000;
         if (diffMinutes < 1) {
-          return res. status(429).send("너무 많은 요청");
+          return res. status(500).send("이미 존재하는 이메일");
         }
       }
 
@@ -190,17 +191,20 @@ router.post('/verifyCode', async(req, res) => {
 
 /** 아이디 찾기 */
 router.post('/findId', async (req, res) => {
-  const {name, birthday} = req.body;
+  const {birthday, name} = req.body;
+  console.log(birthday, name)
   try {
-    const connection = await oracleDB.getConnection();
+    const connection = await connectToOracle();
     const result = await connection.execute(
-      `SELECT id FROM TB_USER WHERE NAME= :name AND BIRTHDAT = :birthday`,
+      `SELECT id FROM TB_USER WHERE NAME = :name AND BIRTHDATE = TO_DATE(:birthday, 'YYYY/MM/DD HH24:MI:SS')`,
       {name: name, birthday: birthday}
     );
+    
+    console.log(result.rows)
     connection.close();
 
     if(result.rows.length > 0 ) {
-      res.json({success: true, id: result.rows[0].ID});
+      res.json({success: true, id: result.rows[0][0]});
     } else {
       res.json({success: false, message: '일치하는 사용자가 없습니다'});
     }
@@ -210,9 +214,102 @@ router.post('/findId', async (req, res) => {
   }
 })
 
-/** 비밀번호 찾기 */
-router.post('/findPw', async(req, res) => {
+/** 비밀번호 찾기 - 임시 비밀번호 발송 */
+router.post('/findPw', async (req, res) => {
+  const generateRandomCode = () => {
+    return Math.random().toString(36).slice(-8);
+  };
+
+  const { email } = req.body;
+  const pw = generateRandomCode();
+
+  const mailOptions = {
+    to: email,
+    subject: 'PULSEPULSE 임시 비밀번호',
+    text: `임시 비밀번호는 ${pw} 입니다.`
+  };
+
+  let connection;
+
+  try {
+    connection = await connectToOracle();
+
+    const result = await connection.execute(
+      `SELECT id FROM tb_user WHERE ID = :id`,
+      { id: email }
+    );
+
+    if (result.rows.length > 0) {
+      try {
+        const emailResponse = await sendmail.sendmail(mailOptions.to, mailOptions.subject, mailOptions.text);
+
+        const hashedPw = bcrypt.hashSync(pw, 10);
+
+        const result2 = await connection.execute(
+          `UPDATE TB_USER SET pw = :pw WHERE ID = :email`,
+          { pw: hashedPw, email: email },
+          { autoCommit: true }
+        );
+
+        if (result2.rowsAffected > 0) {
+          return res.status(200).send('임시 비밀번호 발급 성공');
+        } else {
+          return res.status(500).send('임시 비밀번호 발급 실패');
+        }
+      } catch (emailError) {
+        return res.status(500).send(emailError.toString());
+      }
+    } else {
+      return res.status(404).send('사용자를 찾을 수 없습니다.');
+    }
+  } catch {
+  } 
+});
+
+/** 비밀번호 변경 */
+router.post('/changePw', async(req, res) => {
+  console.log("click")
+  const {id, forwardpw, backwardpw} = req.body;
+
+  console.log(id, forwardpw, backwardpw)
+
+  let connection;
+
+  try{
+    connection = await connectToOracle();
+
+    const result = await connection.execute(
+      `SELECT pw from TB_USER WHERE id = :id`,
+      {id : id}
+    );
+    console.log("결과",result.rows[0][0])
+
+    const matchPw = bcrypt.compareSync(forwardpw, result.rows[0][0]);
+    console.log(matchPw)
+
+    if (matchPw) {
+      console.log('a')
+      result2 = await connection.execute(
+        `UPDATE TB_USER SET PW = :backwardpw WHERE ID = :id`,
+        {backwardpw: backwardpw, id: id},
+        {autoCommit: true}
+      )
+      console.log(result2.rowsAffected)
+
+      if(result2.rowsAffected > 0) {
+        res.status(200).json({success: true, message: "비밀번호 변경 성공"})
+      } 
+
+    } else {
+      res.status(500).json({success: false, message: "비밀번호가 일치하지 않습니다"})
+    }
+  } catch(error) {
+    res.status(500).json({success: false, error: error})
+  }
+  
+
+
+
   
 })
-
 module.exports = router;

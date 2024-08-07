@@ -9,7 +9,7 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-function sendEmail(to, subject, text) {
+function sendmail(to, subject, text) {
   let mailOptions = {
     from: process.env.EMAIL_USER,
     to: to,
@@ -21,5 +21,5 @@ function sendEmail(to, subject, text) {
 }
 
 module.exports = {
-  sendEmail
+  sendmail
 };
