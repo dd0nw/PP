@@ -1,0 +1,260 @@
+[33mcommit a2af4e8576a8923da3a4aed527bbaac515d6d488[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Wed Aug 7 12:19:01 2024 +0900
+
+    아이디/비밀번호 찾기
+
+[33mcommit 20cc20800f6b9310df0214150e67e3564ebaaf7d[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Aug 6 15:48:20 2024 +0900
+
+    find id
+
+[33mcommit 2c517896ef3eadeee9b29d7658d1d94790a600b9[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Aug 6 11:42:32 2024 +0900
+
+    pdf 수정
+
+[33mcommit c09003f23f4da276032c7b8f73a981293e2cd6f3[m
+Merge: af98590 0cd05e2
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Aug 6 11:41:23 2024 +0900
+
+    Merge branch 'main' of https://github.com/2024-SMHRD-IS-IOT-3/PP
+
+[33mcommit af98590f41842cef9d936bceb85fdad5b45f4419[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Aug 6 11:41:15 2024 +0900
+
+    pdf 수정
+
+[33mcommit 0cd05e2050d646b7e34b2ac69582ea936f297988[m
+Merge: 5c936b1 c4ed6ea
+Author: KDA <doa1029@gmail.com>
+Date:   Tue Aug 6 09:18:20 2024 +0900
+
+    ecg
+
+[33mcommit 5c936b1ff78ba257111095e24c4c0db801704a60[m
+Author: KDA <doa1029@gmail.com>
+Date:   Tue Aug 6 09:16:28 2024 +0900
+
+    ecg
+
+[33mcommit f8357ea7a20b273ad0e53ee857ad3251f73d92e1[m
+Author: KDA <doa1029@gmail.com>
+Date:   Tue Aug 6 09:04:14 2024 +0900
+
+    ecg
+
+[33mcommit c4ed6ea990ce8273e6be22e73c82ed7270430022[m
+Merge: c0e80f3 d46452a
+Author: sfm <bom5928@gmail.com>
+Date:   Fri Aug 2 17:48:15 2024 +0900
+
+    메모 수정
+
+[33mcommit c0e80f36fcdca27a5b3196602f362e09ddadbaa2[m
+Author: sfm <bom5928@gmail.com>
+Date:   Fri Aug 2 17:44:27 2024 +0900
+
+    업데이트는 post 그냥 조회는 get -> /memo
+
+[33mcommit d46452aa517517e5f6ac59737db8ea5fd1ebcbf5[m
+Merge: 7c514be b813c8a
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Fri Aug 2 16:16:19 2024 +0900
+
+    Merge branch 'main' of https://github.com/2024-SMHRD-IS-IOT-3/PP
+
+[33mcommit 7c514be56e9c7f0482847ba385ad25c01cb77938[m
+Merge: 48b61f4 47af2f9
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Fri Aug 2 16:16:12 2024 +0900
+
+    pdf
+
+[33mcommit b813c8afcd81d64322dde622e852c47a9da1e016[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Fri Aug 2 16:14:14 2024 +0900
+
+    Update package-lock.json
+
+[33mcommit 48b61f444cf6746cdba0ad8dc26523676a67cfea[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Fri Aug 2 16:08:48 2024 +0900
+
+    pdf..
+
+[33mcommit 47af2f9bfc7a741205c4a78b801fa24e79a37763[m
+Merge: db4cbca eb3a3e6
+Author: sfm <bom5928@gmail.com>
+Date:   Fri Aug 2 10:32:18 2024 +0900
+
+    Merge branch 'main' of https://github.com/2024-SMHRD-IS-IOT-3/PP
+
+[33mcommit db4cbcaaaeeb6a36c643783ec4f79ab11755c16e[m
+Author: sfm <bom5928@gmail.com>
+Date:   Fri Aug 2 10:32:02 2024 +0900
+
+    hard backup
+
+[33mcommit eb3a3e60aa3a9293a2ea8367dd921ef20f439ccd[m
+Merge: 85ab5ff b807ebc
+Author: KDA <doa1029@gmail.com>
+Date:   Fri Aug 2 10:15:40 2024 +0900
+
+    front
+
+[33mcommit 85ab5ffcbc366dc81f4e89e75ee7d34a3de87432[m
+Author: KDA <doa1029@gmail.com>
+Date:   Fri Aug 2 10:12:14 2024 +0900
+
+    front
+
+[33mcommit b807ebc93ff9616392ff9302477bc3d73a0081e8[m
+Merge: bb94d1e 6c4ce33
+Author: sfm <bom5928@gmail.com>
+Date:   Fri Aug 2 09:58:59 2024 +0900
+
+    Merge branch 'main' of https://github.com/2024-SMHRD-IS-IOT-3/PP
+
+[33mcommit bb94d1ea177fbf7f55882e2ade44faabc9d88618[m
+Author: sfm <bom5928@gmail.com>
+Date:   Fri Aug 2 09:50:31 2024 +0900
+
+    memo
+
+[33mcommit b4d8f5ec63ebaf25830b001132b43c3e51733b7f[m
+Merge: 2ebceb7 6c4ce33
+Author: KDA <doa1029@gmail.com>
+Date:   Thu Aug 1 15:14:44 2024 +0900
+
+    Merge branch 'main' of https://github.com/2024-SMHRD-IS-IOT-3/PP
+
+[33mcommit 2ebceb719870a2a9f879fab10bbf80b293ad6030[m
+Author: KDA <doa1029@gmail.com>
+Date:   Thu Aug 1 15:14:34 2024 +0900
+
+    flutter
+
+[33mcommit 6c4ce3337c5370b06e7cedd5fa772d662522629d[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Wed Jul 31 11:42:01 2024 +0900
+
+    Delete Back/package-lock.json
+
+[33mcommit 9406a98c09b6841d56aa3536ba354ea228349fce[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Wed Jul 31 11:41:43 2024 +0900
+
+    Delete package.json
+
+[33mcommit 012a09b9b1e827dcb27081ba60b74cf518ab0dd6[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Wed Jul 31 11:41:35 2024 +0900
+
+    Delete package-lock.json
+
+[33mcommit 59eff8166c91d974186ac9a8221fc31218809df6[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Wed Jul 31 11:41:27 2024 +0900
+
+    Delete node_modules directory
+
+[33mcommit 4bb21fa37eac8972c2c7c7b9993825f40ed64b7d[m
+Author: sfm <bom5928@gmail.com>
+Date:   Wed Jul 31 11:30:02 2024 +0900
+
+    날짜별 내림차순 추가
+
+[33mcommit 1a5ad253e5ac6629d2debc537c7d2972a2ebc76c[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Wed Jul 31 09:19:25 2024 +0900
+
+    회원가입 개인정보 암호화 제거
+
+[33mcommit 009af3c47305c2cd7ed42e0fccb2de571058a090[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Jul 30 21:02:24 2024 +0900
+
+    back register add
+
+[33mcommit 55be2fea0c138eee19ae1131de08e5d4c17dd18c[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Tue Jul 30 17:03:43 2024 +0900
+
+    Delete Back/package-lock.json
+
+[33mcommit f4d1d1de75d1aa424d3af3eac223bccf5ba83374[m
+Author: sfm <bom5928@gmail.com>
+Date:   Tue Jul 30 16:21:07 2024 +0900
+
+    hi
+
+[33mcommit 9bd17071f72c2b1697d80b23a48efb9697075344[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Jul 30 10:23:16 2024 +0900
+
+    back db connect
+
+[33mcommit a507202bd8d84e53a0ed31f00e21768020aff227[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Tue Jul 30 10:18:05 2024 +0900
+
+    Delete Back/package-lock.json
+
+[33mcommit 571ecef660ae2c891ed7b4b73e4c1b53e3690734[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Tue Jul 30 10:16:33 2024 +0900
+
+    Delete Back/node_modules directory
+
+[33mcommit ba7558d8dbba37d080f9d14102b5707c21a52308[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Jul 30 10:14:26 2024 +0900
+
+    back db connect
+
+[33mcommit 09b6fc9e9c55e01be6a52908bb5cf7237c3b9db7[m
+Author: yeon <cyzhfpt11@gmail.com>
+Date:   Tue Jul 30 10:12:04 2024 +0900
+
+    back db connect
+
+[33mcommit 49cd6a8d6f0b7b4a416dbe3e23785adef823ae4a[m
+Author: KDA <doa1029@gmail.com>
+Date:   Tue Jul 30 09:26:30 2024 +0900
+
+    플러터생성
+
+[33mcommit 7d02476a279ef02389a9300aa27fcb83c6184e9d[m[33m ([m[1;31morigin/back[m[33m)[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Mon Jul 29 15:14:52 2024 +0900
+
+    Create hard
+
+[33mcommit 384db5a89004aba97abf5ade424515683afe8578[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Mon Jul 29 15:14:32 2024 +0900
+
+    Create nodejs
+
+[33mcommit f2b30da3298c3d8dc813fc8f114879c41b50114a[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Mon Jul 29 15:14:18 2024 +0900
+
+    Create flutterApp
+
+[33mcommit f497ac405941cafb5209d84d6b046134bf1e5c79[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Mon Jul 29 15:13:54 2024 +0900
+
+    Create ai
+
+[33mcommit 6381561d40ea2fa03ff2b67e0e7c9282d965b144[m
+Author: 김가연 <150112222+yeon820@users.noreply.github.com>
+Date:   Sun Jul 28 22:56:45 2024 +0900
+
+    Initial commit
