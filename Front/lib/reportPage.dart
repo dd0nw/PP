@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'api_service.dart'; // ApiService가 정의된 파일을 import
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:fl_chart/fl_chart.dart'; // 플러터 차트 패키지 사용
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // 추가된 부분
+import 'package:path_provider/path_provider.dart'; // 추가된 부분
+import 'dart:io'; // 추가된 부분
+
+
 class reportPage extends StatefulWidget {
   const reportPage({super.key});
 
@@ -7,11 +16,14 @@ class reportPage extends StatefulWidget {
   State<reportPage> createState() => _reportPageState();
 }
 
+
 class _reportPageState extends State<reportPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+<<<<<<< HEAD
         leading: Icon(Icons.chevron_left),
         backgroundColor: Colors.white,
       ),
@@ -265,3 +277,4 @@ class _reportPageState extends State<reportPage> {
 //     ),
 //   ),
 // ),
+
