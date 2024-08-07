@@ -10,7 +10,7 @@ import 'api_service.dart'; // ApiService 정의된 파일 import
 import 'Calendar.dart';
 import 'Listtile.dart';
 import 'bottomPage.dart';
-import 'mainPage.dart';
+import 'dashPage.dart';
 import 'memoPage/memo_provider.dart';
 import 'memoPage/memopage.dart';
 
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: BluetoothGraphPage(),
+      home: reportPage(),
     );
   }
 }

@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  date_picker_plus:
+    dependency: "direct main"
+    description:
+      name: date_picker_plus
+      sha256: "9b22c94f86c76b20ebe46fa3e54544266400556a8ec9ad5508868ef3180ee513"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   equatable:
     dependency: transitive
     description:
@@ -120,6 +128,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.0"
   leak_tracker:
     dependency: transitive
     description:
