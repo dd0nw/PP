@@ -15,7 +15,6 @@ oracledb.initOracleClient({ libDir: "C:/Users/smhrd/Desktop/instantclient_11_2" 
   async function connectToOracle() {
     try {
       const connection = await oracledb.getConnection(dbConfig);
-      console.log("Successfully connected to Oracle database");
       await connection.execute(`ALTER SESSION SET TIME_ZONE='UTC'`);
       return connection;
     } catch (err) {

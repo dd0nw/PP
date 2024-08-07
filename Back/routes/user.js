@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const connectToOracle = require("../config/db");
 const sendmail  = require('../config/email');
+const AuthToken = require("../AuthToken");
 
 const jwtSecret = process.env.JWT_SECRET;
 const cryptoSecret = process.env.CRYPTO_SECRET;
@@ -86,7 +87,6 @@ router.post("/register", async (req, res) => {
         },
         {autoCommit:true}
       );
-      await connection.commit();
       res.status(200).send({ auth: true });
     } catch (err) {
       res.status(500).send("Error executing query");
@@ -101,58 +101,56 @@ router.post("/register", async (req, res) => {
 
 
 /** 이메일 코드 전송(중복 검사 포함) */
-router.post('/snedEmail', async (req, res) => {
-  const {email} = req.body;
+router.post('/checkId', async (req, res) => {
+  const email = req.body.id;
   const code = crypto.randomBytes(3).toString('hex');
+
+  const mailOptions = {
+    to: email,
+    subject: 'PULSEPULSE 인증 코드',
+    text: `인증코드는 ${code} 입니다.`
+  };
+
   try {
-    const connection = await db.connectToOracle();
-    const sql = 'SELECT ID FROM TB_USER WHERE ID = :email';
-    
-    const result = await connection.execute(sql, [email]);
+    console.log(email, code)
+    const connection = await connectToOracle();
 
+    const result = await connection.execute(
+      `SELECT * FROM TB_USER WHERE ID = :id`,
+      {id: email}
+    )
+
+    const now = new Date();
     if (result.rows.length > 0) {
-      await connection.close();
-      return res.json({success : false, message: 'exist email'})
-    } else {
-      const result = await connection.execute(
-        `SELECT CREATED_AT FROM VERIFICATION_CODES WHERE ID = :eamil`,
-        { email : email }
-      );
-
-      const now = new Date();
-      if (result.rows.length > 0) {
-        const lastRequestTime = result.rows[0][0];
-        const diffMinutes = (now - lastRequestTime) / 60000;
-        if (diffMinutes < 1) {
-          return res. status(500).send("이미 존재하는 이메일");
-        }
+      const lastRequestTime = result.rows[0][0];
+      const diffMinutes = (now - lastRequestTime) / 60000;
+      if (diffMinutes < 1) {
+        return res.status(500).send("이미 존재하는 이메일");
       }
-
+    } else {
+      console.log("d")
       await connection.execute(
-        `MERGE INTO verification_codes vc
-         USING (SELECT :email AS email FROM dual) d
-         ON (vc.email = d.email)
-         WHEN MATCHED THEN
-         UPDATE SET code = :code, created_at = :now, expires_at = :expires_at
-         WHEN NOT MATCHED THEN
-         INSERT (email, code, created_at, expires_at)
-         VALUES (:email, :code, :now, :expires_at)`,
+        `MERGE INTO tb_verification_codes vc
+        USING (SELECT :id AS id FROM dual) d
+        ON (vc.id = d.id)
+        WHEN MATCHED THEN
+        UPDATE SET code = :code, created_at = :now, expires_at = :expires_at
+        WHEN NOT MATCHED THEN
+        INSERT (id, code, created_at, expires_at)
+        VALUES (:id, :code, :now, :expires_at)`,
       {
-        email: email,
-        code: verificationCode,
+        id: email,
+        code: code,
         now: now,
         expires_at: new Date(now.getTime() + 5 * 60000)
       },
       {autoCommit: true}
       );
-      connection.close();
 
-      const mailOptions = {
-        from : 'g8793173@gmail.com',
-        to: email,
-        subject: 'PULSEPULSE 인증 코드',
-        text: `인증코드는 ${code} 입니다.`
-      };
+      console.log(mailOptions)
+      await connection.close();
+
+      const emailResponse = await sendmail.sendmail(mailOptions.to, mailOptions.subject, mailOptions.text);
 
       transporter.sendEmail(mailOptions, (error, info) =>{
         if(error) {
@@ -160,10 +158,8 @@ router.post('/snedEmail', async (req, res) => {
         }
         res.status(200).send("이메일 전송: " + info.response);
       });
-    } 
-
-  } catch(error) {
-    res.status(500).json({success:false, message: '코드 전송 실패', error : error.message});
+    }
+  } catch {
   }
 });
 
