@@ -16,14 +16,37 @@ module.exports = () => {
       console.log('Kakao profile:', { id, email, name: username });
 
       let user = await connection.execute(
-        'SELECT * FROM TB_USER WHERE EMAIL = :email',
+        'SELECT * FROM TB_USER WHERE ID = :email',
         { email }
       );
 
       if (user.rows.length === 0) {
         await connection.execute(
-          `INSERT INTO TB_USER (ID, EMAIL, NAME, PROVIDER) VALUES (:id, :email, :name, 'kakao')`,
-          { id, email, name: username }
+          `
+INSERT INTO TB_USER (
+  ID, 
+  PW, 
+  NAME, 
+  BIRTHDATE, 
+  GENDER, 
+  HEIGHT, 
+  WEIGHT, 
+  JOINED_AT, 
+  PULSE
+) 
+VALUES (
+  :email, 
+  :id, 
+  :name, 
+  TO_DATE('2000-01-01', 'YYYY-MM-DD'), 
+  'male', 
+  180.0, 
+  75.0, 
+  SYSTIMESTAMP, 
+  70
+)
+          `,
+          { email:email, id:id, name: username }
         );
         await connection.commit();
         console.log('New user created:', { id, email, name: username });

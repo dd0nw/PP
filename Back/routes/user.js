@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const connectToOracle = require("../config/db");
 const jwtSecret = process.env.JWT_SECRET;
 const cryptoSecret = process.env.CRYPTO_SECRET;
+const AuthToken = require('../AuthToken');
+const {disconnectKakao} = require('../passport/disconnectKakao');
 
 /////////////////////////////////////////
 let tokenStore = ''; // 토큰을 저장할 메모리 저장소
@@ -109,7 +111,88 @@ router.get('/get-token', (req, res) => {
     return res.status(400).json({ error: 'Token not found' });
   }
   res.json({ token: tokenStore });
-}); //일단은 로그인 html로해서 session storage에 저장한뒤 토큰 전달하는 엔드포인트
+}); //session storage에 저장한뒤 토큰 전달하는 엔드포인트
 ////////////////////////////////////////////////
+
+/** 로그아웃 */
+router.post('/logout', async (req, res) => {
+  console.log("Logging out");
+  // 카카오 소셜 로그아웃 처리
+  try {
+    if (true) {
+      console.log("진행중")
+      const kakaoLogoutUrl = `https://kapi.kakao.com/v1/user/logout`;
+
+      await axios.post(kakaoLogoutUrl, null, {
+        headers: {
+          Authorization: `Bearer ${tokenStore}`
+        }
+      });
+
+      console.log("Kakao user logged out");
+    }
+  } catch (error) {
+    console.error("Error logging out from Kakao:", error.message);
+  }
+
+  tokenStore = ''; // 메모리 저장소에서 토큰 삭제
+  res.status(200).send({ auth: false, token: null, message: "Logged out" });
+});
+
+
+/** 회원탈퇴 */
+router.post("/delete-account", AuthToken, async (req, res) => {
+  const userId = req.user.id; // 토큰에서 추출한 사용자 ID
+  const connection = await connectToOracle();
+  if (connection) {
+    try {
+
+      // 사용자 정보 삭제 전 관련된 데이터 삭제
+      await connection.execute(
+        "DELETE FROM TB_ALARM WHERE ID = :id",
+        { id: userId }
+      );
+      await connection.execute(
+        "DELETE FROM TB_METADATA WHERE ID = :id",
+        { id: userId }
+      );
+      await connection.execute(
+        "DELETE FROM VERIFICATION_CODES WHERE ID = :id",
+        { id: userId }
+      );
+      await connection.execute(
+        "DELETE FROM TB_ANALYSIS WHERE ID = :id",
+        { id: userId }
+      );
+
+      // 사용자 정보 삭제
+      const result = await connection.execute(
+        "DELETE FROM TB_USER WHERE ID = :id",
+        { id: userId }
+      );
+
+      await connection.commit(); // 변경 사항 커밋
+      tokenStore = ''; // 메모리 저장소에서 토큰 삭제
+
+      res.status(200).send({ message: "Account deleted successfully" });
+    } catch (err) {
+      res.status(500).send("Error executing query");
+      console.error("Error executing query: ", err);
+    } finally {
+      await connection.close(); // 연결 종료
+    }
+  } else {
+    res.status(500).send("Error connecting to database");
+  }
+});
+
+/** Get Token */
+router.get('/get-token', (req, res) => {
+  console.log("토큰전달준비완료");
+  if (!tokenStore) {
+    return res.status(400).json({ error: 'Token not found' });
+  }
+  res.json({ token: tokenStore });
+});
 
 module.exports = router;
