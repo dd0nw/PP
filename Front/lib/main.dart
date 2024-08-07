@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:front/memoPage.dart';
-import 'package:front/memoPage/memo_service.dart';
 import 'package:front/reportPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'api_service.dart'; // ApiService 정의된 파일 import
 
@@ -11,25 +10,26 @@ import 'Calendar.dart';
 import 'Listtile.dart';
 import 'bottomPage.dart';
 import 'mainPage.dart';
-import 'memoPage/memo.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MemoProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-        home: ReportPage(),
+      home: BluetoothGraphPage(),
     );
   }
 }
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 

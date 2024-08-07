@@ -3,7 +3,11 @@ const router = express.Router();
 const connectToOracle = require("../config/db");
 const AuthToken = require("../AuthToken");
 
+
+/** 메모 수정 및 정보 불러오기 */
+
 /** 메모 수정 */
+
 router.post("/memo", AuthToken, async (req, res) => {
   const id = req.user.id;
   const  memoContent  =req.body.ANALISYS_ETC; //flutter
