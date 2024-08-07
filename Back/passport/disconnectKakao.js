@@ -3,6 +3,7 @@ const axios = require('axios');
 async function disconnectKakao(accessToken) {
   const kakaoUnlinkUrl = 'https://kapi.kakao.com/v1/user/unlink';
   try {
+    console.log('Access Token:', accessToken); 
     const response = await axios.post(kakaoUnlinkUrl, null, {
       headers: {
         Authorization: `Bearer ${accessToken}`,

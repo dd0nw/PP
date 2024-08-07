@@ -3,6 +3,8 @@ const KakaoStrategy = require('passport-kakao').Strategy;
 const connectToOracle = require('../config/db');
 const jwt = require('jsonwebtoken');
 
+let kakaoAccessTokenStore = {}; 
+
 module.exports = () => {
   passport.use(new KakaoStrategy({
     clientID: process.env.KAKAO_CLIENT_ID,
@@ -53,7 +55,7 @@ VALUES (
       } else {
         console.log('Existing user:', user.rows[0]);
       }
-
+      kakaoAccessTokenStore[email] = accessToken;
       // JWT 토큰 생성
       const token = jwt.sign({ id: user.rows[0][0] }, process.env.JWT_SECRET, {
         expiresIn: '1d'
@@ -75,3 +77,4 @@ VALUES (
     done(null, obj);
   });
 };
+module.exports.kakaoAccessTokenStore = kakaoAccessTokenStore;
