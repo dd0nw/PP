@@ -3,7 +3,7 @@ const oracledb = require("oracledb");
 process.env.ORA_SDTZ = "Asia/Seoul";
 oracledb.autoCommit = true;
 
-oracledb.initOracleClient({ libDir: "C:/Users/PC/Desktop/instantclient_11_2" });
+oracledb.initOracleClient({ libDir: "C:/Users/smhrd/Desktop/instantclient_11_2" });
 
   const dbConfig = {
     user: process.env.DB_USER,

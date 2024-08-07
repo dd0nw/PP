@@ -15,21 +15,44 @@ module.exports = () => {
       const email = emails[0].value;
 
       let user = await connection.execute(
-        'SELECT * FROM TB_USER WHERE EMAIL = :email',
+        'SELECT * FROM TB_USER WHERE id = :email',
         { email }
       );
 
       if (user.rows.length === 0) {
         await connection.execute(
-          `INSERT INTO TB_USER (ID, EMAIL, NAME, PROVIDER) VALUES (:id, :email, :name, 'google')`,
-          { id, email, name: displayName }
+          `
+          INSERT INTO TB_USER (
+  ID, 
+  PW, 
+  NAME, 
+  BIRTHDATE, 
+  GENDER, 
+  HEIGHT, 
+  WEIGHT, 
+  JOINED_AT, 
+  PULSE
+) 
+VALUES (
+  :email, 
+  :id, 
+  :name, 
+  TO_DATE('2000-01-01', 'YYYY-MM-DD'), 
+  'male', 
+  180.0, 
+  75.0, 
+  SYSTIMESTAMP, 
+  70
+)
+          `,
+          { email:email, id:id, name: displayName }
         );
         await connection.commit();
         console.log('New user created:', { id, email, name: displayName });
 
         // 다시 조회하여 새로 생성된 유저 정보를 가져옴
         user = await connection.execute(
-          'SELECT * FROM TB_USER WHERE EMAIL = :email',
+          'SELECT * FROM TB_USER WHERE ID = :email',
           { email }
         );
       } else {
