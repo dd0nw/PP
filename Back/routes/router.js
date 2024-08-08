@@ -4,13 +4,12 @@ const userRoutes = require("./user");
 const analysisRoutes = require("./analysis");
 const resultRoutes = require("./result");
 const memoRoutes = require("./memo");
-const authRoutes = require("./auth");
 
 router.use("/user", userRoutes);
-router.use("/analysis", analysisRoutes);
+router.use("/", analysisRoutes);
 
 router.use("/", memoRoutes);
-router.use("/result", resultRoutes);
+router.use("/", resultRoutes);
 
 router.get("/", async (req, res) => {
   res.sendFile(__dirname + '/test.html');
