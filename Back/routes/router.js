@@ -5,9 +5,8 @@ const analysisRoutes = require("./analysis");
 const resultRoutes = require("./result");
 const memoRoutes = require("./memo");
 
-router.use("/user", userRoutes);
+router.use("/", userRoutes);
 router.use("/", analysisRoutes);
-
 router.use("/", memoRoutes);
 router.use("/", resultRoutes);
 

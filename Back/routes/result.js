@@ -19,7 +19,7 @@ async function getClobAsString(clob) {
   try {
     // CLOB 데이터 스트림을 읽습니다.
     const lobStream = clob;
-    let chunks = [];
+    let chunks = []; 
 
     lobStream.on('data', chunk => {
       chunks.push(chunk);
