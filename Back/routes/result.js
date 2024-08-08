@@ -1,29 +1,50 @@
 const express = require('express');
 const PDFDocument = require('pdfkit');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
-const connectToOracle = require('../config/db'); // 경로에 맞게 수정
+const connectToOracle = require('../config/db'); 
 const path = require('path');
 const AuthToken = require('../AuthToken');
-const fs = require('fs'); // 파일 시스템 모듈 추가
+const fs = require('fs'); 
 
 const router = express.Router();
 
-// CLOB 데이터를 문자열로 변환하는 함수
-async function clobToString(clob) {
-  if (!clob) return '';
+async function getClobAsString(clob) {
+  if (clob === null || clob === undefined) {
+    console.error('CLOB data is null or undefined');
+    return ' '; 
+  }
+
   let clobString = '';
-  return new Promise((resolve, reject) => {
-    clob.setEncoding('utf8');
-    clob.on('data', chunk => {
-      clobString += chunk;
+  
+  try {
+    // CLOB 데이터 스트림을 읽습니다.
+    const lobStream = clob;
+    let chunks = [];
+
+    lobStream.on('data', chunk => {
+      chunks.push(chunk);
     });
-    clob.on('end', () => {
-      resolve(clobString);
+
+    lobStream.on('end', () => {
+      clobString = Buffer.concat(chunks).toString();
     });
-    clob.on('error', err => {
-      reject(err);
+
+    lobStream.on('error', error => {
+      console.error('Error reading CLOB data:', error);
+      throw error;
     });
-  });
+
+    // 스트림이 끝날 때까지 기다립니다.
+    await new Promise((resolve, reject) => {
+      lobStream.on('end', resolve);
+      lobStream.on('error', reject);
+    });
+  } catch (error) {
+    console.error('Error processing CLOB data:', error);
+    throw error;
+  }
+
+  return clobString;
 }
 
 // ECG 데이터를 전송하는 엔드포인트 추가
@@ -120,19 +141,20 @@ async function generateECGChart(ecgData) {
 }
 
 /** 분석 결과를 pdf로 변환하고 다운로드 */
-router.post('/downloadPdf', AuthToken, async (req, res) => {
-  const userId = req.user.id;  // 여기서 userId로 변경
-
+router.post('/downloadPdf',  AuthToken, async (req, res) => {
+  const userId = req.user.id;
+  const {analysisId} = req.body;
+  console.log(analysisId)
   let connection;
   try {
     connection = await connectToOracle();
-
     const result = await connection.execute(
-       `SELECT ID, BG_AVG, BP_MIN, BP_MAX, PR, QT, RR, QRS, QR, CREATED_AT, ANALISYS_RESULT, ANALISYS_ETC, ECG
-        FROM TB_ANALYSIS
-        WHERE ID = :id`,
-       { id: userId }  // 여기서 userId 사용
+      `SELECT ID, BG_AVG, BP_MIN, BP_MAX, PR, QT, RR, QRS, CREATED_AT, ANALISYS_RESULT, ANALISYS_ETC, ECG
+       FROM TB_ANALYSIS
+       WHERE ANALYSIS_IDX = :analisys_idx`,
+      { analisys_idx: analysisId}
     );
+    
 
     if (result.rows.length === 0) {
       return res.status(404).send('Analysis not found');
@@ -147,21 +169,21 @@ router.post('/downloadPdf', AuthToken, async (req, res) => {
       pr,
       qt,
       rr,
-      qrs,
-      qr,
+      qrs, 
       analysisDate,
-      analysisResultClob,
-      analysisNotesClob,
+      ANALISYS_RESULT,
+      ANALISYS_ETC,
       ecg
     ] = analysisData;
 
+    
     // CLOB -> 문자열
-    const analysisResultText = await clobToString(analysisResultClob);
-    const analysisNotes = await clobToString(analysisNotesClob);
+    const analisysResultString = await getClobAsString(ANALISYS_RESULT);
+    const analisysEtcString = await getClobAsString(ANALISYS_ETC);
     const ecgData = ecg.split(',').map(Number);
-    console.log(ecgData)
 
-    const iconPath = path.join(__dirname, '../../Front/img/check.png'); 
+    const checkIconPath = path.join(__dirname, '../../Front/img/check.png'); 
+    const reportIconPath = path.join(__dirname, '../../Front/img/report.png')
     const boldFontPath = path.join(__dirname, '../../Front/fonts/NanumGothicBold.ttf');
 
     // pdf 만들기
@@ -200,35 +222,45 @@ router.post('/downloadPdf', AuthToken, async (req, res) => {
         fit: [pageWidth, imageHeight], // 이미지 크기를 페이지 너비에 맞게 조정
         align: 'center' // 가운데 정렬
       });
-      doc.moveDown(15);
+      doc.moveDown(10);
     } catch (err) {
       console.error('Error generating ECG chart:', err);
     }
 
+    doc.image(reportIconPath, doc.x, doc.y, {width: 25});
+
+    doc.font('NanumGothicBold')
+   .fontSize(20)
+   .fillColor('red')
+   .text(' 검사결과', doc.x + 25, doc.y);
+    doc.moveDown(1.5);
+
     // 검사결과 심박수 및 산소포화도
     // 아이콘을 그립니다.
-doc.image(iconPath, doc.x, doc.y, {width: 15});
+    doc.image(checkIconPath, doc.x, doc.y, {width: 15});
 
-// 아이콘의 높이를 계산합니다.
-const iconHeight = 15; // 아이콘의 높이 (픽셀)
+    // 아이콘의 높이를 계산합니다.
+    const iconHeight = 15; // 아이콘의 높이 (픽셀)
 
-// 텍스트의 y 좌표를 아이콘의 y 좌표와 일치하게 조정합니다.
-// 텍스트의 y 좌표는 아이콘의 중앙에 맞추기 위해 조정됩니다.
-const textY = doc.y + (iconHeight - 16) / 2 - 2; // 16은 텍스트의 폰트 크기
+    // 텍스트의 y 좌표를 아이콘의 y 좌표와 일치하게 조정합니다.
+    // 텍스트의 y 좌표는 아이콘의 중앙에 맞추기 위해 조정됩니다.
+    let textY = doc.y + (iconHeight - 16) / 2 - 2; // 16은 텍스트의 폰트 크기
+    let startX = doc.x
 
-doc.font('NanumGothicBold')
+    doc.font('NanumGothicBold')
    .fontSize(16)
    .fillColor('black')
-   .text('검사결과 심박수', doc.x + 25, textY);
+   .text('심박수', doc.x + 25, textY);
     doc.moveDown();
     doc.font('NanumGothic').fontSize(12).text(`평균 심박수: ${avgHeartRate} BPM`);
     doc.text(`최저 심박수: ${minHeartRate} BPM`);
     doc.text(`최고 심박수: ${maxHeartRate} BPM`);
     doc.moveDown(2);
 
+
     // 산소포화도 위치 조정
     doc.moveDown(); // 심박수와 산소포화도 사이의 간격을 추가
-    doc.image(iconPath, startX, doc.y, { width: 15 }); // 저장된 x 좌표를 사용
+    doc.image(checkIconPath, startX, doc.y, { width: 15 }); // 저장된 x 좌표를 사용
     textY = doc.y + (iconHeight - 16) / 2 - 2; // 새로운 textY 계산
     doc.font('NanumGothicBold')
         .fontSize(16)
@@ -236,35 +268,55 @@ doc.font('NanumGothicBold')
         .text('산소포화도', startX + 25, textY); // 저장된 x 좌표를 기준으로 텍스트 위치 계산
     doc.moveDown();
     doc.font('NanumGothic').fontSize(12).text(`HRV: ${rr} %`);
-    doc.moveDown();
+    doc.moveDown(2);
 
     // 심전도 섹션의 시작 좌표 설정
     const saveX = doc.x;
     const saveY = doc.y;
 
     // 심전도
-    doc.x = saveX + 300; // 심전도를 오른쪽으로 이동
-    doc.y = doc.page.margins.top;
+    doc.x = saveX + 250; // 심전도를 오른쪽으로 이동
+    doc.y = saveY - 193;
 
-    doc.fontSize(12).fillColor('black').text('심전도', { underline: true });
+    textY = doc.y + (iconHeight - 16) / 2 - 2; 
+
+    doc.image(checkIconPath, doc.x - 25, doc.y, { width: 15 });
+    doc.font('NanumGothicBold')
+        .fontSize(16)
+        .fillColor('black')
+        .text('심전도', doc.x, textY)
+
     doc.moveDown();
-    doc.fontSize(12).text(`PR Interval: ${pr} ms`);
+    doc.font('NanumGothic').fontSize(12).text(`PR Interval: ${pr} ms`);
     doc.text(`QT Interval: ${qt} ms`);
-    doc.text(`QR Interval: ${qr} ms`);
     doc.text(`RR Interval: ${rr} ms`);
     doc.text(`QRS Interval: ${qrs} ms`);
-    doc.moveDown();
+    doc.moveDown(2);
 
     // 분석 결과 및 메모
     doc.x = saveX; // X 좌표를 처음으로 되돌림
-    doc.y = saveY + 100; // Y 좌표를 아래로 이동
-    doc.fontSize(12).fillColor('black').text('분석 결과', { underline: true });
+    doc.y = saveY + 10; // Y 좌표를 아래로 이동
+
+    doc.image(checkIconPath, startX, doc.y, { width: 15 }); 
+    textY = doc.y + (iconHeight - 16) / 2 - 2; 
+
+    doc.font('NanumGothicBold')
+        .fontSize(16)
+        .fillColor('black')
+        .text('분석 결과', doc.x, textY);
     doc.moveDown();
-    doc.fontSize(12).text(analysisResultText);
+    doc.font('NanumGothic').fontSize(12).text(analisysResultString);
+    doc.moveDown(2);
+
+    doc.image(checkIconPath, startX, doc.y, { width: 15 }); 
+    textY = doc.y + (iconHeight - 16) / 2 - 2; 
+
+    doc.font('NanumGothicBold')
+        .fontSize(16)
+        .fillColor('black')
+        .text('분석 메모', doc.x, textY);
     doc.moveDown();
-    doc.fontSize(12).text('분석 메모', { underline: true });
-    doc.moveDown();
-    doc.fontSize(12).text(analysisNotes);
+    doc.font('NanumGothic').fontSize(12).text(analisysEtcString);
 
     doc.end();
   } catch (error) {
