@@ -9,7 +9,6 @@ const AuthToken = require("../AuthToken");
 
 const jwtSecret = process.env.JWT_SECRET;
 const cryptoSecret = process.env.CRYPTO_SECRET;
-const AuthToken = require('../AuthToken');
 const {disconnectKakao} = require('../passport/disconnectKakao');
 const { kakaoAccessTokenStore } = require('../passport/kakaoStrategy');
 
