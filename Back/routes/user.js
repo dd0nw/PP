@@ -403,4 +403,43 @@ router.post("/changePw", async (req, res) => {
     res.status(500).json({ success: false, error: error });
   }
 });
+
+/** 프로필 수정 */
+router.post("/profile", AuthToken, async (req, res) => {
+  console.log("A");
+  const id = req.user.id;
+  const { birthdate, gender, height, weight } = req.body;
+  console.log(req.body);
+
+  let connection;
+  console.log(id, birthdate, gender, height, weight);
+  try {
+    connection = await connectToOracle();
+
+    const result = await connection.execute(
+      `UPDATE TB_USER SET BIRTHDATE = :birthdate, GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id`,
+      {
+        birthdate: birthdate,
+        gender: gender,
+        height: height,
+        weight: weight,
+        id: id,
+      },
+      { autoCommit: true }
+    );
+
+    console.log("B", result);
+
+    if (result.rowsAffected > 0) {
+      res.status(200).json({ success: true, message: "프로필 변경 성공" });
+    } else {
+      res.status(500).json({ success: false, message: "프로필 변경 실패" });
+    }
+
+    await connection.close();
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;
