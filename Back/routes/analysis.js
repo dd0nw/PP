@@ -3,35 +3,85 @@ const router = express.Router();
 const connectToOracle = require("../config/db");
 const AuthToken = require("../AuthToken");
 
-async function convertClobToString(clob) {
+async function convertClobAsString(lob) {
   return new Promise((resolve, reject) => {
-    let clobData = '';
-    clob.setEncoding('utf8');
-    clob.on('data', (chunk) => {
-      clobData += chunk;
+    if (lob === null) {
+      return resolve(null);
+    }
+
+    let clobString = '';
+
+    lob.setEncoding('utf8');  // 인코딩을 설정합니다.
+
+    lob.on('data', (chunk) => {
+      clobString += chunk;  // 스트림 데이터를 읽어와 문자열로 결합합니다.
     });
-    clob.on('end', () => {
-      resolve(clobData);
+
+    lob.on('end', () => {
+      resolve(clobString);  // 모든 데이터를 읽은 후 문자열을 반환합니다.
     });
-    clob.on('error', (err) => {
-      reject(err);
+
+    lob.on('error', (err) => {
+      reject(err);  // 오류 발생 시 Promise를 거부합니다.
     });
   });
 }
 
+
 /** 부정맥 발생 의심 목록 불러오기 */
-// 데이터 날짜 거꾸로 정렬해야함
 router.post("/analysis", AuthToken, async (req, res) => {
   const id = req.user.id;
+  const date = req.body.createdAt;
   const connection = await connectToOracle();
+  console.log(req.body);
   if (connection) {
     try {
       const result = await connection.execute(
-        "SELECT * FROM TB_ANALYSIS WHERE ID = :id ORDER BY CREATED_AT DESC",
-        { id }
+        `SELECT 
+          analysis_idx, 
+          id, 
+          bg_avg,
+          TO_CHAR(created_at, 'HH24:MI:SS') as created_at, 
+          TO_CHAR(created_at, 'YYYY/MM/DD HH24:MI:SS') AS fulldate, 
+          pr, 
+          qt, 
+          rr, 
+          qrs, 
+          ANALISYS_RESULT,
+          ANALISYS_ETC,
+          ECG 
+        FROM tb_analysis 
+        WHERE TO_CHAR(CREATED_AT, 'YYYY/MM/DD')=(:create_at) AND ID=:id 
+        ORDER BY CREATED_AT DESC`,
+
+        { create_at: date, id: id }
       );
-      res.status(200).json(result.rows);
-      console.log(result.rows);
+
+      const rows = result.rows;
+      const convertedRows = [];
+
+      for (let row of rows) {
+        const convertedRow = {
+          ANALYSIS_IDX: row[0],
+          ID: row[1],
+          BG_AVG: row[2],
+          CREATED_AT: row[3],
+          FULLDATE: row[4],
+          PR: row[4],
+          QT: row[5],
+          RR: row[6],
+          QRS: row[7],
+          ANALISYS_RESULT: row[8],
+          ANALISYS_ETC : await convertClobAsString(row[9]),
+          ECG : await convertClobAsString(row[10])
+        };
+        console.log(convertedRow)
+        convertedRows.push(convertedRow);
+      }
+      
+      
+      res.status(200).json(convertedRows);
+      console.log(convertedRows);
       await connection.close();
     } catch (err) {
       res.status(500).send("Error executing query");
