@@ -36,5 +36,5 @@ const router = require("./routes/router");
 app.use("/", router);
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running at http://192.168.219.228:${port}`);
 });

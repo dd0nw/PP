@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/recordPage.dart';
+import 'package:front/recordPage/recordPage.dart';
 import 'dashPage.dart';
 
 

@@ -4,17 +4,16 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const connectToOracle = require("../config/db");
-const sendmail  = require('../config/email');
+const sendmail = require("../config/email");
 const AuthToken = require("../AuthToken");
 
 const jwtSecret = process.env.JWT_SECRET;
 const cryptoSecret = process.env.CRYPTO_SECRET;
-const AuthToken = require('../AuthToken');
-const {disconnectKakao} = require('../passport/disconnectKakao');
-const { kakaoAccessTokenStore } = require('../passport/kakaoStrategy');
+const { disconnectKakao } = require("../passport/disconnectKakao");
+const { kakaoAccessTokenStore } = require("../passport/kakaoStrategy");
 
 /////////////////////////////////////////
-let tokenStore = ''; // 토큰을 저장할 메모리 저장소
+let tokenStore = ""; // 토큰을 저장할 메모리 저장소
 ///////////////////////////////////////////
 
 /** 암호화 함수 AES-256-CBC 알고리즘 사용*/
@@ -95,7 +94,7 @@ router.post("/register", async (req, res) => {
           weight: weight,
           heartrate: heartRate,
         },
-        {autoCommit:true}
+        { autoCommit: true }
       );
       res.status(200).send({ auth: true });
     } catch (err) {
@@ -109,20 +108,20 @@ router.post("/register", async (req, res) => {
   }
 });
 ///////////////////////////////////////////////
-router.get('/get-token', (req, res) => {
+router.get("/get-token", (req, res) => {
   console.log("토큰전달준비완료");
   if (!tokenStore) {
-    return res.status(400).json({ error: 'Token not found' });
+    return res.status(400).json({ error: "Token not found" });
   }
   res.json({ token: tokenStore });
 }); //session storage에 저장한뒤 토큰 전달하는 엔드포인트
 ////////////////////////////////////////////////
 
 // 로그아웃
-router.post('/logout', AuthToken, async (req, res) => {
+router.post("/logout", AuthToken, async (req, res) => {
   console.log("Logging out");
   const userId = req.user.id;
-  
+
   // 메모리 저장소에서 액세스 토큰 가져오기
   const accessToken = kakaoAccessTokenStore[userId];
 
@@ -138,12 +137,11 @@ router.post('/logout', AuthToken, async (req, res) => {
   }
 
   // 토큰 저장소 초기화
-  tokenStore = ''; // 메모리 저장소에서 JWT 토큰 삭제
+  tokenStore = ""; // 메모리 저장소에서 JWT 토큰 삭제
   delete kakaoAccessTokenStore[userId]; // 메모리 저장소에서 액세스 토큰 삭제
-  
+
   res.status(200).send({ auth: false, token: null, message: "Logged out" });
 });
-
 
 /** 회원탈퇴 */
 router.post("/delete-account", AuthToken, async (req, res) => {
@@ -151,24 +149,20 @@ router.post("/delete-account", AuthToken, async (req, res) => {
   const connection = await connectToOracle();
   if (connection) {
     try {
-
       // 사용자 정보 삭제 전 관련된 데이터 삭제
-      await connection.execute(
-        "DELETE FROM TB_ALARM WHERE ID = :id",
-        { id: userId }
-      );
-      await connection.execute(
-        "DELETE FROM TB_METADATA WHERE ID = :id",
-        { id: userId }
-      );
+      await connection.execute("DELETE FROM TB_ALARM WHERE ID = :id", {
+        id: userId,
+      });
+      await connection.execute("DELETE FROM TB_METADATA WHERE ID = :id", {
+        id: userId,
+      });
       await connection.execute(
         "DELETE FROM VERIFICATION_CODES WHERE ID = :id",
         { id: userId }
       );
-      await connection.execute(
-        "DELETE FROM TB_ANALYSIS WHERE ID = :id",
-        { id: userId }
-      );
+      await connection.execute("DELETE FROM TB_ANALYSIS WHERE ID = :id", {
+        id: userId,
+      });
 
       // 사용자 정보 삭제
       const result = await connection.execute(
@@ -177,7 +171,7 @@ router.post("/delete-account", AuthToken, async (req, res) => {
       );
 
       await connection.commit(); // 변경 사항 커밋
-      tokenStore = ''; // 메모리 저장소에서 토큰 삭제
+      tokenStore = ""; // 메모리 저장소에서 토큰 삭제
 
       res.status(200).send({ message: "Account deleted successfully" });
     } catch (err) {
@@ -192,34 +186,33 @@ router.post("/delete-account", AuthToken, async (req, res) => {
 });
 
 /** Get Token */
-router.get('/get-token', (req, res) => {
+router.get("/get-token", (req, res) => {
   console.log("토큰전달준비완료");
   if (!tokenStore) {
-    return res.status(400).json({ error: 'Token not found' });
+    return res.status(400).json({ error: "Token not found" });
   }
   res.json({ token: tokenStore });
 });
 
-
 /** 이메일 코드 전송(중복 검사 포함) */
-router.post('/checkId', async (req, res) => {
+router.post("/checkId", async (req, res) => {
   const email = req.body.id;
-  const code = crypto.randomBytes(3).toString('hex');
+  const code = crypto.randomBytes(3).toString("hex");
 
   const mailOptions = {
     to: email,
-    subject: 'PULSEPULSE 인증 코드',
-    text: `인증코드는 ${code} 입니다.`
+    subject: "PULSEPULSE 인증 코드",
+    text: `인증코드는 ${code} 입니다.`,
   };
 
   try {
-    console.log(email, code)
+    console.log(email, code);
     const connection = await connectToOracle();
 
     const result = await connection.execute(
       `SELECT * FROM TB_USER WHERE ID = :id`,
-      {id: email}
-    )
+      { id: email }
+    );
 
     const now = new Date();
     if (result.rows.length > 0) {
@@ -229,7 +222,7 @@ router.post('/checkId', async (req, res) => {
         return res.status(500).send("이미 존재하는 이메일");
       }
     } else {
-      console.log("d")
+      console.log("d");
       await connection.execute(
         `MERGE INTO tb_verification_codes vc
         USING (SELECT :id AS id FROM dual) d
@@ -239,80 +232,82 @@ router.post('/checkId', async (req, res) => {
         WHEN NOT MATCHED THEN
         INSERT (id, code, created_at, expires_at)
         VALUES (:id, :code, :now, :expires_at)`,
-      {
-        id: email,
-        code: code,
-        now: now,
-        expires_at: new Date(now.getTime() + 5 * 60000)
-      },
-      {autoCommit: true}
+        {
+          id: email,
+          code: code,
+          now: now,
+          expires_at: new Date(now.getTime() + 5 * 60000),
+        },
+        { autoCommit: true }
       );
 
-      console.log(mailOptions)
+      console.log(mailOptions);
       await connection.close();
 
-      const emailResponse = await sendmail.sendmail(mailOptions.to, mailOptions.subject, mailOptions.text);
+      const emailResponse = await sendmail.sendmail(
+        mailOptions.to,
+        mailOptions.subject,
+        mailOptions.text
+      );
 
-      transporter.sendEmail(mailOptions, (error, info) =>{
-        if(error) {
+      transporter.sendEmail(mailOptions, (error, info) => {
+        if (error) {
           return res.status(500).send(error.toString());
         }
         res.status(200).send("이메일 전송: " + info.response);
       });
     }
-  } catch {
-  }
+  } catch {}
 });
 
 /** 코드 확인 */
-router.post('/verifyCode', async(req, res) => {
-  const {email, code} = req.body;
+router.post("/verifyCode", async (req, res) => {
+  const { email, code } = req.body;
   try {
     const connection = await oracleDB.getConnection();
     const result = await connection.execute(
       `SELECT CODE FROM VERIFICATION_CODES WHERE EMAIL = : eamil AND CODE = :code AND EXPIRES_AT > CURRENT_TIMESTAMP`,
-      {email: email, code: code}
+      { email: email, code: code }
     );
     connection.close();
 
     if (result.rows.length > 0) {
-      res.status(200).send('코드 전송 성공');
+      res.status(200).send("코드 전송 성공");
     } else {
-      res.status(400).send('코드 전송 실패');
+      res.status(400).send("코드 전송 실패");
     }
-  } catch(err) {
-    console.error('디비 오류', err);
-    res.status(500).send('db 오류');
+  } catch (err) {
+    console.error("디비 오류", err);
+    res.status(500).send("db 오류");
   }
 });
 
 /** 아이디 찾기 */
-router.post('/findId', async (req, res) => {
-  const {birthday, name} = req.body;
-  console.log(birthday, name)
+router.post("/findId", async (req, res) => {
+  const { birthday, name } = req.body;
+  console.log(birthday, name);
   try {
     const connection = await connectToOracle();
     const result = await connection.execute(
       `SELECT id FROM TB_USER WHERE NAME = :name AND BIRTHDATE = TO_DATE(:birthday, 'YYYY/MM/DD HH24:MI:SS')`,
-      {name: name, birthday: birthday}
+      { name: name, birthday: birthday }
     );
-    
-    console.log(result.rows)
+
+    console.log(result.rows);
     connection.close();
 
-    if(result.rows.length > 0 ) {
-      res.json({success: true, id: result.rows[0][0]});
+    if (result.rows.length > 0) {
+      res.json({ success: true, id: result.rows[0][0] });
     } else {
-      res.json({success: false, message: '일치하는 사용자가 없습니다'});
+      res.json({ success: false, message: "일치하는 사용자가 없습니다" });
     }
-
-  } catch (error){
-      res.status(500).json({success: false, message: '아이디 찾기 실패'})
+  } catch (error) {
+    res.status(500).json({ success: false, message: "아이디 찾기 실패" });
   }
-})
+});
 
 /** 비밀번호 찾기 - 임시 비밀번호 발송 */
-router.post('/findPw', async (req, res) => {
+router.post("/findPw", async (req, res) => {
   const generateRandomCode = () => {
     return Math.random().toString(36).slice(-8);
   };
@@ -322,8 +317,8 @@ router.post('/findPw', async (req, res) => {
 
   const mailOptions = {
     to: email,
-    subject: 'PULSEPULSE 임시 비밀번호',
-    text: `임시 비밀번호는 ${pw} 입니다.`
+    subject: "PULSEPULSE 임시 비밀번호",
+    text: `임시 비밀번호는 ${pw} 입니다.`,
   };
 
   let connection;
@@ -338,7 +333,11 @@ router.post('/findPw', async (req, res) => {
 
     if (result.rows.length > 0) {
       try {
-        const emailResponse = await sendmail.sendmail(mailOptions.to, mailOptions.subject, mailOptions.text);
+        const emailResponse = await sendmail.sendmail(
+          mailOptions.to,
+          mailOptions.subject,
+          mailOptions.text
+        );
 
         const hashedPw = bcrypt.hashSync(pw, 10);
 
@@ -349,64 +348,59 @@ router.post('/findPw', async (req, res) => {
         );
 
         if (result2.rowsAffected > 0) {
-          return res.status(200).send('임시 비밀번호 발급 성공');
+          return res.status(200).send("임시 비밀번호 발급 성공");
         } else {
-          return res.status(500).send('임시 비밀번호 발급 실패');
+          return res.status(500).send("임시 비밀번호 발급 실패");
         }
       } catch (emailError) {
         return res.status(500).send(emailError.toString());
       }
     } else {
-      return res.status(404).send('사용자를 찾을 수 없습니다.');
+      return res.status(404).send("사용자를 찾을 수 없습니다.");
     }
-  } catch {
-  } 
+  } catch {}
 });
 
 /** 비밀번호 변경 */
-router.post('/changePw', async(req, res) => {
-  console.log("click")
-  const {id, forwardpw, backwardpw} = req.body;
+router.post("/changePw", async (req, res) => {
+  console.log("click");
+  const { id, forwardpw, backwardpw } = req.body;
 
-  console.log(id, forwardpw, backwardpw)
+  console.log(id, forwardpw, backwardpw);
 
   let connection;
 
-  try{
+  try {
     connection = await connectToOracle();
 
     const result = await connection.execute(
       `SELECT pw from TB_USER WHERE id = :id`,
-      {id : id}
+      { id: id }
     );
-    console.log("결과",result.rows[0][0])
+    console.log("결과", result.rows[0][0]);
 
     const matchPw = bcrypt.compareSync(forwardpw, result.rows[0][0]);
-    console.log(matchPw)
+    console.log(matchPw);
 
     if (matchPw) {
-      console.log('a')
+      console.log("a");
       result2 = await connection.execute(
         `UPDATE TB_USER SET PW = :backwardpw WHERE ID = :id`,
-        {backwardpw: backwardpw, id: id},
-        {autoCommit: true}
-      )
-      console.log(result2.rowsAffected)
+        { backwardpw: backwardpw, id: id },
+        { autoCommit: true }
+      );
+      console.log(result2.rowsAffected);
 
-      if(result2.rowsAffected > 0) {
-        res.status(200).json({success: true, message: "비밀번호 변경 성공"})
-      } 
-
+      if (result2.rowsAffected > 0) {
+        res.status(200).json({ success: true, message: "비밀번호 변경 성공" });
+      }
     } else {
-      res.status(500).json({success: false, message: "비밀번호가 일치하지 않습니다"})
+      res
+        .status(500)
+        .json({ success: false, message: "비밀번호가 일치하지 않습니다" });
     }
-  } catch(error) {
-    res.status(500).json({success: false, error: error})
+  } catch (error) {
+    res.status(500).json({ success: false, error: error });
   }
-  
-
-
-
-  
-})
+});
 module.exports = router;

@@ -9,7 +9,7 @@ const memoRoutes = require("./memo");
 const authRoutes = require("./auth");
 
 router.use("/user", userRoutes);
-router.use("/analysis", analysisRoutes);
+router.use("/", analysisRoutes);
 
 router.use("/", memoRoutes);
 router.use("/result", resultRoutes);

@@ -4,12 +4,24 @@ const jwtSecret = process.env.JWT_SECRET;
 
 function AuthToken(req, res, next) {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; //;Bearer 토큰 형식
-  if (token == null) return res.sendStatus(401); // 토큰이 없는 경우
+  const token = authHeader && authHeader.split(" ")[1]; // Assuming 'Bearer <token>' format
 
-  jwt.verify(token, jwtSecret, (err, user) => {
-    if (err) return res.sendStatus(403); // 토큰이 유효하지 않은 경우
-    req.user = user; // 토큰에서 디코딩된 사용자 정보를 req.user에 저장
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  jwt.verify(token, jwtSecret, (err, decoded) => {
+    if (err) {
+      console.error("Failed to authenticate token:", err.message);
+      if (err.name === "TokenExpiredError") {
+        return res.status(403).json({ message: "Token expired" });
+      } else {
+        return res
+          .status(403)
+          .json({ message: "Failed to authenticate token" });
+      }
+    }
+    req.user = decoded; // Decoded user information from token
     next();
   });
 }
