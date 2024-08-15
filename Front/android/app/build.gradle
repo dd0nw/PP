@@ -43,6 +43,8 @@ android {
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
         minSdk = 21
+        targetSdk = 34
+//        resValue "string", "GOOGLE_MAP_KEY", GoogleMapKey
     }
 
     buildTypes {

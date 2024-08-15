@@ -1,35 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:front/reportPage.dart';
+import 'package:front/dart2Page.dart';
+import 'package:front/reportPage/reportPage.dart';
+import 'package:front/setting.dart';
+import 'package:front/setting2.dart';
+import 'package:front/userinfo_birth.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import 'LoginPage.dart';
+import 'alarm.dart';
 import 'api_service.dart'; // ApiService 정의된 파일 import
-
-import 'Calendar.dart';
-import 'Listtile.dart';
 import 'bottomPage.dart';
-import 'mainPage.dart';
+import 'bt.dart';
+import 'dashPage.dart';
+import 'ecg_chart.dart';
+import 'ecg_graph.dart';
+
+import 'ex.dart';
+import 'ex01_login.dart';
+import 'hosipitalmap.dart';
+import 'join.dart';
+import 'joinPage.dart';
+import 'map.dart';
+import 'memo2page/memo2Page.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => MemoProvider()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: BluetoothGraphPage(),
+      home: MapPage(),
+      // routes: {
+      //   '/report': (context) => const ReportPage(),
+      // },
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -40,12 +53,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  // flutter - Node.js 연결
   final ApiService apiService = ApiService();
   String _text = '변경되기 전!';
-  //final String _url = "http://192.168.219.49:3000";
-
   int _counter = 0;
 
   void _incrementCounter() {
@@ -54,18 +63,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // flutter - Node.js 연결
-  Future<void> _fetchData() async {
-    try {
-      String data = await apiService.fetchData();
-      setState(() {
-        _text = data;
-      });
-    } catch (e) {
-      print('Failed to fetch data: $e');
-    }
-  }
-
+  // Future<void> _fetchData() async {
+  //   try {
+  //     // Assuming fetchData is a method in ApiService that fetches some data
+  //     String data = await apiService.fetchData();
+  //     setState(() {
+  //       _text = data;
+  //     });
+  //   } catch (e) {
+  //     print('Failed to fetch data: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +96,115 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _fetchData,
+        onPressed: (){},
         child: Icon(Icons.add),
       ),
     );
   }
 }
+
+
+//
+//
+// import 'package:flutter/material.dart';
+// import 'authservice.dart';
+//
+// void main() => runApp(MyApp());
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Login Demo',
+//       home: LoginPage(),
+//     );
+//   }
+// }
+//
+// class LoginPage extends StatelessWidget {
+//   final AuthService _authService = AuthService();
+//
+//   void _loginWithKakao(BuildContext context) {
+//     _authService.loginWithKakao();
+//   }
+//
+//   void _loginWithGoogle(BuildContext context) {
+//     _authService.loginWithGoogle();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Login Demo')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             ElevatedButton(
+//               onPressed: () => _loginWithKakao(context),
+//               child: Text('Login with Kakao'),
+//             ),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () => _loginWithGoogle(context),
+//               child: Text('Login with Google'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+//
+//
+// import 'package:flutter/material.dart';
+// import 'authservice.dart';
+//
+// void main() => runApp(MyApp());
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Login Demo',
+//       home: LoginPage(),
+//     );
+//   }
+// }
+//
+// class LoginPage extends StatelessWidget {
+//   final AuthService _authService = AuthService();
+//
+//   void _loginWithKakao(BuildContext context) {
+//     _authService.loginWithKakao();
+//   }
+//
+//   void _loginWithGoogle(BuildContext context) {
+//     _authService.loginWithGoogle();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Login Demo')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             ElevatedButton(
+//               onPressed: () => _loginWithKakao(context),
+//               child: Text('Login with Kakao'),
+//             ),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () => _loginWithGoogle(context),
+//               child: Text('Login with Google'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

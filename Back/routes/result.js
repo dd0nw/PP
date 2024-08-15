@@ -5,19 +5,18 @@ const connectToOracle = require('../config/db');
 const path = require('path');
 const AuthToken = require('../AuthToken');
 const fs = require('fs'); 
+const sharp = require("sharp");
 
 const router = express.Router();
 
 async function getClobAsString(clob) {
   if (clob === null || clob === undefined) {
-    console.error('CLOB data is null or undefined');
     return ' '; 
   }
 
   let clobString = '';
   
   try {
-    // CLOB 데이터 스트림을 읽습니다.
     const lobStream = clob;
     let chunks = []; 
 
@@ -30,65 +29,60 @@ async function getClobAsString(clob) {
     });
 
     lobStream.on('error', error => {
-      console.error('Error reading CLOB data:', error);
       throw error;
     });
 
-    // 스트림이 끝날 때까지 기다립니다.
     await new Promise((resolve, reject) => {
       lobStream.on('end', resolve);
       lobStream.on('error', reject);
     });
   } catch (error) {
-    console.error('Error processing CLOB data:', error);
     throw error;
   }
 
   return clobString;
 }
 
-// ECG 데이터를 전송하는 엔드포인트 추가
-router.post('/ecg-data', AuthToken, async (req, res) => {
-  const id = req.user.id;
-  console.log("전송준비");
-  let connection;
+async function getBlobAsBase64(lob) {
+  return new Promise((resolve, reject) => {
+    if (!lob) {
+      return resolve(null);
+    }
+
+    const chunks = [];
+
+    lob.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+
+    lob.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+      const base64String = buffer.toString('base64');
+      resolve(base64String);
+    });
+
+    lob.on('error', (err) => {
+      reject(err);
+    });
+  });
+}
+
+function decodeBase64ToNumberArray(base64String) {
   try {
-    connection = await connectToOracle();
-
-    const result = await connection.execute(
-        `SELECT ECG FROM TB_ANALYSIS WHERE ID = :id`,
-        { id }
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).send('Analysis not found');
-    }
-
-    const ecgData = result.rows[0][0];
-    res.json({ ecgData });
+    const buffer = Buffer.from(base64String, 'base64');
+    const floatArray = new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT);
+    return Array.from(floatArray).map(num => parseFloat(num.toFixed(3)));
   } catch (error) {
-    console.error('Error processing request:', error);
-    res.status(500).send('Error processing request');
-  } finally {
-    if (connection) {
-      console.log("전송준비완");
-      try {
-        await connection.close();
-      } catch (err) {
-        console.error('Error closing connection:', err);
-      }
-    }
+    return [];
   }
-});
+}
 
-// ECG 그래프 생성 함수
 async function generateECGChart(ecgData) {
-  const width = 800;
-  const height = 200;
+  const width = 1200;
+  const height = 400;
   const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
 
-  // x축 레이블을 1초마다 표시하도록 설정
-  const labels = ecgData.map((_, index) => (index % 188 === 0 ? (index / 188).toFixed(0) : ''));
+  const labels = ecgData.map((_, index) => (index).toString());
 
   const configuration = {
     type: 'line',
@@ -97,7 +91,7 @@ async function generateECGChart(ecgData) {
       datasets: [{
         data: ecgData,
         borderColor: 'rgba(255, 0, 0, 1)',
-        borderWidth: 1,
+        borderWidth: 2,
         fill: false,
         tension: 0,
         showLine: true,
@@ -109,85 +103,140 @@ async function generateECGChart(ecgData) {
       scales: {
         x: { 
           display: true,
+          grid: {
+            display: false,
+            drawBorder: false,
+          },
           ticks: {
-            autoSkip: false, 
-            maxRotation: 0,
-            callback: function(value, index, values) {
-              return labels[index]; 
-            }
+            display: false,
+            autoSkip: false,
+            maxRotation: 0, 
+            minRotation: 0,
           },
           title: {
-            display: true,
-            text: 'Time (seconds)',
+            display: false,
           },
         },
         y: { 
           display: true,
+          grid: {
+            display: false
+          },
+          ticks: {
+            display: false,
+            autoSkip: false,
+            maxRotation: 0, 
+            minRotation: 0,
+          },
           title: {
-            display: true,
-            text: 'Amplitude',
+            display: false,
           },
         },
       },
       plugins: {
         legend: {
-          display: false // 범례를 비활성화합니다.
+          display: false
         },
       },
+      elements: {
+        line: {
+          borderWidth: 2,
+          borderColor: 'rgba(105, 105, 105, 1)',
+          borderDash: [],
+        },
+      }
     },
   };
-
   return await chartJSNodeCanvas.renderToBuffer(configuration);
 }
 
-/** 분석 결과를 pdf로 변환하고 다운로드 */
-router.post('/downloadPdf',  AuthToken, async (req, res) => {
+function getMaxValueFromResult(resultString) {
+  const regex = /([A-Z/]): (\d+\.\d+)/g;
+  let match;
+  const values = {};
+
+  while ((match = regex.exec(resultString)) !== null) {
+    values[match[1]] = parseFloat(match[2]);
+  }
+
+  if (Object.keys(values).length === 0) {
+    return 'No valid data found';
+  }
+
+  const maxKey = Object.keys(values).reduce((a, b) => values[a] > values[b] ? a : b);
+  const maxValue = values[maxKey].toFixed(4);
+
+  const messages = {
+    'N': `정상 심박수(Normal beats)`,
+    'R': `우각차단(Right bundle branch block) 가능성 있음`,
+    'L': `좌각차단(Left bundle branch block) 가능성 있음`,
+    'V': `심실 이소성 박동 및 심실 조기 수축(Ventricular ectopic beats and ventricular premature contraction) 가능성 있음`,
+    '/': `인공 심박 조율기 박동(paced beat) 가능성 있음`
+  };
+
+  return messages[maxKey] || `알 수 없는 항목: ${maxValue}`;
+}
+
+router.post('/downloadPdf', AuthToken, async (req, res) => {
   const userId = req.user.id;
-  const {analysisId} = req.body;
-  console.log(analysisId)
+  const { analysisId } = req.body;
   let connection;
+
   try {
     connection = await connectToOracle();
-    const result = await connection.execute(
-      `SELECT ID, BG_AVG, BP_MIN, BP_MAX, PR, QT, RR, QRS, CREATED_AT, ANALISYS_RESULT, ANALISYS_ETC, ECG
+
+    const analysisResult = await connection.execute(
+      `SELECT ID, BP_AVG, PR, QT, RR, QRS, SUBSTR(TO_CHAR(CREATED_AT, 'YYYY/MM/DD HH24:MI:SS'), 1, 16) , ANALISYS_RESULT, ANALISYS_ETC, ECG
        FROM TB_ANALYSIS
        WHERE ANALYSIS_IDX = :analisys_idx`,
-      { analisys_idx: analysisId}
+      { analisys_idx: analysisId }
     );
-    
 
-    if (result.rows.length === 0) {
+
+    if (analysisResult.rows.length === 0) {
       return res.status(404).send('Analysis not found');
     }
 
-    const analysisData = result.rows[0];
+    const analysisData = analysisResult.rows[0];
     const [
       id,
       avgHeartRate,
-      minHeartRate,
-      maxHeartRate,
       pr,
       qt,
       rr,
-      qrs, 
+      qrs,
       analysisDate,
       ANALISYS_RESULT,
       ANALISYS_ETC,
       ecg
     ] = analysisData;
 
-    
-    // CLOB -> 문자열
-    const analisysResultString = await getClobAsString(ANALISYS_RESULT);
-    const analisysEtcString = await getClobAsString(ANALISYS_ETC);
-    const ecgData = ecg.split(',').map(Number);
 
-    const checkIconPath = path.join(__dirname, '../../Front/img/check.png'); 
-    const reportIconPath = path.join(__dirname, '../../Front/img/report.png')
+    const analisysResultString = await getClobAsString(ANALISYS_RESULT);
+    const maxAnalysisResult = getMaxValueFromResult(analisysResultString);
+
+    const userResult = await connection.execute(
+      `SELECT NAME, TO_CHAR(BIRTHDATE, 'YYYY/MM/DD'), GENDER, HEIGHT, WEIGHT FROM TB_USER WHERE ID = :userId`,
+      { userId: userId }
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).send('User not found');
+    }
+
+    const [name, birthdate, gender, height, weight] = userResult.rows[0];
+
+    const analisysEtcString = await getClobAsString(ANALISYS_ETC);
+
+    const ecgBase64 = await getBlobAsBase64(ecg);
+    const ecgData = decodeBase64ToNumberArray(ecgBase64);
+
+    const checkIconPath = path.join(__dirname, '../../Front/img/check.png');
+    const reportIconPath = path.join(__dirname, '../../Front/img/report.png');
+    const reportIcon = path.join(__dirname, '../../Front/img/report_modified.png');
     const boldFontPath = path.join(__dirname, '../../Front/fonts/NanumGothicBold.ttf');
 
-    // pdf 만들기
-    const doc = new PDFDocument({ size: 'A4',  margin: 50 });
+    const doc = new PDFDocument({ size: 'A4', margin: 50 });
     const fontPath = path.join(__dirname, '../../Front/fonts/NanumGothic.ttf');
     doc.registerFont('NanumGothic', fontPath);
     doc.registerFont('NanumGothicBold', boldFontPath);
@@ -199,135 +248,120 @@ router.post('/downloadPdf',  AuthToken, async (req, res) => {
     doc.on('end', () => {
       pdfBuffer = Buffer.concat(chunks);
       const filePath = path.join(__dirname, `../uploads/analysis_${userId}.pdf`);
-      fs.writeFileSync(filePath, pdfBuffer); // PDF 파일을 서버의 로컬 디렉토리에 저장
+      fs.writeFileSync(filePath, pdfBuffer);
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'attachment; filename=analysis.pdf');
       res.send(pdfBuffer);
     });
 
-    // pdf 내용
-    doc.fontSize(20).fillColor('black').text(`${id}님 리포트`, { align: 'center' });
+    doc.fontSize(20).font('NanumGothicBold').fillColor('black').text(`${name}님 리포트`, { align: 'center' });
     doc.moveDown();
 
-    doc.fontSize(14).fillColor('black').text(`검사 일시: ${new Date(analysisDate).toLocaleString()}`, { align: 'center' });
-    doc.moveDown();
+    doc.fontSize(14).font('NanumGothic').fillColor('black').text(`생년월일 : ${birthdate}   성별 : ${gender}   키: ${height}   몸무게: ${weight}`, { align: 'center' });
     doc.moveDown();
 
-    // ECG 그래프 추가
+    doc.fontSize(14).fillColor('black').text(`검사 일시: ${analysisDate}`, { align: 'center' });
+    doc.moveDown(1);
+
+    doc.fontSize(12).fillColor('red').text('리드 II');
+
     try {
       const ecgChartBuffer = await generateECGChart(ecgData);
       const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
-      const imageHeight = 200; // 원하는 이미지 높이
+      const imageHeight = 200;
       doc.image(ecgChartBuffer, doc.page.margins.left, doc.y, {
-        fit: [pageWidth, imageHeight], // 이미지 크기를 페이지 너비에 맞게 조정
-        align: 'center' // 가운데 정렬
+        fit: [pageWidth, imageHeight],
+        align: 'center'
       });
-      doc.moveDown(10);
+      doc.moveDown(15);
     } catch (err) {
-      console.error('Error generating ECG chart:', err);
     }
 
-    doc.image(reportIconPath, doc.x, doc.y, {width: 25});
+    try {
+      await sharp(reportIconPath)
+        .tint({ r: 253, g: 0, b: 27 })
+        .toFile(reportIcon);
+      doc.image(reportIcon, doc.x, doc.y, { width: 25 });
+    } catch (err) {
+    }
 
     doc.font('NanumGothicBold')
-   .fontSize(20)
-   .fillColor('red')
-   .text(' 검사결과', doc.x + 25, doc.y);
-    doc.moveDown(1.5);
+       .fontSize(20)
+       .fillColor('#fd001b')
+       .text(' 검사결과', doc.x + 25, doc.y);
+    doc.moveDown(1);
 
-    // 검사결과 심박수 및 산소포화도
-    // 아이콘을 그립니다.
-    doc.image(checkIconPath, doc.x, doc.y, {width: 15});
+    let startX = doc.x;
+    let startY = doc.y;
+    
+    // 분석 결과
+    doc.image(checkIconPath, startX, doc.y + 12, { width: 15 });
 
-    // 아이콘의 높이를 계산합니다.
-    const iconHeight = 15; // 아이콘의 높이 (픽셀)
-
-    // 텍스트의 y 좌표를 아이콘의 y 좌표와 일치하게 조정합니다.
-    // 텍스트의 y 좌표는 아이콘의 중앙에 맞추기 위해 조정됩니다.
-    let textY = doc.y + (iconHeight - 16) / 2 - 2; // 16은 텍스트의 폰트 크기
-    let startX = doc.x
+    let iconHeight = 15;
 
     doc.font('NanumGothicBold')
-   .fontSize(16)
-   .fillColor('black')
-   .text('심박수', doc.x + 25, textY);
+      .fontSize(16)
+      .fillColor('black')
+      .text('분석 결과', startX + 25, startY + 10);
     doc.moveDown();
-    doc.font('NanumGothic').fontSize(12).text(`평균 심박수: ${avgHeartRate} BPM`);
-    doc.text(`최저 심박수: ${minHeartRate} BPM`);
-    doc.text(`최고 심박수: ${maxHeartRate} BPM`);
+    doc.font('NanumGothic').fontSize(12).text(maxAnalysisResult);
     doc.moveDown(2);
 
-
-    // 산소포화도 위치 조정
-    doc.moveDown(); // 심박수와 산소포화도 사이의 간격을 추가
-    doc.image(checkIconPath, startX, doc.y, { width: 15 }); // 저장된 x 좌표를 사용
-    textY = doc.y + (iconHeight - 16) / 2 - 2; // 새로운 textY 계산
-    doc.font('NanumGothicBold')
-        .fontSize(16)
-        .fillColor('black')
-        .text('산소포화도', startX + 25, textY); // 저장된 x 좌표를 기준으로 텍스트 위치 계산
-    doc.moveDown();
-    doc.font('NanumGothic').fontSize(12).text(`HRV: ${rr} %`);
-    doc.moveDown(2);
-
-    // 심전도 섹션의 시작 좌표 설정
-    const saveX = doc.x;
-    const saveY = doc.y;
+    let textY = doc.y + (iconHeight - 16) / 2 - 2;
 
     // 심전도
-    doc.x = saveX + 250; // 심전도를 오른쪽으로 이동
-    doc.y = saveY - 193;
+    doc.image(checkIconPath, startX, textY + 10, { width: 15 });
 
-    textY = doc.y + (iconHeight - 16) / 2 - 2; 
+    textY = doc.y + (iconHeight - 16) / 2 -2;
 
-    doc.image(checkIconPath, doc.x - 25, doc.y, { width: 15 });
     doc.font('NanumGothicBold')
-        .fontSize(16)
-        .fillColor('black')
-        .text('심전도', doc.x, textY)
+      .fontSize(16)
+      .fillColor('black')
+      .text('심전도', startX + 25, textY + 9);
 
     doc.moveDown();
-    doc.font('NanumGothic').fontSize(12).text(`PR Interval: ${pr} ms`);
-    doc.text(`QT Interval: ${qt} ms`);
-    doc.text(`RR Interval: ${rr} ms`);
-    doc.text(`QRS Interval: ${qrs} ms`);
+    doc.font('NanumGothic').fontSize(12);
+
+    doc.text(`PR Interval: ${pr} ms`, startX + 25, doc.y);
+    doc.text(`QT Interval: ${qt} ms`, startX + 275, doc.y - 14);
+
+    doc.text(`RR Interval: ${rr} ms`, startX + 25, doc.y + 10);
+    doc.text(`QRS Interval: ${qrs} ms`, startX + 275, doc.y - 14);
+
     doc.moveDown(2);
 
-    // 분석 결과 및 메모
-    doc.x = saveX; // X 좌표를 처음으로 되돌림
-    doc.y = saveY + 10; // Y 좌표를 아래로 이동
-
-    doc.image(checkIconPath, startX, doc.y, { width: 15 }); 
-    textY = doc.y + (iconHeight - 16) / 2 - 2; 
-
+    // 심박수
+    doc.image(checkIconPath, startX, doc.y, { width: 15 });
+    textY = doc.y + (iconHeight - 16) / 2 - 2;
     doc.font('NanumGothicBold')
-        .fontSize(16)
-        .fillColor('black')
-        .text('분석 결과', doc.x, textY);
+      .fontSize(16)
+      .fillColor('black')
+      .text('심박수', startX + 25, textY);
     doc.moveDown();
-    doc.font('NanumGothic').fontSize(12).text(analisysResultString);
+    doc.font('NanumGothic').fontSize(12).text(`평균 심박수: ${avgHeartRate} BPM`);
     doc.moveDown(2);
 
-    doc.image(checkIconPath, startX, doc.y, { width: 15 }); 
-    textY = doc.y + (iconHeight - 16) / 2 - 2; 
+    
+    doc.moveDown(2);
 
+    // 분석 메모
+    doc.image(checkIconPath, startX, doc.y, { width: 15 });
+    textY = doc.y + (iconHeight - 16) / 2 - 2;
     doc.font('NanumGothicBold')
-        .fontSize(16)
-        .fillColor('black')
-        .text('분석 메모', doc.x, textY);
+      .fontSize(16)
+      .fillColor('black')
+      .text('분석 메모', startX + 25, textY);
     doc.moveDown();
     doc.font('NanumGothic').fontSize(12).text(analisysEtcString);
 
     doc.end();
   } catch (error) {
-    console.error('Error processing request:', error);
     res.status(500).send('Error processing request');
   } finally {
     if (connection) {
       try {
         await connection.close();
       } catch (err) {
-        console.error('Error closing connection:', err);
       }
     }
   }

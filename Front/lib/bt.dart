@@ -108,7 +108,18 @@ class _BluetoothGraphPageState extends State<BluetoothGraphPage> {
 
   void _addDataPoint(int data) {
     setState(() {
+      if (dataPoints.length >= 180) {
+        // 180개가 넘으면 첫 번째 데이터를 삭제하고, 나머지를 앞으로 이동
+        dataPoints.removeAt(0);
+      }
+
+      // 새로운 데이터를 끝에 추가
       dataPoints.add(FlSpot(time.toDouble(), data.toDouble()));
+
+      // X축 값을 0부터 다시 계산하도록 함
+      for (int i = 0; i < dataPoints.length; i++) {
+        dataPoints[i] = FlSpot(i.toDouble(), dataPoints[i].y);
+      }
       time++;
     });
   }
@@ -131,15 +142,15 @@ class _BluetoothGraphPageState extends State<BluetoothGraphPage> {
             : LineChart(
           LineChartData(
             minX: 0,
-            maxX: time.toDouble() > 20 ? time.toDouble() : 20,
+            maxX: 180, // X축 범위를 0에서 180으로 고정
             minY: 0,
-            maxY: 1024, // 조도 센서 값의 최대 범위
+            maxY: 350, // Y축 범위를 0에서 500으로 설정
             lineBarsData: [
               LineChartBarData(
                 spots: dataPoints.isNotEmpty ? dataPoints : [FlSpot(0, 0)], // 초기 값 설정
                 isCurved: true,
-                color: Colors.blue, // colors를 color로 수정
-                barWidth: 4,
+                color: Colors.black,
+                barWidth: 1,
                 isStrokeCapRound: true,
                 dotData: FlDotData(show: false),
                 belowBarData: BarAreaData(show: false),

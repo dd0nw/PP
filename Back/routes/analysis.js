@@ -27,6 +27,74 @@ async function convertClobAsString(lob) {
   });
 }
 
+// BLOB을 Base64로 변환하는 함수
+async function getBlobAsBase64(lob) {
+  return new Promise((resolve, reject) => {
+    if (!lob) {
+      return resolve(null);
+    }
+
+    const chunks = [];
+
+    lob.on('data', (chunk) => {
+      chunks.push(chunk);  // 데이터를 배열에 추가
+    });
+
+    lob.on('end', () => {
+      const buffer = Buffer.concat(chunks);  // 버퍼로 결합
+      const base64String = buffer.toString('base64');  // Base64로 인코딩
+      resolve(base64String);
+    });
+
+    lob.on('error', (err) => {
+      reject(err);
+    });
+  });
+}
+
+// Base64 문자열을 소수점 3자리까지의 숫자 배열로 변환하는 함수
+function decodeBase64ToNumberArray(base64String) {
+  try {
+    // Base64 문자열을 버퍼로 변환
+    const buffer = Buffer.from(base64String, 'base64');
+    
+    // 버퍼를 Float64Array로 변환
+    const floatArray = new Float64Array(buffer.buffer, buffer.byteOffset, buffer.length / Float64Array.BYTES_PER_ELEMENT);
+    
+    // 각 요소를 소수점 3자리까지 반올림하여 배열로 반환
+    return Array.from(floatArray).map(num => parseFloat(num.toFixed(3)));
+  } catch (error) {
+    console.error('Error decoding Base64 string:', error);
+    return [];
+  }
+}
+
+function getMaxValueFromResult(resultString) {
+  const regex = /([A-Z/]): (\d+\.\d+)/g;
+  let match;
+  const values = {};
+
+  while ((match = regex.exec(resultString)) !== null) {
+    values[match[1]] = parseFloat(match[2]);
+  }
+
+  if (Object.keys(values).length === 0) {
+    return 'No valid data found';
+  }
+
+  const maxKey = Object.keys(values).reduce((a, b) => values[a] > values[b] ? a : b);
+  const maxValue = values[maxKey].toFixed(4);
+
+  const messages = {
+    'N': `정상 심박수`,
+    'R': `심방세동`,
+    'L': `심실빈맥:`,
+    'V': `심실 조기 수축`,
+    '/': `인공 심박 조율기 박동`
+  };
+
+  return messages[maxKey] || `알 수 없는 항목: ${maxValue}`;
+}
 
 /** 부정맥 발생 의심 목록 불러오기 */
 router.post("/analysis", AuthToken, async (req, res) => {
@@ -40,7 +108,7 @@ router.post("/analysis", AuthToken, async (req, res) => {
         `SELECT 
           analysis_idx, 
           id, 
-          bg_avg,
+          bp_avg,
           TO_CHAR(created_at, 'HH24:MI:SS') as created_at, 
           TO_CHAR(created_at, 'YYYY/MM/DD HH24:MI:SS') AS fulldate, 
           pr, 
@@ -57,28 +125,31 @@ router.post("/analysis", AuthToken, async (req, res) => {
         { create_at: date, id: id }
       );
 
+
       const rows = result.rows;
       const convertedRows = [];
 
       for (let row of rows) {
+        const ecgBase64 = await getBlobAsBase64(row[11]);
+        const ecgNumberArray = decodeBase64ToNumberArray(ecgBase64);
+
         const convertedRow = {
           ANALYSIS_IDX: row[0],
           ID: row[1],
-          BG_AVG: row[2],
+          BP_AVG: row[2],
           CREATED_AT: row[3],
           FULLDATE: row[4],
-          PR: row[4],
-          QT: row[5],
-          RR: row[6],
-          QRS: row[7],
-          ANALISYS_RESULT: row[8],
-          ANALISYS_ETC : await convertClobAsString(row[9]),
-          ECG : await convertClobAsString(row[10])
+          PR: row[5],
+          QT: row[6],
+          RR: row[7],
+          QRS: row[8],
+          ANALISYS_RESULT: getMaxValueFromResult(await convertClobAsString(row[9])),
+          ANALISYS_ETC: await convertClobAsString(row[10]),
+          ECG: ecgNumberArray
         };
-        console.log(convertedRow)
+        console.log(convertedRow);
         convertedRows.push(convertedRow);
       }
-      
       
       res.status(200).json(convertedRows);
       console.log(convertedRows);
@@ -92,44 +163,53 @@ router.post("/analysis", AuthToken, async (req, res) => {
   }
 });
 
-/** 부정맥 결과지 */
-router.post('/analysisResult', AuthToken, async(req, res) => {
-  const createdAt = req.body.createdAt;
-  const id = req.user.id;
-  const connection = await connectToOracle();
-  console.log(createdAt, id)
+let notificationSent = false;
 
+// 데이터베이스 변경 확인 함수
+async function checkForUpdates() {
+  let connection;
   try {
+    connection = await connectToOracle();
+
+    // 1초 전의 시간을 계산하여 현재 시간과 비교합니다.
     const result = await connection.execute(
-      `SELECT bg_avg, bp_min, bp_max, pr, qt, qr, rr, qrs, analisys_result, analisys_etc, ecg FROM TB_ANALYSIS WHERE ID = :id AND CREATED_AT = :createdAt`,
-      {id: id, createdAt: createdAt}
+      `SELECT * FROM tb_analysis WHERE modified_at > SYSDATE - INTERVAL '6' SECOND`
+    
     );
     if (result.rows.length > 0) {
-      const [bg_avg, bp_min, bp_max, pr, qt, qr, rr, qrs, analisys_result, analisys_etc, ecg] = result.rows[0];
-  
-      const analisysResultString = await convertClobToString(analisys_result);
-      const analisysEtcString = await convertClobToString(analisys_etc);
-  
-      res.status(200).json({
-        bg_avg,
-        bp_min,
-        bp_max,
-        pr,
-        qt,
-        qr,
-        rr,
-        qrs,
-        analisys_result: analisysResultString,
-        analisys_etc: analisysEtcString,
-        ecg
-      });
+      console.log('Data changed - sending notification');
+      await sendNotificationToFlutter();
     } else {
-      res.status(404).json({ message: 'No data found' });
     }
-  } catch (error) {
-    console.error('Error executing query:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+  } catch (err) {
+    console.error('Error checking for updates:', err);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error('Error closing connection:', err);
+      }
+    }
   }
-});
+}
+
+// Flutter 애플리케이션에 알림 전송 함수
+async function sendNotificationToFlutter() {
+  try {
+    await fetch('http://10.0.2.2:3000/notify', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: 'Data changed' }),
+    });
+  } catch (err) {
+    console.error('Error sending notification to Flutter:', err);
+  }
+}
+
+setInterval(checkForUpdates, 6000);
+
 
 module.exports = router;
