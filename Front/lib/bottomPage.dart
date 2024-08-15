@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:front/recordPage/recordPage.dart';
+import 'package:front/setting2.dart';
+import 'dart2Page.dart';
+import 'dashPage.dart';
 
-import 'mainPage.dart';
 
 class BottomPage extends StatefulWidget {
   const BottomPage({super.key});
@@ -12,7 +15,7 @@ class BottomPage extends StatefulWidget {
 class _BottomPageState extends State<BottomPage> {
 
   int index = 0; // 화면을 관리 인덱스
-  List<Widget> pageList = [MainPage(), Report(), Setting()]; //화면클래스 리스트
+  List<Widget> pageList = [dashPage(), recordPage(), setting()]; //화면클래스 리스트
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class _BottomPageState extends State<BottomPage> {
         onTap: onItemTap,  // 여러개의 화면과 bottom버튼 연결
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.monitor_heart), label: '실시간'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_chart), label: '보고서'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_chart), label: '기록'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: '설정'),
         ],
 
@@ -44,7 +47,6 @@ class _BottomPageState extends State<BottomPage> {
       index = i;
     });
   }
-
 
 } // stf클래스의 범위
 

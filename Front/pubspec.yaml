@@ -30,8 +30,30 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.2                # node.js연결
-  provider: ^6.1.2            # 메모
+  http: ^1.2.2 # node.js연결
+  provider: ^6.1.2 # 메모
+
+  flutter_blue_plus: ^1.32.11
+  fl_chart: ^0.68.0
+  permission_handler: ^11.3.1
+  date_picker_plus: ^4.1.0 # 달력~
+  intl: ^0.17.0 # 날짜형식변경~
+  jwt_decoder: ^2.0.1 # JWX토큰
+  flutter_secure_storage: ^9.2.2 #html에서 로컬스토리지에 저장한 토큰값 가져오기
+  geolocator: ^12.0.0 # 병원지도
+  google_maps_flutter: ^2.9.0  # 구글 맵
+  location: ^7.0.0 # 사용자 위치
+  google_sign_in: ^6.2.1 # 구글로그인
+  kakao_flutter_sdk: ^1.9.5 # 카카오로그인
+  # flutter_appauth: ^6.0.7
+  # flutter_webview_plugin: ^0.4.0
+  # webview_flutter: ^4.8.0
+  path_provider: ^2.1.4 # PDF파일열어보기
+  open_filex: ^4.4.0 # PDF파일열어보기
+  pdf: ^3.11.1
+  url_launcher: ^6.3.0
+  uni_links2: ^0.6.0+2
+  font_awesome_flutter: ^10.7.0
 
 
 

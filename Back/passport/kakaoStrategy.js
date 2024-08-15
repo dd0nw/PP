@@ -56,6 +56,7 @@ VALUES (
         console.log('Existing user:', user.rows[0]);
       }
       kakaoAccessTokenStore[email] = accessToken;
+      console.log(user.rows)
       // JWT 토큰 생성
       const token = jwt.sign({ id: user.rows[0][0] }, process.env.JWT_SECRET, {
         expiresIn: '1d'

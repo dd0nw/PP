@@ -1,0 +1,4 @@
+<!-- android/app/src/main/res/values/strings.xml -->
+<resources>
+    <string name="googleMapsApiKey">AIzaSyBC6yUNs3yom9zPNGod3GyLWFdTzPsslhc</string>
+</resources>
