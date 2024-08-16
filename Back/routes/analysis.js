@@ -196,7 +196,6 @@ async function checkForUpdates() {
     const result = await connection.execute(
       `SELECT * FROM tb_analysis WHERE modified_at > SYSDATE - INTERVAL '6' SECOND`
     );
-    console.log(result.rows.length);
     if (result.rows.length > 0) {
       console.log("Data changed - sending notification");
       await sendNotificationToFlutter();

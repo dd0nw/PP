@@ -152,6 +152,13 @@ async function generateECGChart(ecgData) {
           borderDash: [],
         },
       },
+      elements: {
+        line: {
+          borderWidth: 2,
+          borderColor: "rgba(105, 105, 105, 1)",
+          borderDash: [],
+        },
+      },
     },
   };
   return await chartJSNodeCanvas.renderToBuffer(configuration);
@@ -195,7 +202,7 @@ router.post("/downloadPdf", AuthToken, async (req, res) => {
     connection = await connectToOracle();
 
     const analysisResult = await connection.execute(
-      `SELECT ID, BP_AVG, PR, QT, RR, QRS, SUBSTR(TO_CHAR(CREATED_AT, 'YYYY/MM/DD HH24:MI:SS'), 1, 16) , ANALISYS_RESULT, ANALISYS_ETC, ECG
+      `SELECT ID, BP_AVG, rr_min, rr_max, rr_avg, rr_std, SUBSTR(TO_CHAR(CREATED_AT, 'YYYY/MM/DD HH24:MI:SS'), 1, 16) , ANALISYS_RESULT, ANALISYS_ETC, ECG
        FROM TB_ANALYSIS
        WHERE ANALYSIS_IDX = :analisys_idx`,
       { analisys_idx: analysisId }

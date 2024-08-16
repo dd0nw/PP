@@ -168,3 +168,109 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+//
+//
+// import 'package:flutter/material.dart';
+// import 'authservice.dart';
+//
+// void main() => runApp(MyApp());
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Login Demo',
+//       home: LoginPage(),
+//     );
+//   }
+// }
+//
+// class LoginPage extends StatelessWidget {
+//   final AuthService _authService = AuthService();
+//
+//   void _loginWithKakao(BuildContext context) {
+//     _authService.loginWithKakao();
+//   }
+//
+//   void _loginWithGoogle(BuildContext context) {
+//     _authService.loginWithGoogle();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Login Demo')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             ElevatedButton(
+//               onPressed: () => _loginWithKakao(context),
+//               child: Text('Login with Kakao'),
+//             ),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () => _loginWithGoogle(context),
+//               child: Text('Login with Google'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+//
+//
+// import 'package:flutter/material.dart';
+// import 'authservice.dart';
+//
+// void main() => runApp(MyApp());
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Login Demo',
+//       home: LoginPage(),
+//     );
+//   }
+// }
+//
+// class LoginPage extends StatelessWidget {
+//   final AuthService _authService = AuthService();
+//
+//   void _loginWithKakao(BuildContext context) {
+//     _authService.loginWithKakao();
+//   }
+//
+//   void _loginWithGoogle(BuildContext context) {
+//     _authService.loginWithGoogle();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Login Demo')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             ElevatedButton(
+//               onPressed: () => _loginWithKakao(context),
+//               child: Text('Login with Kakao'),
+//             ),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () => _loginWithGoogle(context),
+//               child: Text('Login with Google'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

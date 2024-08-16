@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
         ///////////////////
         tokenStore = token; //로그인할때 전달 토큰 변수에 토큰 할당
         ////////////////////
-        res.status(200).json({ auth: true, token: token });
+        res.status(200).send({ auth: true, token: token });
       } else {
         res.status(404).json("No user found");
       }
@@ -410,7 +410,6 @@ router.post("/profile", AuthToken, async (req, res) => {
       },
       { autoCommit: true }
     );
-    console.log(result2.rowsAffected);
 
     if (result.rowsAffected > 0) {
       res.status(200).json({ success: true, message: "프로필 변경 성공" });
@@ -448,44 +447,6 @@ router.post("/infoUpdate", AuthToken, async (req, res) => {
     }
   } else {
     res.status(500).json({ message: "db 연결 실패" });
-  }
-});
-
-/** 프로필 수정 */
-router.post("/profile", AuthToken, async (req, res) => {
-  console.log("A");
-  const id = req.user.id;
-  const { birthdate, gender, height, weight } = req.body;
-  console.log(req.body);
-
-  let connection;
-  console.log(id, birthdate, gender, height, weight);
-  try {
-    connection = await connectToOracle();
-
-    const result = await connection.execute(
-      `UPDATE TB_USER SET BIRTHDATE = :birthdate, GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id`,
-      {
-        birthdate: birthdate,
-        gender: gender,
-        height: height,
-        weight: weight,
-        id: id,
-      },
-      { autoCommit: true }
-    );
-
-    console.log("B", result);
-
-    if (result.rowsAffected > 0) {
-      res.status(200).json({ success: true, message: "프로필 변경 성공" });
-    } else {
-      res.status(500).json({ success: false, message: "프로필 변경 실패" });
-    }
-
-    await connection.close();
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
   }
 });
 

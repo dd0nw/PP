@@ -1,4 +1,5 @@
 //ecg ppg같이 시도했으나 ecg, ppg 각각 하나씩만 받아올 수 있는 화면;;
+// 메인(실시간)화면
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
