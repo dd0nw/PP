@@ -4,7 +4,9 @@ const connectToOracle = require("../config/db");
 const AuthToken = require("../AuthToken");
 const admin = require('../controllers/push-notifications.controller');
 const axios = require("axios")
+require('dotenv').config()
 
+const TARGET_TOKEN = process.env.TARGET_TOKEN
 
 async function convertClobAsString(lob) {
   return new Promise((resolve, reject) => {
@@ -213,8 +215,7 @@ setInterval(checkForUpdates, 6000);
 
 // 푸시 알림 전송 엔드포인트
 router.get("/push_send", function (req, res, next) {
-  let target_token =
-    "fs8n1QmvQNCLReyHBVBDCq:APA91bGbU0Lqh58Lysb8Hv3Md1Fg7LRtVXl23h6R3C39lyMADtKZDqVk6beS9QtpO9x_AKbESpzhWk2BGeaJYoGjibAo5mmeITwv_MBZDjDmo0TmVLee1lhu3pJbnqEBeaufVH3cSL_5";
+  let target_token = TARGET_TOKEN;
 
   let message = {
     data: {
