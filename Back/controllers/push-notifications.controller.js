@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // // 알림
 // var admin = require("firebase-admin");
 // var fcm = require("fcm-notification");
@@ -43,8 +42,6 @@
 //   }
 // };
 
-=======
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 const admin = require("firebase-admin");
 
 let serAccount = require("../config/push-notification-key.json");
