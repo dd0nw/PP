@@ -186,7 +186,7 @@ router.post('/downloadPdf', AuthToken, async (req, res) => {
     connection = await connectToOracle();
 
     const analysisResult = await connection.execute(
-      `SELECT ID, BP_AVG, PR, QT, RR, QRS, SUBSTR(TO_CHAR(CREATED_AT, 'YYYY/MM/DD HH24:MI:SS'), 1, 16) , ANALISYS_RESULT, ANALISYS_ETC, ECG
+      `SELECT ID, BP_AVG, rr_min, rr_max, rr_avg, rr_std, SUBSTR(TO_CHAR(CREATED_AT, 'YYYY/MM/DD HH24:MI:SS'), 1, 16) , ANALISYS_RESULT, ANALISYS_ETC, ECG
        FROM TB_ANALYSIS
        WHERE ANALYSIS_IDX = :analisys_idx`,
       { analisys_idx: analysisId }
@@ -201,10 +201,10 @@ router.post('/downloadPdf', AuthToken, async (req, res) => {
     const [
       id,
       avgHeartRate,
-      pr,
-      qt,
-      rr,
-      qrs,
+      rr_min,
+      rr_max,
+      rr_avg,
+      rr_std,
       analysisDate,
       ANALISYS_RESULT,
       ANALISYS_ETC,
@@ -309,7 +309,7 @@ router.post('/downloadPdf', AuthToken, async (req, res) => {
 
     let textY = doc.y + (iconHeight - 16) / 2 - 2;
 
-    // 심전도
+    // RR
     doc.image(checkIconPath, startX, textY + 10, { width: 15 });
 
     textY = doc.y + (iconHeight - 16) / 2 -2;
@@ -317,16 +317,16 @@ router.post('/downloadPdf', AuthToken, async (req, res) => {
     doc.font('NanumGothicBold')
       .fontSize(16)
       .fillColor('black')
-      .text('심전도', startX + 25, textY + 9);
+      .text('RR', startX + 25, textY + 9);
 
     doc.moveDown();
     doc.font('NanumGothic').fontSize(12);
 
-    doc.text(`PR Interval: ${pr} ms`, startX + 25, doc.y);
-    doc.text(`QT Interval: ${qt} ms`, startX + 275, doc.y - 14);
+    doc.text(`RR MIN Interval: ${rr_min} ms`, startX + 25, doc.y);
+    doc.text(`RR MAX Interval: ${rr_max} ms`, startX + 275, doc.y - 14);
 
-    doc.text(`RR Interval: ${rr} ms`, startX + 25, doc.y + 10);
-    doc.text(`QRS Interval: ${qrs} ms`, startX + 275, doc.y - 14);
+    doc.text(`RR AVG Interval: ${rr_avg} ms`, startX + 25, doc.y + 10);
+    doc.text(`RR STD Interval: ${rr_std} ms`, startX + 275, doc.y - 14);
 
     doc.moveDown(2);
 
