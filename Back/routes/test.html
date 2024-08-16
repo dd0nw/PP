@@ -201,7 +201,7 @@
             });
 
         document
-            .getElementById("logout")
+            .getElementById("logout")   
             .addEventListener("click", async function () {
                 const token = localStorage.getItem("token");
                 const response = await fetch("http://localhost:3000/user/logout", {
