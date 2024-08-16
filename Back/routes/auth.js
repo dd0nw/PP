@@ -2,6 +2,14 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const axios = require('axios');
+require('dotenv').config();
+
+const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
+const KAKAO_CALLBACK_URL = process.env.KAKAO_CALLBACK_URL
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL
+
 
 // 로그 미들웨어
 const logMiddleware = (req, res, next) => {
@@ -25,8 +33,8 @@ router.get('/kakao/callback', async (req, res, next) => {
       {
         params: {
           grant_type: 'authorization_code',
-          client_id: 'e05b6c085a959c7d6bd778fa7d4b5a0e', // 여기에 카카오 클라이언트 ID를 입력하세요.
-          redirect_uri: 'http://192.168.219.161:3000/auth/kakao/callback',
+          client_id: KAKAO_CLIENT_ID, 
+          redirect_uri: KAKAO_CALLBACK_URL,
           code: code,
         },
         headers: {
@@ -61,9 +69,9 @@ router.get('/google/callback', async (req, res, next) => {
       'https://oauth2.googleapis.com/token',
       new URLSearchParams({
         code: code,
-        client_id: '616087438747-ung3nfv8jhg81uilk4bvjs5jbc8aln6o.apps.googleusercontent.com', // 여기에 구글 클라이언트 ID를 입력하세요.
-        client_secret: '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', // 여기에 구글 클라이언트 시크릿을 입력하세요.
-        redirect_uri: 'http://192.168.219.161:3000/auth/google/callback',
+        client_id: GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET, 
+        redirect_uri: GOOGLE_CALLBACK_URL,
         grant_type: 'authorization_code',
       }),
       {
@@ -82,6 +90,14 @@ router.get('/google/callback', async (req, res, next) => {
     console.error('Error fetching token from Google:', error);
     res.redirect('/');
   }
+});
+
+router.get('/gg',(req,res)=>{
+  const gg = req.quergy.gg
+  if(gg!=1){
+    return res.status(400).json({ error: 'gg=not 1' });
+  }
+  res.json({gg:'google'});
 });
 
 
