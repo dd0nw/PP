@@ -5,10 +5,10 @@ const AuthToken = require("../AuthToken");
 const admin = require("../controllers/push-notifications.controller"); // Firebase Admin 모듈
 const axios = require("axios");
 require("dotenv").config();
-const FCM = require("fcm-node");
+// const FCM = require("fcm-node");
 
 const TARGET_TOKEN = process.env.TARGET_TOKEN;
-const fcm = new FCM(process.env.FCM_SERVER_KEY); // FCM 서버 키를 환경 변수에서 가져옵니다.
+// const fcm = new FCM(process.env.FCM_SERVER_KEY); // FCM 서버 키를 환경 변수에서 가져옵니다.
 
 // CLOB을 문자열로 변환하는 함수
 async function convertClobAsString(lob) {

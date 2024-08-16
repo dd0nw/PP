@@ -9,7 +9,7 @@ const memoRoutes = require("./memo");
 const AuthRoutes = require("./auth");
 const hospitalRoutes = require("./hospitals");
 // 알림
-const pushNotificationController = require("../controllers/push-notifications.controller.js");
+// const pushNotificationController = require("../controllers/push-notifications.controller.js");
 
 router.use("/user", userRoutes);
 router.use("/", analysisRoutes);

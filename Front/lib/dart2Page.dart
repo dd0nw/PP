@@ -1,6 +1,7 @@
 // 그래프 이쁘게 나오고 ... 쉿 //
 import 'dart:async';
 import 'dart:math';
+// 메인(실시간)화면
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -236,6 +237,8 @@ class _dashPageState extends State<dashPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            //Icon(Icons.favorite),
+                            //Flexible(child: Image.asset("/heart.png", fit: BoxFit.fill,width: 5,)),
                             Icon(Icons.favorite, color: Colors.pink, size: 50,),
                             SizedBox(width: 8,),
                             Column(
@@ -266,6 +269,7 @@ class _dashPageState extends State<dashPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            //Image.asset("img/O2.PNG", width: 50, height: 50,),
                             Icon(Icons.water_drop, color: Colors.indigo,size: 50,),
                             SizedBox(width: 1,),
                             Column(
@@ -291,7 +295,7 @@ class _dashPageState extends State<dashPage> {
                           ///////////////////////////////그래프 ///////////
                           Container(
                             alignment: Alignment.center,
-                            height: 330,
+                            height: 340,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: Colors.black, // 배경색을 검은색으로 설정 연분홍색 Color(0xFFFFE4E1)
@@ -312,7 +316,7 @@ class _dashPageState extends State<dashPage> {
                                 minX: 0,
                                 maxX: 180, // X축 범위를 0에서 180으로 고정
                                 minY: 0,
-                                maxY: 370, // Y축 범위를 0에서 350으로 설정
+                                maxY: 300, // Y축 범위를 0에서 350으로 설정
                                 titlesData: FlTitlesData(show: false), // X축과 Y축의 수치를 숨김
                                 lineBarsData: [
                                   LineChartBarData(
