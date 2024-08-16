@@ -2,12 +2,15 @@ const express = require("express");
 const router = express.Router();
 const connectToOracle = require("../config/db");
 const AuthToken = require("../AuthToken");
-const admin = require("../controllers/push-notifications.controller");
+const admin = require("../controllers/push-notifications.controller"); // Firebase Admin 모듈
 const axios = require("axios");
 require("dotenv").config();
+const FCM = require("fcm-node");
 
 const TARGET_TOKEN = process.env.TARGET_TOKEN;
+const fcm = new FCM(process.env.FCM_SERVER_KEY); // FCM 서버 키를 환경 변수에서 가져옵니다.
 
+// CLOB을 문자열로 변환하는 함수
 async function convertClobAsString(lob) {
   return new Promise((resolve, reject) => {
     if (lob === null) {
@@ -16,18 +19,18 @@ async function convertClobAsString(lob) {
 
     let clobString = "";
 
-    lob.setEncoding("utf8"); // 인코딩을 설정합니다.
+    lob.setEncoding("utf8");
 
     lob.on("data", (chunk) => {
-      clobString += chunk; // 스트림 데이터를 읽어와 문자열로 결합합니다.
+      clobString += chunk;
     });
 
     lob.on("end", () => {
-      resolve(clobString); // 모든 데이터를 읽은 후 문자열을 반환합니다.
+      resolve(clobString);
     });
 
     lob.on("error", (err) => {
-      reject(err); // 오류 발생 시 Promise를 거부합니다.
+      reject(err);
     });
   });
 }
@@ -42,12 +45,12 @@ async function getBlobAsBase64(lob) {
     const chunks = [];
 
     lob.on("data", (chunk) => {
-      chunks.push(chunk); // 데이터를 배열에 추가
+      chunks.push(chunk);
     });
 
     lob.on("end", () => {
-      const buffer = Buffer.concat(chunks); // 버퍼로 결합
-      const base64String = buffer.toString("base64"); // Base64로 인코딩
+      const buffer = Buffer.concat(chunks);
+      const base64String = buffer.toString("base64");
       resolve(base64String);
     });
 
@@ -60,17 +63,12 @@ async function getBlobAsBase64(lob) {
 // Base64 문자열을 소수점 3자리까지의 숫자 배열로 변환하는 함수
 function decodeBase64ToNumberArray(base64String) {
   try {
-    // Base64 문자열을 버퍼로 변환
     const buffer = Buffer.from(base64String, "base64");
-
-    // 버퍼를 Float64Array로 변환
     const floatArray = new Float64Array(
       buffer.buffer,
       buffer.byteOffset,
       buffer.length / Float64Array.BYTES_PER_ELEMENT
     );
-
-    // 각 요소를 소수점 3자리까지 반올림하여 배열로 반환
     return Array.from(floatArray).map((num) => parseFloat(num.toFixed(3)));
   } catch (error) {
     console.error("Error decoding Base64 string:", error);
@@ -132,7 +130,6 @@ router.post("/analysis", AuthToken, async (req, res) => {
         FROM tb_analysis 
         WHERE TO_CHAR(CREATED_AT, 'YYYY/MM/DD')=(:create_at) AND ID=:id 
         ORDER BY CREATED_AT DESC`,
-
         { create_at: date, id: id }
       );
 
@@ -176,14 +173,26 @@ router.post("/analysis", AuthToken, async (req, res) => {
 
 /////////////////////알림
 
-// 푸시 알림 전송 함수
+// 푸시 알림 전송 함수 (fcm-node 사용)
 async function sendNotificationToFlutter() {
-  try {
-    const response = await axios.get("http://localhost:3000/push_send");
-    console.log("Notification send response:", response.data);
-  } catch (err) {
-    console.error("Error sending notification:", err);
-  }
+  const message = {
+    to: TARGET_TOKEN, // 타겟 디바이스의 FCM 토큰
+    notification: {
+      title: "테스트 데이터 발송",
+      body: "데이터가 잘 가나요?",
+    },
+    data: {
+      style: "굳굳",
+    },
+  };
+
+  fcm.send(message, function (err, response) {
+    if (err) {
+      console.error("Error sending notification:", err);
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
 }
 
 // 데이터베이스 변경 확인 함수
@@ -220,26 +229,10 @@ setInterval(checkForUpdates, 6000);
 
 // 푸시 알림 전송 엔드포인트
 router.get("/push_send", function (req, res, next) {
-  let target_token = TARGET_TOKEN;
-
-  let message = {
-    data: {
-      title: "테스트 데이터 발송",
-      body: "데이터가 잘 가나요?",
-      style: "굳굳",
-    },
-    token: target_token,
-  };
-  console.log(message);
-  admin
-    .messaging()
-    .send(message)
-    .then(function (response) {
-      console.log("Successfully sent message: : ", response);
-      res.status(200).send("Notification sent successfully");
-    })
-    .catch(function (err) {
-      console.log("Error Sending message!!! : ", err);
+  sendNotificationToFlutter()
+    .then(() => res.status(200).send("Notification sent successfully"))
+    .catch((err) => {
+      console.error("Error sending notification: ", err);
       res.status(500).send("Error sending notification");
     });
 });

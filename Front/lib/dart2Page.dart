@@ -1,18 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 // 그래프 이쁘게 나오고 ... 쉿 //
 import 'dart:async';
 import 'dart:math';
-=======
-// 메인(실시간)화면
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-// 메인(실시간)화면
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-// 메인(실시간)화면
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -34,9 +22,6 @@ class _dashPageState extends State<dashPage> {
   bool isScanning = false;
   bool isConnected = false;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   int heartRate = 68;
   int spo2 = 98;
   late Timer _timer;
@@ -86,21 +71,6 @@ class _dashPageState extends State<dashPage> {
     } else {
       return 100; // 100
     }
-=======
-  @override
-  void initState() {
-    super.initState();
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-  @override
-  void initState() {
-    super.initState();
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-  @override
-  void initState() {
-    super.initState();
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
   }
 
   void _requestPermissions() async {
@@ -266,40 +236,13 @@ class _dashPageState extends State<dashPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                            //Icon(Icons.favorite),
-                            //Flexible(child: Image.asset("/heart.png", fit: BoxFit.fill,width: 5,)),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                            //Icon(Icons.favorite),
-                            //Flexible(child: Image.asset("/heart.png", fit: BoxFit.fill,width: 5,)),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                            //Icon(Icons.favorite),
-                            //Flexible(child: Image.asset("/heart.png", fit: BoxFit.fill,width: 5,)),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                             Icon(Icons.favorite, color: Colors.pink, size: 50,),
                             SizedBox(width: 8,),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text('심박수', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 Text('$heartRate BPM', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-=======
-                                Text('68BPM', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                                Text('68BPM', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                                Text('68BPM', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                               ],
                             ),
                           ],
@@ -323,37 +266,13 @@ class _dashPageState extends State<dashPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                            //Image.asset("img/O2.PNG", width: 50, height: 50,),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                            //Image.asset("img/O2.PNG", width: 50, height: 50,),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                            //Image.asset("img/O2.PNG", width: 50, height: 50,),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                             Icon(Icons.water_drop, color: Colors.indigo,size: 50,),
                             SizedBox(width: 1,),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text('산소포화도', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 Text('$spo2%', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-=======
-                                Text('98%', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                                Text('98%', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                                Text('98%', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                               ],
                             ),
                           ],
@@ -372,19 +291,7 @@ class _dashPageState extends State<dashPage> {
                           ///////////////////////////////그래프 ///////////
                           Container(
                             alignment: Alignment.center,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                            height: 340,
-=======
                             height: 330,
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                            height: 330,
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                            height: 330,
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: Colors.black, // 배경색을 검은색으로 설정 연분홍색 Color(0xFFFFE4E1)
@@ -405,19 +312,7 @@ class _dashPageState extends State<dashPage> {
                                 minX: 0,
                                 maxX: 180, // X축 범위를 0에서 180으로 고정
                                 minY: 0,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                maxY: 300, // Y축 범위를 0에서 350으로 설정
-=======
                                 maxY: 370, // Y축 범위를 0에서 350으로 설정
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                                maxY: 370, // Y축 범위를 0에서 350으로 설정
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                                maxY: 370, // Y축 범위를 0에서 350으로 설정
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                                 titlesData: FlTitlesData(show: false), // X축과 Y축의 수치를 숨김
                                 lineBarsData: [
                                   LineChartBarData(
@@ -433,45 +328,10 @@ class _dashPageState extends State<dashPage> {
                               ),
                             ),
                           ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                         ],
                       ),
                     ),
                   ),
-=======
-=======
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-
-
-
-
-
-                        ],
-
-
-
-
-
-
-                      ),
-                    ),
-                  ),
-
-
-
-
-
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                   SizedBox(height: 15,),
                   Container(
                       child: Row(
@@ -486,18 +346,6 @@ class _dashPageState extends State<dashPage> {
                           ),
                           SizedBox(width: 8,),
                           Text("심장 리듬이 안정적입니다", style: TextStyle(color: Colors.green, fontSize: 17, fontWeight: FontWeight.bold),),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                          //Text("심장 리듬에 이상이 감지되었습니다", style: TextStyle(color: Colors.red, fontSize: 16),)
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                          //Text("심장 리듬에 이상이 감지되었습니다", style: TextStyle(color: Colors.red, fontSize: 16),)
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-                          //Text("심장 리듬에 이상이 감지되었습니다", style: TextStyle(color: Colors.red, fontSize: 16),)
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
                         ],
                       )
                   ),

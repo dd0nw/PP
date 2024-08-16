@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:front/reportPage/reportPage.dart';
-=======
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';

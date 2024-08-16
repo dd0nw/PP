@@ -239,12 +239,10 @@ router.post("/checkId", async (req, res) => {
           mailOptions.subject,
           mailOptions.text
         );
-        res
-          .status(200)
-          .json({
-            message: "이메일 전송 성공",
-            response: emailResponse.response,
-          });
+        res.status(200).json({
+          message: "이메일 전송 성공",
+          response: emailResponse.response,
+        });
       } catch (error) {
         res
           .status(500)

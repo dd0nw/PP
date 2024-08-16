@@ -5,24 +5,10 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:convert';
 
 class MemoService {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
   //final String baseUrl = 'http://192.168.219.228:3000'; // 핸드폰
-=======
-  //final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
-  final String baseUrl = 'http://192.168.219.161:3000'; // 핸드폰
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-  //final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
-  final String baseUrl = 'http://192.168.219.161:3000'; // 핸드폰
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-=======
-  //final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
-  final String baseUrl = 'http://192.168.219.161:3000'; // 핸드폰
->>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
-  final storage = FlutterSecureStorage(); // JWT토큰
+
+  final storage = FlutterSecureStorage();
 
   Future<String> getToken() async { // 서버에서 JWT토큰 가져옴
     try {
