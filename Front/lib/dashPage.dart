@@ -38,12 +38,19 @@ class _DashPageState extends State<DashPage> {
    final String heartRateCharacteristicUUID = 'ee09d1ef-6a75-4f58-bd29-d98b70cbb5a2'; // 심박수 특성 UUID
    final String spo2CharacteristicUUID = 'b4b11c42-07b5-47b3-b6a0-6d5cb8c3d6e8'; // 산소포화도 특성 UUID
 
+   // 타이머 추가
+
+
 
    @override
    void initState() {
       super.initState();
       _requestPermissions(); // 초기화 시 권한 요청 한 번만 실행
    }
+
+   // 타이머 시작
+
+
 
    // 권한 요청을 한 번만 수행
    void _requestPermissions() async {

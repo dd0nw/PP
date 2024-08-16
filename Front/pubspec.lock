@@ -2,6 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
 <<<<<<< HEAD
+<<<<<<< HEAD
   _flutterfire_internals:
     dependency: transitive
     description:
@@ -10,6 +11,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.40"
+=======
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
   app_links:
@@ -165,6 +168,7 @@ packages:
     source: hosted
     version: "4.1.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
   dbus:
     dependency: transitive
     description:
@@ -173,6 +177,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.10"
+=======
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
   dio:
@@ -240,6 +246,7 @@ packages:
     source: hosted
     version: "7.0.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
   firebase_core:
     dependency: "direct main"
     description:
@@ -290,6 +297,8 @@ packages:
     version: "3.8.12"
 =======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
+=======
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
   fixnum:
     dependency: transitive
     description:
@@ -336,6 +345,7 @@ packages:
     source: hosted
     version: "3.0.2"
 <<<<<<< HEAD
+<<<<<<< HEAD
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -360,6 +370,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.2.0"
+=======
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
   flutter_plugin_android_lifecycle:
@@ -581,6 +593,7 @@ packages:
     source: hosted
     version: "0.12.4+2"
 <<<<<<< HEAD
+<<<<<<< HEAD
   googleapis_auth:
     dependency: "direct main"
     description:
@@ -589,6 +602,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
+=======
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
   gtk:

@@ -1,8 +1,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // 그래프 이쁘게 나오고 ... 쉿 //
 import 'dart:async';
 import 'dart:math';
+=======
+// 메인(실시간)화면
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
 // 메인(실시간)화면
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
@@ -30,6 +34,7 @@ class _dashPageState extends State<dashPage> {
   bool isScanning = false;
   bool isConnected = false;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   int heartRate = 68;
@@ -81,6 +86,11 @@ class _dashPageState extends State<dashPage> {
     } else {
       return 100; // 100
     }
+=======
+  @override
+  void initState() {
+    super.initState();
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
   @override
   void initState() {
@@ -258,6 +268,11 @@ class _dashPageState extends State<dashPage> {
                           children: [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                            //Icon(Icons.favorite),
+                            //Flexible(child: Image.asset("/heart.png", fit: BoxFit.fill,width: 5,)),
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
                             //Icon(Icons.favorite),
                             //Flexible(child: Image.asset("/heart.png", fit: BoxFit.fill,width: 5,)),
@@ -274,7 +289,11 @@ class _dashPageState extends State<dashPage> {
                                 Text('심박수', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 Text('$heartRate BPM', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+=======
+                                Text('68BPM', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
                                 Text('68BPM', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
@@ -306,6 +325,10 @@ class _dashPageState extends State<dashPage> {
                           children: [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                            //Image.asset("img/O2.PNG", width: 50, height: 50,),
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
                             //Image.asset("img/O2.PNG", width: 50, height: 50,),
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
@@ -320,7 +343,11 @@ class _dashPageState extends State<dashPage> {
                                 Text('산소포화도', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 Text('$spo2%', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+=======
+                                Text('98%', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
                                 Text('98%', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
@@ -347,7 +374,11 @@ class _dashPageState extends State<dashPage> {
                             alignment: Alignment.center,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                             height: 340,
+=======
+                            height: 330,
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
                             height: 330,
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
@@ -376,7 +407,11 @@ class _dashPageState extends State<dashPage> {
                                 minY: 0,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 maxY: 300, // Y축 범위를 0에서 350으로 설정
+=======
+                                maxY: 370, // Y축 범위를 0에서 350으로 설정
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
                                 maxY: 370, // Y축 범위를 0에서 350으로 설정
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
@@ -400,11 +435,14 @@ class _dashPageState extends State<dashPage> {
                           ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         ],
                       ),
                     ),
                   ),
 =======
+=======
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 
@@ -428,6 +466,9 @@ class _dashPageState extends State<dashPage> {
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
+=======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
@@ -447,6 +488,10 @@ class _dashPageState extends State<dashPage> {
                           Text("심장 리듬이 안정적입니다", style: TextStyle(color: Colors.green, fontSize: 17, fontWeight: FontWeight.bold),),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                          //Text("심장 리듬에 이상이 감지되었습니다", style: TextStyle(color: Colors.red, fontSize: 16),)
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 =======
                           //Text("심장 리듬에 이상이 감지되었습니다", style: TextStyle(color: Colors.red, fontSize: 16),)
 >>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418

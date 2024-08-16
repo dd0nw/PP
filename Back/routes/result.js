@@ -11,7 +11,6 @@ const router = express.Router();
 
 async function getClobAsString(clob) {
   if (clob === null || clob === undefined) {
-    console.error("CLOB data is null or undefined");
     return " ";
   }
 
@@ -150,6 +149,14 @@ async function generateECGChart(ecgData) {
           borderWidth: 2,
           borderColor: "rgba(105, 105, 105, 1)",
           borderDash: [],
+        },
+      },
+      elements: {
+        line: {
+          borderWidth: 2,
+          borderColor: "rgba(105, 105, 105, 1)",
+          borderDash: [],
+          display: false,
         },
       },
       elements: {
