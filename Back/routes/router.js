@@ -7,6 +7,7 @@ const connectToOracle = require("../config/db.js");
 const resultRoutes = require("./result");
 const memoRoutes = require("./memo");
 const AuthRoutes = require("./auth");
+const hospitalRoutes = require("./hospitals");
 // 알림
 const pushNotificationController = require("../controllers/push-notifications.controller.js");
 
@@ -15,6 +16,7 @@ router.use("/", analysisRoutes);
 router.use("/", memoRoutes);
 router.use("/", resultRoutes);
 router.use("/auth", AuthRoutes);
+router.use("/", hospitalRoutes);
 
 // 알림
 // router.post(

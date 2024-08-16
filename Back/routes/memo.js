@@ -5,21 +5,16 @@ const AuthToken = require("../AuthToken");
 
 
 /** 메모 수정 및 정보 불러오기 */
-
-/** 메모 수정 */
-
 router.post("/memo", AuthToken, async (req, res) => {
   const id = req.user.id;
-  const  memoContent  =req.body.ANALISYS_ETC; //flutter
-  // const { memoContent } = req.bod // html
+  const  {memoContent, analysis_idx}  = req.body; 
   
   const connection = await connectToOracle();
   if (connection) {
     try {
-      console.log("id",id,"memo content",memoContent);
       await connection.execute(
-        "UPDATE TB_ANALYSIS SET ANALISYS_ETC = :memoContent WHERE ID = :id",
-        { memoContent, id },
+        "UPDATE TB_ANALYSIS SET ANALISYS_ETC = :memoContent WHERE ID = :id AND ANALYSIS_IDX = :analysis_idx",
+        { memoContent, id, analysis_idx },
         { autoCommit: true }
       );
       const result = await connection.execute(
@@ -39,16 +34,14 @@ router.post("/memo", AuthToken, async (req, res) => {
 
           clob.on('end', async () => {
             res.status(200).json({ ANALISYS_ETC: memo });
-            await connection.close(); // 여기서 연결을 닫습니다.
+            await connection.close(); 
           });
 
           clob.on('error', async (err) => {
-            console.error('Error reading CLOB:', err);
             res.status(500).send('Error reading CLOB');
-            await connection.close(); // 여기서 연결을 닫습니다.
+            await connection.close(); 
           });
         } else {
-          console.error('CLOB object is null');
           res.status(404).json({ message: "No memo found for this ID" });
           await connection.close();
         }
@@ -58,8 +51,7 @@ router.post("/memo", AuthToken, async (req, res) => {
       }
     } catch (err) {
       res.status(500).send("Error executing query");
-      console.error("Error executing query: ", err);
-      await connection.close(); // 여기서 연결을 닫습니다.
+      await connection.close();
     }
   } else {
     res.status(500).send("Error connecting to database");
@@ -89,16 +81,14 @@ router.get("/memo", AuthToken, async (req, res) => {
 
           clob.on('end', async () => {
             res.status(200).json({ memos: [{ ANALISYS_ETC: memo }] });
-            await connection.close(); // 여기서 연결을 닫습니다.
+            await connection.close();
           });
 
           clob.on('error', async (err) => {
-            console.error('Error reading CLOB:', err);
             res.status(500).send('Error reading CLOB');
-            await connection.close(); // 여기서 연결을 닫습니다.
+            await connection.close();
           });
         } else {
-          console.error('CLOB object is null');
           res.status(200).json({ memos: [] });
           await connection.close();
         }
@@ -108,7 +98,6 @@ router.get("/memo", AuthToken, async (req, res) => {
       }
     } catch (err) {
       res.status(500).send("Error executing query");
-      console.error("Error executing query: ", err);
       await connection.close();
     }
   } else {

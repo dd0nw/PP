@@ -73,5 +73,23 @@
 	<string>$(PRODUCT_NAME) needs access to your camera to let you take photos.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your microphone to let you record videos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>현재 위치를 사용하기 위해 위치 권한이 필요합니다.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>현재 위치를 사용하기 위해 위치 권한이 필요합니다.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>현재 위치를 사용하기 위해 위치 권한이 필요합니다.</string>
 </dict>
+<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>http</string>
+  <string>https</string>
+</array>
+
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoads</key>
+  <true/>
+</dict>
+
 </plist>

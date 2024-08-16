@@ -30,7 +30,6 @@ async function getClobAsString(clob) {
     });
 
     lobStream.on("error", (error) => {
-      console.error("Error reading CLOB data:", error);
       throw error;
     });
 
@@ -39,7 +38,6 @@ async function getClobAsString(clob) {
       lobStream.on("error", reject);
     });
   } catch (error) {
-    console.error("Error processing CLOB data:", error);
     throw error;
   }
 
@@ -80,7 +78,6 @@ function decodeBase64ToNumberArray(base64String) {
     );
     return Array.from(floatArray).map((num) => parseFloat(num.toFixed(3)));
   } catch (error) {
-    console.error("Error decoding Base64 string:", error);
     return [];
   }
 }
@@ -212,17 +209,15 @@ router.post("/downloadPdf", AuthToken, async (req, res) => {
     const [
       id,
       avgHeartRate,
-      pr,
-      qt,
-      rr,
-      qrs,
+      rr_min,
+      rr_max,
+      rr_avg,
+      rr_std,
       analysisDate,
       ANALISYS_RESULT,
       ANALISYS_ETC,
       ecg,
     ] = analysisData;
-
-    console.log(analysisDate);
 
     const analisysResultString = await getClobAsString(ANALISYS_RESULT);
     const maxAnalysisResult = getMaxValueFromResult(analisysResultString);
@@ -310,18 +305,14 @@ router.post("/downloadPdf", AuthToken, async (req, res) => {
         align: "center",
       });
       doc.moveDown(15);
-    } catch (err) {
-      console.error("Error generating ECG chart:", err);
-    }
+    } catch (err) {}
 
     try {
       await sharp(reportIconPath)
         .tint({ r: 253, g: 0, b: 27 })
         .toFile(reportIcon);
       doc.image(reportIcon, doc.x, doc.y, { width: 25 });
-    } catch (err) {
-      console.error("Error processing report icon:", err);
-    }
+    } catch (err) {}
 
     doc
       .font("NanumGothicBold")
@@ -349,7 +340,7 @@ router.post("/downloadPdf", AuthToken, async (req, res) => {
 
     let textY = doc.y + (iconHeight - 16) / 2 - 2;
 
-    // 심전도
+    // RR
     doc.image(checkIconPath, startX, textY + 10, { width: 15 });
 
     textY = doc.y + (iconHeight - 16) / 2 - 2;
@@ -358,16 +349,16 @@ router.post("/downloadPdf", AuthToken, async (req, res) => {
       .font("NanumGothicBold")
       .fontSize(16)
       .fillColor("black")
-      .text("심전도", startX + 25, textY + 9);
+      .text("RR", startX + 25, textY + 9);
 
     doc.moveDown();
     doc.font("NanumGothic").fontSize(12);
 
-    doc.text(`PR Interval: ${pr} ms`, startX + 25, doc.y);
-    doc.text(`QT Interval: ${qt} ms`, startX + 275, doc.y - 14);
+    doc.text(`RR MIN Interval: ${rr_min} ms`, startX + 25, doc.y);
+    doc.text(`RR MAX Interval: ${rr_max} ms`, startX + 275, doc.y - 14);
 
-    doc.text(`RR Interval: ${rr} ms`, startX + 25, doc.y + 10);
-    doc.text(`QRS Interval: ${qrs} ms`, startX + 275, doc.y - 14);
+    doc.text(`RR AVG Interval: ${rr_avg} ms`, startX + 25, doc.y + 10);
+    doc.text(`RR STD Interval: ${rr_std} ms`, startX + 275, doc.y - 14);
 
     doc.moveDown(2);
 
@@ -401,15 +392,12 @@ router.post("/downloadPdf", AuthToken, async (req, res) => {
 
     doc.end();
   } catch (error) {
-    console.error("Error processing request:", error);
     res.status(500).send("Error processing request");
   } finally {
     if (connection) {
       try {
         await connection.close();
-      } catch (err) {
-        console.error("Error closing connection:", err);
-      }
+      } catch (err) {}
     }
   }
 });

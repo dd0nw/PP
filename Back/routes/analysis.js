@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const connectToOracle = require("../config/db");
 const AuthToken = require("../AuthToken");
-// 알람
-const admin = require("../controllers/push-notifications.controller.js");
-const axios = require("axios"); // HTTP 요청을 보내기 위한 axios 모듈
+const admin = require("../controllers/push-notifications.controller");
+const axios = require("axios");
+require("dotenv").config();
+
+const TARGET_TOKEN = process.env.TARGET_TOKEN;
 
 async function convertClobAsString(lob) {
   return new Promise((resolve, reject) => {
@@ -160,7 +162,6 @@ router.post("/analysis", AuthToken, async (req, res) => {
         console.log(convertedRow);
         convertedRows.push(convertedRow);
       }
-
       res.status(200).json(convertedRows);
       console.log(convertedRows);
       await connection.close();
@@ -219,9 +220,8 @@ async function checkForUpdates() {
 setInterval(checkForUpdates, 6000);
 
 // 푸시 알림 전송 엔드포인트
-router.get("/push_send", async function (req, res, next) {
-  let target_token =
-    "fL9X8PSURCCDUCvOJyaUsZ:APA91bEanfC2LOnJA4pr35uuvsT_KDlKIGBekN2f-bzL3CxCZ0_UvEdvX4zi5h5mEq0-uYOnQN2VT9H4v43yCl5wpxwwnK4BsVaaxR3Ck6mk7d1tTk7dv-OKtaCiBsF4g5Vvhx5FfRx7";
+router.get("/push_send", function (req, res, next) {
+  let target_token = TARGET_TOKEN;
 
   let message = {
     data: {
@@ -231,20 +231,18 @@ router.get("/push_send", async function (req, res, next) {
     },
     token: target_token,
   };
-  try {
-    console.log(message);
-    const response = await admin.messaging().send(message);
-    console.log("Successfully sent message: ", response);
-    res.status(200).send("Notification sent successfully");
-  } catch (err) {
-    if (err.code === "messaging/registration-token-not-registered") {
-      console.error("Invalid token, removing from database:", target_token);
-      // 여기서 데이터베이스에서 해당 토큰을 제거하는 로직을 추가합니다.
-    } else {
-      console.error("Error Sending message!!! : ", err);
-    }
-    res.status(500).send("Error sending notification");
-  }
+  console.log(message);
+  admin
+    .messaging()
+    .send(message)
+    .then(function (response) {
+      console.log("Successfully sent message: : ", response);
+      res.status(200).send("Notification sent successfully");
+    })
+    .catch(function (err) {
+      console.log("Error Sending message!!! : ", err);
+      res.status(500).send("Error sending notification");
+    });
 });
 
 module.exports = router;

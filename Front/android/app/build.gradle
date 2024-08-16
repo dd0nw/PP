@@ -29,6 +29,9 @@ if (flutterVersionName == null) {
 
 
 // android 에 대한 구체적인 빌드 옵션
+def googleMapApiKey = localProperties.getProperty('google.map.Key')
+def kakaonativeappKey = localProperties.getProperty('kakao.native.app.Key')
+
 android {
     namespace = "com.example.front" //Android 패키지 이름
     compileSdk = flutter.compileSdkVersion
@@ -49,10 +52,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
-        minSdk = 21 // 최소 SDK 버전이 21 이상인지 확인
-        manifestPlaceholders += [
-                appAuthRedirectScheme: 'com.example.front'
-        ]
+        minSdk = 21
+        targetSdk = 34
+        manifestPlaceholders += [appAuthRedirectScheme: 'com.example.front', googleMapApiKey:googleMapApiKey, kakaoNativeAppKey:kakaonativeappKey]
     }
 
     // 다양한 빌드 타입을 구성, 보통 debug, release를 둔다.
@@ -81,4 +83,6 @@ dependencies {
     // Add other Firebase products as needed
     implementation 'com.google.firebase:firebase-analytics' //★ 2번 추가
     // Firebase 관련 종속성들
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" 
 }

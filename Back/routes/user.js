@@ -4,7 +4,11 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const connectToOracle = require("../config/db");
+<<<<<<< HEAD
 const sendmail = require("../config/email");
+=======
+const {sendmail} = require('../config/email');
+>>>>>>> 5e812aa7eaa5b3ded7841110a268ce2424945418
 const AuthToken = require("../AuthToken");
 
 const jwtSecret = process.env.JWT_SECRET;
@@ -32,7 +36,6 @@ function encrypt(text) {
 /** 로그인 */
 router.post("/login", async (req, res) => {
   const { id, pw } = req.body;
-  console.log(id, pw);
   const connection = await connectToOracle();
   if (connection) {
     try {
@@ -43,8 +46,6 @@ router.post("/login", async (req, res) => {
       if (result.rows.length > 0) {
         const user = result.rows[0];
         const pwpw = bcrypt.compareSync(pw, user[1]);
-        console.log(pw, user[1]);
-        console.log(pwpw, user[1]);
         if (!pwpw) {
           return res
             .status(401)
@@ -53,7 +54,6 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign({ id: user[0] }, jwtSecret, {
           expiresIn: 86400,
         });
-        console.log(token);
         ///////////////////
         tokenStore = token; //로그인할때 전달 토큰 변수에 토큰 할당
         ////////////////////
@@ -63,8 +63,7 @@ router.post("/login", async (req, res) => {
       }
       await connection.close();
     } catch (err) {
-      res.status(500).json("Error executing query");
-      console.error("Error executing query: ", err);
+      res.status(500).send("Error executing query");
     }
   } else {
     res.status(500).send("Error connecting to database");
@@ -73,7 +72,7 @@ router.post("/login", async (req, res) => {
 
 /** 회원가입 */
 router.post("/register", async (req, res) => {
-  const { id, pw, name, birth, gender, height, weight, heartRate } = req.body;
+  const { id, pw, name } = req.body;
 
   // 비밀번호 암호화
   const hashedPw = bcrypt.hashSync(pw, 10);
@@ -83,23 +82,17 @@ router.post("/register", async (req, res) => {
     try {
       const result = await connection.execute(
         `INSERT INTO TB_USER (ID, PW, NAME, BIRTHDATE, GENDER, HEIGHT, WEIGHT, PULSE, JOINED_AT)
-         VALUES (:id, :password, :name, TO_DATE(:birth, 'YYYY-MM-DD'), :gender, :height, :weight, :heartrate, sysdate)`,
+         VALUES (:id, :password, :name, sysdate, '0', 0, 0, 0, sysdate)`,
         {
           id,
           password: hashedPw,
           name: name,
-          birth: birth,
-          gender: gender,
-          height: height,
-          weight: weight,
-          heartrate: heartRate,
         },
         { autoCommit: true }
       );
-      res.status(200).send({ auth: true });
+      res.status(200).json({ auth: true });
     } catch (err) {
-      res.status(500).send("Error executing query");
-      console.error("Error executing query: ", err);
+      res.status(500).json({message: "Error executing query"});
     } finally {
       await connection.close();
     }
@@ -107,6 +100,7 @@ router.post("/register", async (req, res) => {
     res.status(500).send("Error connecting to database");
   }
 });
+
 ///////////////////////////////////////////////
 router.get("/get-token", (req, res) => {
   console.log("토큰전달준비완료");
@@ -118,8 +112,7 @@ router.get("/get-token", (req, res) => {
 ////////////////////////////////////////////////
 
 // 로그아웃
-router.post("/logout", AuthToken, async (req, res) => {
-  console.log("Logging out");
+router.post('/logout', AuthToken, async (req, res) => {
   const userId = req.user.id;
 
   // 메모리 저장소에서 액세스 토큰 가져오기
@@ -133,7 +126,6 @@ router.post("/logout", AuthToken, async (req, res) => {
       console.log("Kakao user logged out");
     }
   } catch (error) {
-    console.error("Error logging out from Kakao:", error.message);
   }
 
   // 토큰 저장소 초기화
@@ -176,7 +168,6 @@ router.post("/delete-account", AuthToken, async (req, res) => {
       res.status(200).send({ message: "Account deleted successfully" });
     } catch (err) {
       res.status(500).send("Error executing query");
-      console.error("Error executing query: ", err);
     } finally {
       await connection.close(); // 연결 종료
     }
@@ -186,18 +177,19 @@ router.post("/delete-account", AuthToken, async (req, res) => {
 });
 
 /** Get Token */
-router.get("/get-token", (req, res) => {
-  console.log("토큰전달준비완료");
+router.get('/get-token', (req, res) => {
+  console.log("gettoken")
   if (!tokenStore) {
     return res.status(400).json({ error: "Token not found" });
   }
+  console.log("token")
   res.json({ token: tokenStore });
 });
 
 /** 이메일 코드 전송(중복 검사 포함) */
-router.post("/checkId", async (req, res) => {
-  const email = req.body.id;
-  const code = crypto.randomBytes(3).toString("hex");
+router.post('/checkId', async (req, res) => {
+  const { email } = req.body;
+  const code = crypto.randomBytes(3).toString('hex');
 
   const mailOptions = {
     to: email,
@@ -206,8 +198,13 @@ router.post("/checkId", async (req, res) => {
   };
 
   try {
-    console.log(email, code);
     const connection = await connectToOracle();
+
+    await connection.execute(
+      `DELETE FROM tb_verification_codes WHERE EXPIRES_AT <= CURRENT_TIMESTAMP`,
+      [],
+      { autoCommit: true }
+    );
 
     const result = await connection.execute(
       `SELECT * FROM TB_USER WHERE ID = :id`,
@@ -215,85 +212,77 @@ router.post("/checkId", async (req, res) => {
     );
 
     const now = new Date();
+
     if (result.rows.length > 0) {
-      const lastRequestTime = result.rows[0][0];
-      const diffMinutes = (now - lastRequestTime) / 60000;
-      if (diffMinutes < 1) {
-        return res.status(500).send("이미 존재하는 이메일");
-      }
+      await connection.close();
+      return res.status(500).json({message: "이미 존재하는 이메일"});
     } else {
-      console.log("d");
       await connection.execute(
         `MERGE INTO tb_verification_codes vc
-        USING (SELECT :id AS id FROM dual) d
-        ON (vc.id = d.id)
-        WHEN MATCHED THEN
-        UPDATE SET code = :code, created_at = :now, expires_at = :expires_at
-        WHEN NOT MATCHED THEN
-        INSERT (id, code, created_at, expires_at)
-        VALUES (:id, :code, :now, :expires_at)`,
+         USING (SELECT :id AS id FROM dual) d
+         ON (vc.id = d.id)
+         WHEN MATCHED THEN
+         UPDATE SET code = :code, created_at = :now, expires_at = :expires_at
+         WHEN NOT MATCHED THEN
+         INSERT (id, code, created_at, expires_at)
+         VALUES (:id, :code, :now, :expires_at)`,
         {
           id: email,
           code: code,
           now: now,
-          expires_at: new Date(now.getTime() + 5 * 60000),
+          expires_at: new Date(now.getTime() + 5 * 60000)
         },
         { autoCommit: true }
       );
 
-      console.log(mailOptions);
+      // 이메일 전송
       await connection.close();
 
-      const emailResponse = await sendmail.sendmail(
-        mailOptions.to,
-        mailOptions.subject,
-        mailOptions.text
-      );
-
-      transporter.sendEmail(mailOptions, (error, info) => {
-        if (error) {
-          return res.status(500).send(error.toString());
-        }
-        res.status(200).send("이메일 전송: " + info.response);
-      });
+      try {
+        const emailResponse = await sendmail(mailOptions.to, mailOptions.subject, mailOptions.text);
+        res.status(200).json({ message: "이메일 전송 성공", response: emailResponse.response });
+      } catch (error) {
+        res.status(500).json({ message: "이메일 전송 실패", error: error.toString() });
+      }
     }
-  } catch {}
+  } catch (err) {
+    res.status(500).json({ error: err, message: "Error occurred" });
+  }
 });
+
 
 /** 코드 확인 */
 router.post("/verifyCode", async (req, res) => {
   const { email, code } = req.body;
   try {
-    const connection = await oracleDB.getConnection();
+    const connection = await connectToOracle();
     const result = await connection.execute(
-      `SELECT CODE FROM VERIFICATION_CODES WHERE EMAIL = : eamil AND CODE = :code AND EXPIRES_AT > CURRENT_TIMESTAMP`,
-      { email: email, code: code }
+      `SELECT CODE FROM TB_VERIFICATION_CODES WHERE ID = :id AND CODE = :code AND EXPIRES_AT > CURRENT_TIMESTAMP`,
+      {id: email, code: code}
     );
     connection.close();
 
+
     if (result.rows.length > 0) {
-      res.status(200).send("코드 전송 성공");
+      res.status(200).send('인증 성공');
     } else {
-      res.status(400).send("코드 전송 실패");
+      res.status(400).send('인증 실패');
     }
-  } catch (err) {
-    console.error("디비 오류", err);
-    res.status(500).send("db 오류");
+  } catch(err) {
+    res.status(500).send('db 오류');
   }
 });
 
 /** 아이디 찾기 */
-router.post("/findId", async (req, res) => {
-  const { birthday, name } = req.body;
-  console.log(birthday, name);
+router.post('/findId', async (req, res) => {
+  const {birthday, name} = req.body;
   try {
     const connection = await connectToOracle();
     const result = await connection.execute(
       `SELECT id FROM TB_USER WHERE NAME = :name AND BIRTHDATE = TO_DATE(:birthday, 'YYYY/MM/DD HH24:MI:SS')`,
       { name: name, birthday: birthday }
     );
-
-    console.log(result.rows);
+    
     connection.close();
 
     if (result.rows.length > 0) {
@@ -362,12 +351,9 @@ router.post("/findPw", async (req, res) => {
 });
 
 /** 비밀번호 변경 */
-router.post("/changePw", async (req, res) => {
-  console.log("click");
-  const { id, forwardpw, backwardpw } = req.body;
-
-  console.log(id, forwardpw, backwardpw);
-
+router.post('/changePw', async(req, res) => {
+  const {id, forwardpw, backwardpw} = req.body;
+  console.log("changer")
   let connection;
 
   try {
@@ -377,30 +363,81 @@ router.post("/changePw", async (req, res) => {
       `SELECT pw from TB_USER WHERE id = :id`,
       { id: id }
     );
-    console.log("결과", result.rows[0][0]);
 
     const matchPw = bcrypt.compareSync(forwardpw, result.rows[0][0]);
-    console.log(matchPw);
 
     if (matchPw) {
-      console.log("a");
       result2 = await connection.execute(
         `UPDATE TB_USER SET PW = :backwardpw WHERE ID = :id`,
-        { backwardpw: backwardpw, id: id },
-        { autoCommit: true }
+        {backwardpw: backwardpw, id: id},
+        {autoCommit: true}
+      )
+
+      if(result2.rowsAffected > 0) {
+        res.status(200).json({success: true, message: "비밀번호 변경 성공"})
+      } 
+
+    } else {
+      res.status(500).json({success: false, message: "비밀번호가 일치하지 않습니다"})
+    }
+  } catch(error) {
+    res.status(500).json({success: false, error: error})
+  }
+})
+  
+  /** 프로필 수정 */
+  router.post('/profile', AuthToken, async (req, res) => {
+    const id = req.user.id;
+    const {birthdate, gender, height, weight} = req.body;
+  
+    let connection;
+    try {
+      connection = await connectToOracle();
+  
+      const result = await connection.execute(
+        `UPDATE TB_USER SET BIRTHDATE = :birthdate, GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id`,
+        {birthdate: birthdate, gender: gender, height: height, weight: weight, id: id}, 
+        {autoCommit: true}
       );
       console.log(result2.rowsAffected);
 
-      if (result2.rowsAffected > 0) {
-        res.status(200).json({ success: true, message: "비밀번호 변경 성공" });
+  
+      if (result.rowsAffected > 0) {
+        res.status(200).json({success: true, message: "프로필 변경 성공"});
+      } else {
+        res.status(500).json({success: false, message: "프로필 변경 실패"});
       }
-    } else {
-      res
-        .status(500)
-        .json({ success: false, message: "비밀번호가 일치하지 않습니다" });
+      
+      await connection.close();
+    } catch(error) {
+      res.status(500).json({success: false, error: error.message});
+    } 
+  });
+  
+// 정보 업데이트
+router.post("/infoUpdate", AuthToken, async (req, res) => {
+  const id = req.user.id;
+  const {name, birthdate, gender, height, weight} = req.body;
+  const connection = await connectToOracle();
+console.log(req.body)
+  if (connection) {
+    try {
+      const result = await connection.execute(
+        "UPDATE TB_USER SET NAME = :name, BIRTHDATE = :birthdate, GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id",
+        { name, birthdate, gender, height, weight, id },
+        { autoCommit: true }
+      );
+      console.log(result.rowsAffected)
+      if (result.rowsAffected > 0) {
+        res.status(200).json({message:"정보 업데이트 성공"});
+      }
+    } catch (error) {
+      res.status(500).json({message:"정보 업데이트 실패"});
+    } finally {
+      connection.close();
     }
-  } catch (error) {
-    res.status(500).json({ success: false, error: error });
+  } else {
+    res.status(500).json({message:"db 연결 실패"});
   }
 });
 

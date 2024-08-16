@@ -27,3 +27,17 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+// Kotlin 버전 추가
+buildscript {
+    ext.kotlin_version = '1.9.0' // Kotlin 버전 업데이트
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // 여기에 필요한 다른 의존성 추가
+    }
+}

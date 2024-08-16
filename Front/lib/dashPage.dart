@@ -17,6 +17,7 @@ class _DashPageState extends State<DashPage> {
    List<FlSpot> ecgDataPoints = [];
    bool isEcgConnected = false;
    bool isEcgScanning = false;
+   int time = 0;
 
    // PPG 관련 변수
    BluetoothDevice? _ppgDevice;
@@ -36,7 +37,6 @@ class _DashPageState extends State<DashPage> {
    final String heartRateCharacteristicUUID = 'ee09d1ef-6a75-4f58-bd29-d98b70cbb5a2'; // 심박수 특성 UUID
    final String spo2CharacteristicUUID = 'b4b11c42-07b5-47b3-b6a0-6d5cb8c3d6e8'; // 산소포화도 특성 UUID
 
-   int time = 0;
 
    @override
    void initState() {
@@ -369,14 +369,14 @@ class _DashPageState extends State<DashPage> {
                                                 minX: 0,
                                                 maxX: 180,
                                                 minY: 0,
-                                                maxY: 700, // 511까지 커버할 수 있도록 조정
+                                                maxY: 350, // 511까지 커버할 수 있도록 조정
                                                 titlesData: FlTitlesData(show: false),
                                                 lineBarsData: [
                                                    LineChartBarData(
                                                       spots: ecgDataPoints.isNotEmpty ? ecgDataPoints : [FlSpot(0, 0)],
                                                       isCurved: true,
                                                       color: Color(0xFF00FF00),
-                                                      barWidth: 1,
+                                                      barWidth: 2,
                                                       isStrokeCapRound: true,
                                                       dotData: FlDotData(show: false),
                                                       belowBarData: BarAreaData(show: false),
@@ -408,7 +408,7 @@ class _DashPageState extends State<DashPage> {
                                  ),
                               ),
                            ),
-                           SizedBox(height: 20,),
+                           SizedBox(height: 80,),
                            Center(
                               child: ElevatedButton(
                                  onPressed: _togglePpgConnection,
