@@ -3,6 +3,7 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+
 }
 
 def localProperties = new Properties()
@@ -22,6 +23,8 @@ def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
+
+def googleMapApiKey = localProperties.getProperty('google.map.Key')
 
 android {
     namespace = "com.example.front"
@@ -44,7 +47,7 @@ android {
         versionName = flutterVersionName
         minSdk = 21
         targetSdk = 34
-//        resValue "string", "GOOGLE_MAP_KEY", GoogleMapKey
+        manifestPlaceholders += [googleMapApiKey:googleMapApiKey]
     }
 
     buildTypes {
@@ -58,4 +61,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Kotlin 표준 라이브러리 추가
+    // 여기에 다른 의존성을 추가
 }

@@ -179,9 +179,11 @@ router.post("/delete-account", AuthToken, async (req, res) => {
 
 /** Get Token */
 router.get('/get-token', (req, res) => {
+  console.log("gettoken")
   if (!tokenStore) {
     return res.status(400).json({ error: 'Token not found' });
   }
+  console.log("token")
   res.json({ token: tokenStore });
 });
 
@@ -351,8 +353,7 @@ router.post('/findPw', async (req, res) => {
 /** 비밀번호 변경 */
 router.post('/changePw', async(req, res) => {
   const {id, forwardpw, backwardpw} = req.body;
-
-
+  console.log("changer")
   let connection;
 
   try{
@@ -415,17 +416,20 @@ router.post('/changePw', async(req, res) => {
 // 정보 업데이트
 router.post("/infoUpdate", AuthToken, async (req, res) => {
   const id = req.user.id;
-  const {birthdate, gender, height, weight} = req.body;
+  const {name, birthdate, gender, height, weight} = req.body;
   const connection = await connectToOracle();
-
+console.log(req.body)
   if (connection) {
     try {
-      await connection.execute(
-        "UPDATE TB_USER SET BIRTHDATE = :birthdate, GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id",
-        { birthdate, gender, height, weight, id },
+      const result = await connection.execute(
+        "UPDATE TB_USER SET NAME = :name, BIRTHDATE = :birthdate, GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id",
+        { name, birthdate, gender, height, weight, id },
         { autoCommit: true }
       );
-      res.status(200).json({message:"정보 업데이트 성공"});
+      console.log(result.rowsAffected)
+      if (result.rowsAffected > 0) {
+        res.status(200).json({message:"정보 업데이트 성공"});
+      }
     } catch (error) {
       res.status(500).json({message:"정보 업데이트 실패"});
     } finally {
