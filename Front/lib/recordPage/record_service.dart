@@ -7,9 +7,9 @@ import 'dart:convert';
 class MemoService {
   final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
   //final String baseUrl = 'http://192.168.219.228:3000'; // 핸드폰
-  final storage = FlutterSecureStorage();
+  final storage = FlutterSecureStorage(); // JWT토큰
 
-  Future<String> getToken() async {
+  Future<String> getToken() async { // 서버에서 JWT토큰 가져옴
     try {
       final response = await http.get(Uri.parse('$baseUrl/user/get-token'));
       print('Server response: ${response.body}'); // 서버 응답을 출력하여 디버깅
@@ -33,11 +33,11 @@ class MemoService {
     }
   }
 
-  Future<void> saveToken(String token) async {
+  Future<void> saveToken(String token) async { // JWT토큰을 fluttersecurestorage에 저장
     await storage.write(key: 'jwtToken', value: token);
   }
 
-  Future<bool> isTokenValid(String token) async {
+  Future<bool> isTokenValid(String token) async { // JWT토큰이 유효한지 확인
     try {
       // 디코딩하여 토큰의 만료 시간을 확인
       final decodedToken = JwtDecoder.decode(token);
@@ -56,7 +56,8 @@ class MemoService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchAnalysis(String date) async {
+  // 서버 -> 데이터 받아와서 flutter에서 사용
+  Future<List<Map<String, dynamic>>> fetchAnalysis(String date) async { // 날짜에 대한 데이터
     String? token = await storage.read(key: 'jwtToken');
 
     // 토큰이 없거나 유효하지 않으면 새로운 토큰을 요청
@@ -67,22 +68,22 @@ class MemoService {
       print('Token found and valid: $token');
     }
 
-    final response = await http.post(Uri.parse('$baseUrl/analysis'),
+    final response = await http.post(Uri.parse('$baseUrl/analysis'), // "/analysis"
       headers: <String, String>{
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode({
-        'createdAt': date,
+        'createdAt': date, // 날짜
       }),
     );
 
     if (response.statusCode == 200) {
       List<dynamic> body = json.decode(response.body);
       print(
-          'Fetched analysis result from server: $body'); // DB, node.js에서 넘어온 값
+          'fetchAnalysis: $body'); //////////////////////////////////console DB -> node.js에서 넘어온 값
 
-      // 이미 리스트의 맵이므로 변환 불필요
+      // List<Map<String, dynamic>>
       List<Map<String, dynamic>> results = List<Map<String, dynamic>>.from(
           body);
       return results;

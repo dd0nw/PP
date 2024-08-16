@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../memoPage/memo.dart';
 // import 'memo2Page/memo.dart';
 // import 'memoPage/memo_service.dart';
 import 'memo2_service.dart';

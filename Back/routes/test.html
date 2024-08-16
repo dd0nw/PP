@@ -190,13 +190,16 @@
           e.preventDefault();
           const id = document.getElementById("loginId").value;
           const pw = document.getElementById("loginPw").value;
-          const response = await fetch("http://localhost:3000/user/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id, pw }),
-          });
+          const response = await fetch(
+            "http://192.168.219.228:3000/user/login",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ id, pw }),
+            }
+          );
 
           const result = await response.json();
           if (response.ok) {

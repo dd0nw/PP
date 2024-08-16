@@ -1,26 +1,90 @@
+import 'package:firebase_messaging/firebase_messaging.dart'; // 알림★
 import 'package:flutter/material.dart';
+import 'package:front/dart2Page.dart';
+import 'package:front/passwordchange.dart';
+import 'package:front/push%20notification/home_screen.dart';
+import 'package:front/push%20notification/notification_screen.dart';
 import 'package:front/reportPage/reportPage.dart';
+import 'package:front/setting.dart';
+import 'package:front/setting2.dart';
+import 'package:front/userinfo_birth.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import 'FCM Token.dart';
+import 'LoginPage.dart';
 import 'api_service.dart'; // ApiService 정의된 파일 import
-
-import 'Calendar.dart';
-import 'Listtile.dart';
 import 'bottomPage.dart';
 import 'bt.dart';
 import 'dashPage.dart';
 import 'ecg_chart.dart';
-import 'ecgchart/ECGchart.dart';
-import 'ex01_login.dart';
-import 'memo2page/memo2Page.dart';
-import 'memoPage/memo_provider.dart';
-import 'memoPage/memopage.dart';
-import 'nodedb/nodedb.dart';
+import 'ecg_graph.dart';
 
-void main() {
+import 'ex.dart';
+import 'ex01_login.dart';
+import 'push notification/home_page.dart';
+import 'hosipitalmap.dart';
+import 'join.dart';
+import 'joinPage.dart';
+import 'memo2page/memo2Page.dart';
+import 'package:firebase_core/firebase_core.dart'; // 알림★
+import 'package:flutter/material.dart';
+import 'push notification/empty_page.dart';
+import 'package:front/push%20notification/empty_page.dart';
+
+// void main() {
+//   runApp(const MyApp());
+// }
+
+// 네비게이션 작업을 전역에서 관리
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진 초기화★
+  await Firebase.initializeApp(); // Firebase를 초기화★
+
+  // 현재 디바이스의 FCM 토큰을 가져옴. 이 토큰은 서버에서 메시지를 보낼 때 필요
+  FirebaseMessaging.instance.getToken().then((value) {
+    print("getToken : $value");
+  });
+
+  // 앱이 백그라운드 상태에서 FCM 메시지를 클릭했을 때 호출되는 리스너입니다.
+  // 클릭한 메시지와 함께 특정 페이지로 네비게이션
+  FirebaseMessaging.onMessageOpenedApp.listen(
+        (RemoteMessage message) async {
+      print("onMessageOpenedApp: $message");
+      Navigator.pushNamed(
+        navigatorKey.currentState!.context,
+        '/push-page',
+        arguments: {"message": json.encode(message.data)},
+      );
+    },
+  );
+
+  // 앱이 종료된 상태에서 FCM 메시지를 클릭하여 시작될 때 호출
+  // 이 경우도 특정 페이지로 네비게이션
+  FirebaseMessaging.instance.getInitialMessage().then(
+        (RemoteMessage? message) {
+      if (message != null) {
+        Navigator.pushNamed(
+          navigatorKey.currentState!.context,
+          '/push-page',
+          arguments: {"message": json.encode(message.data)},
+        );
+      }
+    },
+  );
+
+  // 앱이 백그라운드 또는 종료된 상태에서 메시지를 처리할 때 호출되는 핸들러
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("_firebaseMessagingBackgroundHandler : $message");
 }
 
 class MyApp extends StatelessWidget {
@@ -29,10 +93,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MemoPage(),
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      home: BottomPage(),
       // routes: {
-      //   '/report': (context) => const ReportPage(),
-      // },
+      //   '/notification': (context) => NotificationScreen(),
+      // navigatorKey: navigatorKey,
+      // routes: {
+      //   '/': (context) => const EmptyPage(), // 기본페이지
+      //   '/push-page': (context) => const HomePage(), // 푸시 알림을 클릭했을때 이동할 페이지
+     // },
     );
   }
 }

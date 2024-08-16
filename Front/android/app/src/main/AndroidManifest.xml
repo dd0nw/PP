@@ -1,8 +1,32 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.front.app">
+
+    <!-- FCM을 위한 권한 추가 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- 위치에 대한 권한 설정 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARES_LOCATION"/>
+
     <application
         android:label="front"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- FCM 기본 설정 -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher"/> <!-- 기본 아이콘 설정 -->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_color"/>-->
+<!--            android:resource="@color/colorAccent"-->
+        <!-- 기본 알림 색상 설정 -->
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -24,18 +48,26 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel"
+            />
+
     </application>
+
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+
     <!-- 블루투스 권한 추가 -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
 </manifest>

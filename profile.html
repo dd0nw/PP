@@ -1,59 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Update</title>
-</head>
-<body>
-  <h1>Update Profile</h1>
-  <form id="profileForm">
-    <label for="birthday">Birthday:</label><br>
-    <input type="date" id="birthday" name="birthdate"><br><br>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Update</title>
+  </head>
+  <body>
+    <h1>Update Profile</h1>
+    <form id="profileForm">
+      <label for="birthday">Birthday:</label><br />
+      <input type="date" id="birthday" name="birthdate" /><br /><br />
 
-    <label for="gender">Gender:</label><br>
-    <input type="text" id="gender" name="gender"><br><br>
+      <label for="gender">Gender:</label><br />
+      <input type="text" id="gender" name="gender" /><br /><br />
 
-    <label for="height">Height (cm):</label><br>
-    <input type="number" id="height" name="height"><br><br>
+      <label for="height">Height (cm):</label><br />
+      <input type="number" id="height" name="height" /><br /><br />
 
-    <label for="weight">Weight (kg):</label><br>
-    <input type="number" id="weight" name="weight"><br><br>
+      <label for="weight">Weight (kg):</label><br />
+      <input type="number" id="weight" name="weight" /><br /><br />
 
-    <button type="button" onclick="updateProfile()">Update Profile</button>
-  </form>
+      <button type="button" onclick="updateProfile()">Update Profile</button>
+    </form>
 
-  <script>
-    async function updateProfile() {
-      const form = document.getElementById('profileForm');
-      const formData = new FormData(form);
+    <script>
+      async function updateProfile() {
+        const form = document.getElementById("profileForm");
+        const formData = new FormData(form);
 
-      const data = {};
-      formData.forEach((value, key) => (data[key] = value));
-      
-      const token = localStorage.getItem("token");
+        const data = {};
+        formData.forEach((value, key) => (data[key] = value));
 
-      try {
-        const response = await fetch('http://localhost:3000/profile', { // 경로를 '/profile'로 설정
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify(data)
-        });
+        const token = localStorage.getItem("token");
 
-        const result = await response.json();
+        try {
+          const response = await fetch("http://localhost:3000/profile", {
+            // 경로를 '/profile'로 설정
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(data),
+          });
 
-        if (response.ok) {
-          alert('Profile updated successfully!');
-        } else {
-          alert('Profile update failed: ' + result.message);
+          const result = await response.json();
+
+          if (response.ok) {
+            alert("Profile updated successfully!");
+          } else {
+            alert("Profile update failed: " + result.message);
+          }
+        } catch (error) {
+          alert("Error updating profile: " + error);
         }
-      } catch (error) {
-        alert('Error updating profile: ' + error);
       }
-    }
-  </script>
-</body>
+    </script>
+  </body>
 </html>

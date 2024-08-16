@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
         if (!pwpw) {
           return res
             .status(401)
-            .send({ auth: false, token: null, message: "Invalid password" });
+            .json({ auth: false, token: null, message: "Invalid password" });
         }
         const token = jwt.sign({ id: user[0] }, jwtSecret, {
           expiresIn: 86400,
@@ -57,13 +57,13 @@ router.post("/login", async (req, res) => {
         ///////////////////
         tokenStore = token; //로그인할때 전달 토큰 변수에 토큰 할당
         ////////////////////
-        res.status(200).send({ auth: true, token: token });
+        res.status(200).json({ auth: true, token: token });
       } else {
-        res.status(404).send("No user found");
+        res.status(404).json("No user found");
       }
       await connection.close();
     } catch (err) {
-      res.status(500).send("Error executing query");
+      res.status(500).json("Error executing query");
       console.error("Error executing query: ", err);
     }
   } else {

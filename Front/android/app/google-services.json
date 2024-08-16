@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "166468413364",
+    "project_id": "pulse-6d2b7",
+    "storage_bucket": "pulse-6d2b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166468413364:android:0355790341b1d1ead2b4e1",
+        "android_client_info": {
+          "package_name": "com.example.front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA86UP8gzJtrtyGF7sW7P13oDftYE9SFPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,17 @@
+buildscript {
+    repositories {
+        google()  // Firebase와 관련된 플러그인을 가져올 수 있도록 설정
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.0.2'  // Android Gradle 플러그인
+        classpath 'com.google.gms:google-services:4.3.15'  // Firebase 설정을 위한 Google 서비스 플러그인
+    }
+}
+
 allprojects {
     repositories {
-        google()
+        google()  // 모든 프로젝트에서 Google Maven 저장소를 사용할 수 있도록 설정
         mavenCentral()
     }
 }

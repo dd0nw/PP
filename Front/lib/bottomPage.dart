@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:front/recordPage/recordPage.dart';
-import 'dashPage.dart';
+import 'package:front/setting2.dart';
+
+import 'dart2Page.dart';
+import 'dashPage.dart'; //되는거
+// import 'dashPage.dart'; //안되는거
+
 
 
 class BottomPage extends StatefulWidget {
@@ -13,7 +18,7 @@ class BottomPage extends StatefulWidget {
 class _BottomPageState extends State<BottomPage> {
 
   int index = 0; // 화면을 관리 인덱스
-  List<Widget> pageList = [dashPage(), recordPage(), Setting()]; //화면클래스 리스트
+  List<Widget> pageList = [dashPage(), recordPage(), setting()]; //화면클래스 리스트
 
   @override
   Widget build(BuildContext context) {
