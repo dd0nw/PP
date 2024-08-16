@@ -1,5 +1,5 @@
 Back/.env
-Back\node_modules/*
-Back\config\push-notification-key.json
-Front\android\local.properties
-Front\ios\Runner\Storage.swift
+Back/node_modules/*
+Back/config/push-notification-key.json
+Front/android/local.properties
+Front/ios/Runner/Storage.swift
