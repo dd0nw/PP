@@ -1,13 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.front">
     <application
+        android:usesCleartextTraffic="true"
         android:label="front"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <!-- Google Maps API Key -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${googleMapApiKey}"
-            />
+
+            <!-- Google Maps API Key -->
+            <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="${googleMapApiKey}"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -17,6 +18,22 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
+
+            <intent-filter android:label="flutter_web_auth">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI, "kakao${kakaoNativeAppKey}://oauth" 형식 -->
+                <data
+                    android:scheme="${kakaoNativeAppKey}"
+                    android:host="oauth"/>
+
+                <!-- Custom URL Scheme -->
+                <data
+                    android:scheme="myapp"
+                    android:host="oauth2callback" />
+            </intent-filter>
 
 
             <!-- Other meta-data or application settings -->

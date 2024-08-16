@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: PasswordCh(),
+      home: BottomPage(),
       // routes: {
       //   '/report': (context) => const ReportPage(),
       // },

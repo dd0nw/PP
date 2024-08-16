@@ -62,8 +62,18 @@ void uploadData(const char* fileName, int* data, size_t dataSize, const char* ti
         http.begin(lambdaEndpoint);
         http.addHeader("Content-Type", "application/json");
 
+        // 12비트 데이터를 11비트로 줄이기
+        size_t reducedDataSize = dataSize; // 12비트 -> 11비트로 줄이기
+        uint8_t* reducedData = new uint8_t[reducedDataSize];
+        for (size_t i = 0; i < dataSize / sizeof(uint16_t); i++) {
+            // 12비트 데이터를 11비트로 줄이기
+            uint16_t reducedValue = data[i] >> 1; // 하위 11비트 추출
+            reducedData[i] = reducedValue & 0xFF; // 하위 8비트
+            reducedData[i + 1] = (reducedValue >> 8) & 0xFF; // 상위 3비트
+        }
+
         // Base64로 인코딩
-        String base64Payload = base64::encode((uint8_t*)data, dataSize);
+        String base64Payload = base64::encode(data, dataSize);
 
         // 내부 JSON 데이터 생성
         DynamicJsonDocument doc(2048);
@@ -90,6 +100,8 @@ void uploadData(const char* fileName, int* data, size_t dataSize, const char* ti
         }
 
         http.end();
+
+        delete[] reducedData; // 동적 메모리 해제
     } else {
         Serial.println("WiFi 연결 끊김");
     }
@@ -124,7 +136,7 @@ void loop() {
     if (readIndex < numReadings) {
       int rawValue = analogRead(0); // 원시 ADC 값 읽기
       Serial.println(rawValue);
-      readings[readIndex] = rawValue; // 원시 값을 배열에 저장
+      readings[readIndex] = rawValue / 2; // 원시 값을 배열에 저장
       readIndex++;
       delay(1000 / sampleRate); // 샘플링 속도에 맞춰 지연
     }

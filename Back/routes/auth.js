@@ -58,7 +58,6 @@ router.get('/kakao/callback', async (req, res, next) => {
 router.get('/google', logMiddleware, passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 // 구글 로그인 콜백 라우터
-// 구글 로그인 콜백 라우터
 router.get('/google/callback', async (req, res, next) => {
   const { code } = req.query;
   console.log("code", req.query);

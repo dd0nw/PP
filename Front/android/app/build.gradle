@@ -25,6 +25,7 @@ if (flutterVersionName == null) {
 }
 
 def googleMapApiKey = localProperties.getProperty('google.map.Key')
+def kakaonativeappKey = localProperties.getProperty('kakao.native.app.Key')
 
 android {
     namespace = "com.example.front"
@@ -47,7 +48,7 @@ android {
         versionName = flutterVersionName
         minSdk = 21
         targetSdk = 34
-        manifestPlaceholders += [googleMapApiKey:googleMapApiKey]
+        manifestPlaceholders += [googleMapApiKey:googleMapApiKey, kakaoNativeAppKey:kakaonativeappKey]
     }
 
     buildTypes {
@@ -64,6 +65,5 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Kotlin 표준 라이브러리 추가
-    // 여기에 다른 의존성을 추가
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" 
 }
