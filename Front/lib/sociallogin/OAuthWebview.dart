@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:app_links/app_links.dart';
-import 'package:front/socialDone.dart';
+import 'package:front/userinfo_social.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 // Import for Android features.
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -67,35 +67,25 @@ Page resource error:
             ''');
           },
           onNavigationRequest: (NavigationRequest request) async {
-            // Google OAuth URL을 감지하면 기본 브라우저로 리디렉션
-            if (request.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth')) {
-              // 기본 브라우저에서 URL 열기
+            if (widget.oauthProvider == 'google' &&
+                request.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth')) {
               await _launchURL(request.url);
-              return NavigationDecision.prevent; // WebView에서 로드하지 않도록 막음
+              return NavigationDecision.prevent;
             }
 
-            // 서버에서 Custom URL Scheme으로 리디렉션하도록 설정
-            if (request.url.startsWith('https://9cc8-106-252-44-73.ngrok-free.app/auth/google/callback')) {
+            if (widget.oauthProvider == 'kakao' &&
+                request.url.startsWith('http://192.168.219.161:3000/auth/kakao/callback')) {
               final Uri uri = Uri.parse(request.url);
               final String? code = uri.queryParameters['code'];
+              print('랄라랄라라랄 : $code');
 
               if (code != null) {
-                // 서버가 Custom URL Scheme으로 리디렉션
-                await _launchURL('myapp://oauth2callback?code=$code');
-                return NavigationDecision.prevent;
-              } else {
-                print('Error: No code found in redirect URL');
-                return NavigationDecision.navigate;
-              }
-            }
-
-            // 추가: /로 리디렉션될 경우 Custom URL Scheme으로 리디렉션
-            if (request.url.startsWith('https://9cc8-106-252-44-73.ngrok-free.app/')) {
-              final Uri uri = Uri.parse(request.url);
-              final String? code = uri.queryParameters['code'];
-
-              if (code != null) {
-                await _launchURL('myapp://oauth2callback?code=$code');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserinfoSocial(),
+                  ),
+                );
                 return NavigationDecision.prevent;
               } else {
                 print('Error: No code found in redirect URL');
@@ -108,7 +98,6 @@ Page resource error:
         ),
       );
 
-    // Android 플랫폼에서 추가 설정
     if (controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
       (controller.platform as AndroidWebViewController)
@@ -117,7 +106,6 @@ Page resource error:
 
     _controller = controller;
 
-    // 초기 URL 설정
     if (widget.oauthProvider == 'kakao') {
       final String initialUrl = 'http://192.168.219.161:3000/auth/kakao';
       _controller.loadRequest(Uri.parse(initialUrl));
@@ -135,18 +123,17 @@ Page resource error:
   Future<void> initDeepLinks() async {
     _appLinks = AppLinks();
 
-    // Handle links
     _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
       debugPrint('onAppLink: $uri');
       if (uri != null && uri.scheme == "myapp") {
         final String? code = uri.queryParameters['code'];
         if (code != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TokenDisplayScreen(token: code),
-            ),
-          );
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => TokenDisplayScreen(token: code),
+          //   ),
+          // );
         }
       }
     });
@@ -162,7 +149,6 @@ Page resource error:
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('OAuth Login'),
         actions: <Widget>[
           NavigationControls(webViewController: _controller),
         ],
@@ -171,7 +157,6 @@ Page resource error:
     );
   }
 
-  // 기본 브라우저에서 URL 열기
   Future<void> _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: false, forceWebView: false);

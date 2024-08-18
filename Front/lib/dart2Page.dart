@@ -1,4 +1,5 @@
 // 그래프 이쁘게 나오고 ... 쉿 //
+// 실제 메인페이지
 import 'dart:async';
 import 'dart:math';
 // 메인(실시간)화면
@@ -40,7 +41,7 @@ class _dashPageState extends State<dashPage> {
   }
 
   void _startRandomValueUpdate() {
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
       setState(() {
         heartRate = _generateHeartRate();
         spo2 = _generateSpo2();
@@ -213,7 +214,7 @@ class _dashPageState extends State<dashPage> {
                 children: [
                   SizedBox(height: 15,),
                   Container(
-                      child: Text('실시간데이터', style: TextStyle(fontSize: 29,fontWeight: FontWeight.bold),)
+                      child: Text('실시간 데이터', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
                   ),
                   SizedBox(height: 20,),
                   Row(

@@ -1,28 +1,19 @@
-// 추가입력정보
-
 import 'package:flutter/material.dart';
-import 'package:front/sensorattach.dart';
-import 'package:front/sensorinfo.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'dart:convert'; // for jsonEncode
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
-import 'bottomPage.dart';
-import 'dart2Page.dart'; // for jsonEncode
-
-class UserInfoPage extends StatefulWidget {
-  final String email;
-  final String password;
-  final String name;
-
-  const UserInfoPage({super.key, required this.email, required this.password, required this.name,});
+class UserinfoSocial extends StatefulWidget {
+  const UserinfoSocial({super.key});
 
   @override
-  State<UserInfoPage> createState() => _UserInfoPageState();
+  State<UserinfoSocial> createState() => _UserinfoSocialState();
 }
 
 enum Gender { man, woman }
 
-class _UserInfoPageState extends State<UserInfoPage> {
+class _UserinfoSocialState extends State<UserinfoSocial> {
   int currentStep = 0;
   bool get isFirstStep => currentStep == 0;
   bool get isLastStep => currentStep == steps().length - 1;
@@ -36,19 +27,78 @@ class _UserInfoPageState extends State<UserInfoPage> {
   bool isComplete = false;
   bool _isVerified = false;
 
+  final String baseUrl = 'http://10.0.2.2:3000';
+  final storage = FlutterSecureStorage();
+
+  /////////////////////토큰/////////////////////////////////////
+  Future<String> getToken() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/user/get-token'));
+      print('Server response: ${response.body}'); // 서버 응답을 출력하여 디버깅
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final token = responseData['token'];
+        if (token == null || token.isEmpty) {
+          throw Exception('Token not found');
+        }
+        await saveToken(token);
+        print('Token fetched and saved: $token');
+        return token;
+      } else {
+        print('Failed to get token with status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to load token');
+      }
+    } catch (e) {
+      print('Error occurred while fetching token: $e');
+      throw e;
+    }
+  }
+
+  Future<void> saveToken(String token) async {
+    await storage.write(key: 'jwtToken', value: token);
+  }
+
+  Future<bool> isTokenValid(String token) async {
+    try {
+      // 디코딩하여 토큰의 만료 시간을 확인
+      final decodedToken = JwtDecoder.decode(token);
+      final isExpired = JwtDecoder.isExpired(token);
+
+      if (isExpired) {
+        print('Token is expired');
+        return false;
+      }
+
+      print('Token is valid. Payload: $decodedToken');
+      return true;
+    } catch (e) {
+      print('Failed to decode token: $e');
+      return false;
+    }
+  }
+
   Future<void> _submitInfo() async {
-    final String apiUrl = 'http://10.0.2.2:3000/user/infoUpdatePP';
+    String? token = await storage.read(key: 'jwtToken');
+
+    // 토큰이 없거나 유효하지 않으면 새로운 토큰을 요청
+    if (token == null || !(await isTokenValid(token))) {
+      print('Token not found or invalid, fetching new token');
+      token = await getToken();
+    } else {
+      print('Token found and valid: $token');
+    }
+
+    final String apiUrl = '$baseUrl/user/infoUpdateSocial';
 
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token', // JWT 토큰을 헤더에 추가
         },
         body: jsonEncode({
-          'email': widget.email,
-          'password': widget.password,
-          'name': widget.name,
           'birthdate': birthCon.text,
           'gender': g.toString().split('.').last,
           'height': heightCon.text,
@@ -65,6 +115,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
         setState(() {
           isComplete = true;
         });
+
         // Snackbar 표시
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -72,11 +123,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
             duration: Duration(seconds: 2), // Snackbar가 표시되는 시간
           ),
         );
-
-        // Dashpage로 이동
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Sensorattach()),);
       } else {
         // 오류 발생
         print('정보 업데이트 실패');
@@ -97,8 +143,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
       );
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +263,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
           Row(
             children: [
               Container(
-                width: 200,
+                width: 160,
                 child: TextFormField(
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.calendar_today_outlined),
@@ -248,7 +292,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("성별을 선택해주세요",style: TextStyle(fontSize: 17),),
+          Text("성별을 선택해주세요"),
           SizedBox(height: 10),
           Row(
             children: [
@@ -289,8 +333,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("키(cm)를 입력해주세요",style: TextStyle(fontSize: 17),),
-          SizedBox(height: 10),
           Row(
             children: [
               Container(
@@ -299,14 +341,14 @@ class _UserInfoPageState extends State<UserInfoPage> {
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.height),
                       hintStyle: TextStyle(fontSize: 15),
-                      hintText: "ex)163",
+                      hintText:  "ex)163",
                       errorBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.red),
                       ),
                       focusedErrorBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.red, width: 2.0),
                       ),
-                    suffixText: "cm",
+                      suffixText: "cm"
                   ),
                   keyboardType: TextInputType.number,
                   controller: heightCon,
@@ -325,8 +367,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("몸무게(kg)를 입력해주세요",style: TextStyle(fontSize: 17),),
-          SizedBox(height: 10),
           Row(
             children: [
               Container(
@@ -335,14 +375,14 @@ class _UserInfoPageState extends State<UserInfoPage> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.monitor_weight_outlined),
                     hintStyle: TextStyle(fontSize: 15),
-                    hintText: "ex) 50",
+                    hintText:  "ex) 50",
                     errorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color : Colors.red),
+                      borderSide: BorderSide(color: Colors.red),
                     ),
                     focusedErrorBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.red, width: 2.0),
                     ),
-                    suffixText: "kg",
+                    suffixText: "kg", // TextFormField 끝에 "kg" 추가
                   ),
                   keyboardType: TextInputType.number,
                   controller: weightCon,

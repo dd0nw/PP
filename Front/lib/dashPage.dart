@@ -279,7 +279,7 @@ class _DashPageState extends State<DashPage> {
                         children: [
                            SizedBox(height: 15,),
                            Container(
-                              child: Text('실시간데이터', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                              child: Text('실시간데이터', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                            ),
                            SizedBox(height: 13,),
                            Row(

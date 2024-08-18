@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-class ProfileService {
+class SettingService {
   final String baseUrl = 'http://10.0.2.2:3000';
   final storage = FlutterSecureStorage();
 
@@ -60,14 +60,8 @@ class ProfileService {
     }
   }
 
-  // 프로필을 저장하는 메서드
-  Future<Map<String, dynamic>> saveProfile({
-    required String name,
-    required String birthdate,
-    required String gender,
-    required double height,
-    required double weight,
-  }) async {
+  // 프로필을 조회하는 메서드
+  Future<List<Map<String, dynamic>>> fetchAnalysis(String date) async { // 날짜에 대한 데이터
     String? token = await storage.read(key: 'jwtToken');
 
     // 토큰이 없거나 유효하지 않으면 새로운 토큰을 요청
@@ -78,38 +72,30 @@ class ProfileService {
       print('Token found and valid: $token');
     }
 
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
+    final response = await http.post(Uri.parse('$baseUrl/profile'), // "/analysis"
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        'createdAt': date, // 날짜
+      }),
+    );
 
-    final body = jsonEncode({
-      'name': name,
-      'birthdate': birthdate,
-      'gender': gender,
-      'height': height,
-      'weight': weight,
-    });
+    if (response.statusCode == 200) {
+      List<dynamic> body = json.decode(response.body);
+      print(
+          'fetchAnalysis: $body'); //////////////////////////////////console DB -> node.js에서 넘어온 값
 
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/user/profile'),
-        headers: headers,
-        body: body,
-      );
-      print('Response status: ${response.statusCode}'); // 응답 상태 코드 로그
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        print('Response data: $responseData'); // 응답 데이터 로그
-        return responseData;
-      } else {
-        print('Failed to save profile, status code: ${response.statusCode}');
-        throw Exception('Failed to save profile');
-      }
-    } catch (error) {
-      print('Error saving profile: $error');
-      throw error;
+      // List<Map<String, dynamic>>
+      List<Map<String, dynamic>> results = List<Map<String, dynamic>>.from(
+          body);
+      return results;
+    } else {
+      print('Failed to load analysis result with status code: ${response
+          .statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to load analysis result');
     }
   }
 }

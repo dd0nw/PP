@@ -1,12 +1,12 @@
+// 로그인(첫)페이지
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'bottomPage.dart';
 import 'dashPage.dart';
-// import 'package:flutter_appauth/flutter_appauth.dart';
-// import 'package:webview_flutter/webview_flutter.dart';
+import 'sociallogin/OAuthWebview.dart';
+import 'joinPage.dart';
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,41 +16,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController idCon = TextEditingController();
   final TextEditingController pwCon = TextEditingController();
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  // final FlutterAppAuth _appAuth = FlutterAppAuth();
-  // late WebViewController _webViewController;
-  // final String kakaoLoginUrl = "http://10.0.2.2:3000/auth/kakao";  // Node.js 서버 URL
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _webViewController = WebViewController()
-  //     ..setJavaScriptMode(JavaScriptMode.unrestricted)
-  //     ..setBackgroundColor(const Color(0x00000000))
-  //     ..setNavigationDelegate(
-  //       NavigationDelegate(
-  //         onProgress: (int progress) {
-  //           // 로딩 바 업데이트
-  //         },
-  //         onPageStarted: (String url) {},
-  //         onPageFinished: (String url) {},
-  //         onHttpError: (HttpResponseError error) {},
-  //         onWebResourceError: (WebResourceError error) {},
-  //         onNavigationRequest: (NavigationRequest request) {
-  //           if (request.url.contains("?token=")) {
-  //             final token = Uri.parse(request.url).queryParameters['token'];
-  //             Navigator.pop(context, token);
-  //             return NavigationDecision.prevent;
-  //           }
-  //           return NavigationDecision.navigate;
-  //         },
-  //       ),
-  //     )
-  //     ..loadRequest(Uri.parse(kakaoLoginUrl));
-  // }
-
+  // 일반 로그인
   Future<void> _login() async {
-    // 일반 로그인
     final String url = 'http://10.0.2.2:3000/user/login';
     // final String url = 'http://192.168.219.228:3000/user/login';
     final response = await http.post(
@@ -77,21 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Future<void> _loginWithKakao() async {
-  //   final result = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => KakaoLoginWebView(controller: _webViewController),
-  //     ),
-  //   );
-  //
-  //   if (result != null) {
-  //     // 로그인 성공 및 JWT 토큰 사용
-  //     print("JWT Token: $result");
-  //     // TODO: 토큰 저장 및 이후 요청에 사용
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,59 +62,71 @@ class _LoginScreenState extends State<LoginScreen> {
             color: Colors.white,
             child: Column(
               children: [
-                Image.asset('img/logo.png', width: 170, height: 170),
-                SizedBox(height: 30),
+                Image.asset('img/logo.png', width: 220, height: 200),
+                SizedBox(height: 40),
                 Container(
-                  child: Flexible(
-                    child: TextField(
-                      controller: idCon,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        hintText: '이메일',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
+                  width: 290,
+                  child: TextField(
+                    controller: idCon,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.email_outlined),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
                       ),
+                      hintText: '이메일',
+                      hintStyle: TextStyle(color: Colors.grey[500]),
                     ),
                   ),
-                  width: 273,
                 ),
+                SizedBox(height: 10,),
                 Container(
-                  child: Flexible(
-                    child: TextField(
-                      controller: pwCon,
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        hintText: '비밀번호',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
+                  width: 290,
+                  child: TextField(
+                    controller: pwCon,
+                    obscureText: true,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.lock_outline),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
                       ),
+                      hintText: '비밀번호',
+                      hintStyle: TextStyle(color: Colors.grey[500]),
                     ),
                   ),
-                  width: 273,
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(284, 40),
-                    backgroundColor: Colors.red[900],
+                    minimumSize: Size(284, 50),
+                    backgroundColor: Colors.pink,
                     foregroundColor: Colors.white,
                   ),
                   child: Text(
                     '로그인',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 18
                     ),
                   ),
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: ()async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OAuthWebView(oauthProvider: 'google'),
+                      ),
+                    );
+
+                    if (result != null) {
+                      // result는 OAuth 인증 후 받은 토큰입니다.
+                      print('Google Login Token: $result');
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     side: BorderSide(
                       color: Colors.grey,
@@ -187,7 +152,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 5),
                 ElevatedButton(
-                  onPressed: (){},
+                  onPressed: ()async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OAuthWebView(oauthProvider: 'kakao'),
+                      ),
+                    );
+
+                    if (result != null) {
+                      // result는 OAuth 인증 후 받은 토큰입니다.
+                      print('Kakao Login Token: $result');
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow,
                     foregroundColor: Colors.black,
@@ -214,7 +191,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => JoinPage()),
+                          );
+                        },
                         child: Text(
                           '회원가입',
                           style: TextStyle(color: Colors.grey[700]),

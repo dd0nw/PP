@@ -1,14 +1,20 @@
+// 추가한 것
 buildscript {
+    ext.kotlin_version = '1.9.0' // Kotlin 버전 업데이트
+
     repositories {
         google()  // Firebase와 관련된 플러그인을 가져올 수 있도록 설정
         mavenCentral()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.2'  // Android Gradle 플러그인
         classpath 'com.google.gms:google-services:4.3.15'  // Firebase 설정을 위한 Google 서비스 플러그인
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"  // Kotlin Gradle 플러그인
     }
 }
 
+// 아래는 기본적으로 있던 것
 allprojects {
     repositories {
         google()  // 모든 프로젝트에서 Google Maven 저장소를 사용할 수 있도록 설정
@@ -26,18 +32,4 @@ subprojects {
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
-}
-// Kotlin 버전 추가
-buildscript {
-    ext.kotlin_version = '1.9.0' // Kotlin 버전 업데이트
-
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // 여기에 필요한 다른 의존성 추가
-    }
 }

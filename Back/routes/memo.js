@@ -16,11 +16,12 @@ router.post("/memo", AuthToken, async (req, res) => {
         { memoContent, id, analysis_idx },
         { autoCommit: true }
       );
+      console.log("메모수정완료", memoContent, id, analysis_idx);
       const result = await connection.execute(
         "SELECT ANALISYS_ETC FROM TB_ANALYSIS WHERE ID = :id",
         { id }
       );
-
+      console.log("수정후 바뀐거", result);
       if (result.rows.length > 0) {
         const clob = result.rows[0][0];
         if (clob) {

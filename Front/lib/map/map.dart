@@ -1,3 +1,4 @@
+// 가까운 병원 찾기
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -163,7 +164,19 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Google Map"),
+        title: Text(
+          "가까운 병원 찾기",
+          style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.chevron_left, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          }, // 전페이지로 이동
+        ),
+        backgroundColor: Color(0xFFFFF8F9),
+        elevation: 0,
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

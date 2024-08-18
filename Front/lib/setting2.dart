@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:front/password/passwordPage.dart';
+import 'package:front/profile/profile.dart';
+import 'package:front/sensorattach.dart';
+import 'package:front/sensorattach22.dart';
+import 'package:front/settings_alarm.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
+import 'bottomPage.dart';
+import 'ex01_login.dart';
+
+// 이름, 아이디 가져오기
+
+
+// 로그아웃 하기
 class LogoutService {
   final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
   final storage = FlutterSecureStorage(); // JWT토큰 저장
@@ -17,7 +29,7 @@ class LogoutService {
 
       // 로그아웃 요청 보내기
       final response = await http.post(
-        Uri.parse('$baseUrl/logout'),
+        Uri.parse('$baseUrl/user/logout'),
         headers: {
           'Authorization': 'Bearer $token', // 토큰을 Authorization 헤더에 포함
           'Content-Type': 'application/json',
@@ -52,15 +64,27 @@ class _settingState extends State<setting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFFF8F9),
       appBar: AppBar(
-        leading: Icon(Icons.chevron_left),
+        title: Text(
+          "설정",
+          style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.chevron_left, color: Colors.black),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BottomPage()),);
+
+          }, // 전페이지로 이동
+        ),
+        backgroundColor: Color(0xFFFFF8F9),
         elevation: 0,
-        title: Text("설정", style: TextStyle(color: Colors.black),),
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.blue,
       ),
       body: Container(
-        color: Colors.white,
+        color: Color(0xFFFFF8F9),
         child: ListView(
           padding: EdgeInsets.all(20.0),
           children: [
@@ -97,6 +121,9 @@ class _settingState extends State<setting> {
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 // 비밀번호 변경 클릭 시 동작
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChangeProfile()));
               },
             ),
             ListTile(
@@ -104,7 +131,9 @@ class _settingState extends State<setting> {
               title: Text('비밀번호 변경'),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // 콘텐츠 설정 클릭 시 동작
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PasswordCh()));
               },
             ),
             ListTile(
@@ -112,7 +141,10 @@ class _settingState extends State<setting> {
               title: Text('알림설정'),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // 소셜 클릭 시 동작
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AppNoti()));
+
               },
             ),
             ListTile(
@@ -120,7 +152,7 @@ class _settingState extends State<setting> {
               title: Text('센서 연결정보'),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // 언어 클릭 시 동작
+
               },
             ),
             ListTile(
@@ -128,78 +160,25 @@ class _settingState extends State<setting> {
               title: Text('사용방법'),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // 개인정보 및 보안 클릭 시 동작
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Sensorattach22()));
+
               },
             ),
-            SizedBox(height: 30),
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  await logoutService.logout();
-                  // 로그아웃 후, 로그인 페이지로 리디렉션
-                  Navigator.pushReplacementNamed(context, '/dashPage');
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 아이콘과 텍스트 가운데 정렬
-                  children: [
-                    Icon(Icons.logout_outlined, color: Colors.black,),
-                    SizedBox(width: 3), // 아이콘과 텍스트 사이 간격 추가
-                    Text(
-                      '로그아웃',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  side: BorderSide(
-                    color: Colors.black12,
-                    width: 1,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  fixedSize: Size(150, 40), // 버튼의 고정 크기 설정
-                ),
-              ),
+            ListTile(
+              leading: Icon(Icons.logout_outlined),
+              title: Text('로그아웃'),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () async {
+                await logoutService.logout();
+                // 로그아웃 후, 로그인 페이지로 리디렉션
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
             ),
-            // ListTile(
-            //   leading: Icon(Icons.notifications),
-            //   title: Text('알림'),
-            // ),
-            // Divider(),
-            // SwitchListTile(
-            //   title: Text('다크 모드'),
-            //   value: isDarkTheme,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       isDarkTheme = value;
-            //     });
-            //   },
-            // ),
-            // SwitchListTile(
-            //   title: Text('계정 활성화'),
-            //   value: isAccountActive,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       isAccountActive = value;
-            //     });
-            //   },
-            // ),
-            // SwitchListTile(
-            //   title: Text('기회 알림'),
-            //   value: isOpportunityEnabled,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       isOpportunityEnabled = value;
-            //     });
-            //   },
-            // ),
-            // SizedBox(height: 20),
-
           ],
         ),
       ),

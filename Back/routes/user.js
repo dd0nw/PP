@@ -191,7 +191,8 @@ router.post("/checkId", async (req, res) => {
     subject: "PULSEPULSE 인증 코드",
     text: `인증코드는 ${code} 입니다.`,
   };
-
+  console.log(mailOptions.to);
+  console.log(mailOptions.text);
   try {
     const connection = await connectToOracle();
 
@@ -391,16 +392,21 @@ router.post("/changePw", async (req, res) => {
 /** 프로필 수정 */
 router.post("/profile", AuthToken, async (req, res) => {
   const id = req.user.id;
-  const { birthdate, gender, height, weight } = req.body;
-
+  const { birthdate, gender, height, weight, name } = req.body;
+  const formattedBirthdate = `${birthdate.substring(
+    0,
+    4
+  )}/${birthdate.substring(5, 7)}/${birthdate.substring(8, 10)}`;
+  console.log("프로필수정", req.body, formattedBirthdate);
   let connection;
   try {
     connection = await connectToOracle();
 
     const result = await connection.execute(
-      `UPDATE TB_USER SET BIRTHDATE = :birthdate, GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id`,
+      `UPDATE TB_USER SET  NAME = :name, BIRTHDATE = To_DATE(:birthdate, 'YYYY/MM/DD'), GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id`,
       {
-        birthdate: birthdate,
+        name: name,
+        birthdate: formattedBirthdate,
         gender: gender,
         height: height,
         weight: weight,
@@ -408,7 +414,7 @@ router.post("/profile", AuthToken, async (req, res) => {
       },
       { autoCommit: true }
     );
-
+    console.log(result.rowsAffected);
     if (result.rowsAffected > 0) {
       res.status(200).json({ success: true, message: "프로필 변경 성공" });
     } else {
@@ -445,6 +451,125 @@ router.post("/infoUpdate", AuthToken, async (req, res) => {
     }
   } else {
     res.status(500).json({ message: "db 연결 실패" });
+  }
+});
+
+// 추가정보입력
+router.post("/infoUpdatePP", async (req, res) => {
+  const { name, birthdate, gender, height, weight, email } = req.body;
+  const formattedBirthdate = `${birthdate.substring(
+    0,
+    4
+  )}/${birthdate.substring(4, 6)}/${birthdate.substring(6, 8)}`;
+  console.log("Formatted Birthdate: ", formattedBirthdate); // 디버깅을 위해 날짜 출력
+
+  const connection = await connectToOracle();
+  console.log(req.body);
+
+  if (connection) {
+    try {
+      const result = await connection.execute(
+        "UPDATE TB_USER SET NAME = :name, BIRTHDATE = TO_DATE(:birthdate,'YYYY/MM/DD'), GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :email",
+        {
+          name: name,
+          birthdate: formattedBirthdate,
+          gender: gender,
+          height: height,
+          weight: weight,
+          email: email,
+        },
+        { autoCommit: true }
+      );
+
+      console.log("Rows affected: ", result.rowsAffected);
+
+      if (result.rowsAffected && result.rowsAffected > 0) {
+        res.status(200).json({ message: "정보 업데이트 성공" });
+      } else {
+        res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+      }
+    } catch (error) {
+      console.error("Error during database operation:", error);
+      res
+        .status(500)
+        .json({ message: "정보 업데이트 실패", error: error.message });
+    } finally {
+      await connection.close();
+    }
+  } else {
+    res.status(500).json({ message: "DB 연결 실패" });
+  }
+});
+
+// 소셜로그인용 -> 토큰
+router.post("/infoUpdateSocial", AuthToken, async (req, res) => {
+  const id = req.user.id;
+  const { birthdate, gender, height, weight } = req.body;
+
+  // birthdate를 'YYYYMMDD' 형식에서 'YYYY/MM/DD' 형식으로 변환
+  const formattedBirthdate = `${birthdate.substring(
+    0,
+    4
+  )}/${birthdate.substring(4, 6)}/${birthdate.substring(6, 8)}`;
+  console.log("Formatted Birthdate: ", formattedBirthdate); // 디버깅을 위해 날짜 출력
+
+  const connection = await connectToOracle();
+  console.log(req.body);
+
+  if (connection) {
+    try {
+      const result = await connection.execute(
+        "UPDATE TB_USER SET BIRTHDATE = TO_DATE(:birthdate, 'YYYY/MM/DD'), GENDER = :gender, HEIGHT = :height, WEIGHT = :weight WHERE ID = :id",
+        { birthdate: formattedBirthdate, gender, height, weight, id },
+        { autoCommit: true }
+      );
+
+      console.log(result.rowsAffected);
+      if (result.rowsAffected > 0) {
+        res.status(200).json({ message: "정보 업데이트 성공" });
+      } else {
+        res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+      }
+    } catch (error) {
+      console.error("Error during database operation:", error);
+      res
+        .status(500)
+        .json({ message: "정보 업데이트 실패", error: error.message });
+    } finally {
+      await connection.close();
+    }
+  } else {
+    res.status(500).json({ message: "DB 연결 실패" });
+  }
+});
+
+// 프로필 정보 가져오기
+router.get("/profile", AuthToken, async (req, res) => {
+  const id = req.user.id;
+  const connection = await connectToOracle();
+  if (connection) {
+    try {
+      const result = await connection.execute(
+        "SELECT ID, NAME FROM TB_USER WHERE ID = :id",
+        [id]
+      );
+
+      if (result.rows.length > 0) {
+        const ID = result.rows[0][0];
+        console.log(ID);
+        const NAME = result.rows[0][1];
+        res.status(200).json({ id: ID, name: NAME });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+
+      await connection.close();
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+      await connection.close();
+    }
+  } else {
+    res.status(500).json({ error: "Database connection error" });
   }
 });
 

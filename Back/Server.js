@@ -1,6 +1,6 @@
 process.env.ORA_SDTZ = "Asia/Seoul";
 require("dotenv").config();
-const express = require("express"); //
+const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -37,5 +37,5 @@ const router = require("./routes/router");
 app.use("/", router); // / -> /api로 바꿈
 
 app.listen(port, () => {
-  console.log(`Server is running at http://192.168.219.228:${port}`);
+  console.log(`Server is running at http://localhost:${port}`);
 });

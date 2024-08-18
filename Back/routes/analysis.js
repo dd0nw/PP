@@ -7,8 +7,9 @@ const axios = require("axios");
 require("dotenv").config();
 // const FCM = require("fcm-node");
 
-const TARGET_TOKEN = process.env.TARGET_TOKEN;
-// const fcm = new FCM(process.env.FCM_SERVER_KEY); // FCM 서버 키를 환경 변수에서 가져옵니다.
+const TARGET_TOKEN =
+  "fQAKRZ1lT023AhuHA7hDuX:APA91bGr79JINlpSJxrFIBTZJwcJjZq66hgxVgImf3bdfYqCWPtWMoMvauKLPfXLIXQ1fKX4O8X2ke4FBF2ZP7WaFdV_q3rElkKh_GAWPe_3BHL4Fl9au8aT01Fhk2q35i_gpl9cXPIp";
+//const fcm = new FCM(process.env.FCM_SERVER_KEY); // FCM 서버 키를 환경 변수에서 가져옵니다.
 
 // CLOB을 문자열로 변환하는 함수
 async function convertClobAsString(lob) {
@@ -173,26 +174,14 @@ router.post("/analysis", AuthToken, async (req, res) => {
 
 /////////////////////알림
 
-// 푸시 알림 전송 함수 (fcm-node 사용)
+// 푸시 알림 전송 함수
 async function sendNotificationToFlutter() {
-  const message = {
-    to: TARGET_TOKEN, // 타겟 디바이스의 FCM 토큰
-    notification: {
-      title: "테스트 데이터 발송",
-      body: "데이터가 잘 가나요?",
-    },
-    data: {
-      style: "굳굳",
-    },
-  };
-
-  fcm.send(message, function (err, response) {
-    if (err) {
-      console.error("Error sending notification:", err);
-    } else {
-      console.log("Successfully sent with response: ", response);
-    }
-  });
+  try {
+    const response = await axios.get("http://localhost:3000/push_send");
+    console.log("Notification send response:", response.data);
+  } catch (err) {
+    console.error("Error sending notification:", err);
+  }
 }
 
 // 데이터베이스 변경 확인 함수
@@ -229,10 +218,26 @@ setInterval(checkForUpdates, 6000);
 
 // 푸시 알림 전송 엔드포인트
 router.get("/push_send", function (req, res, next) {
-  sendNotificationToFlutter()
-    .then(() => res.status(200).send("Notification sent successfully"))
-    .catch((err) => {
-      console.error("Error sending notification: ", err);
+  let target_token = TARGET_TOKEN;
+
+  let message = {
+    data: {
+      title: "테스트 데이터 발송",
+      body: "데이터가 잘 가나요?",
+      style: "굳굳",
+    },
+    token: target_token,
+  };
+  console.log(message);
+  admin
+    .messaging()
+    .send(message)
+    .then(function (response) {
+      console.log("Successfully sent message: : ", response);
+      res.status(200).send("Notification sent successfully");
+    })
+    .catch(function (err) {
+      console.log("Error Sending message!!! : ", err);
       res.status(500).send("Error sending notification");
     });
 });

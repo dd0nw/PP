@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../setting2.dart';
 import 'profile_service.dart';
 
 class ChangeProfile extends StatefulWidget {
@@ -50,44 +51,46 @@ class _ChangeProfileState extends State<ChangeProfile> {
       ),
       backgroundColor: const Color(0xFFFFF6F6),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(26.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 0),
 
-            // 이름 필드와 작은 텍스트 필드 포함
-            Container(
-              width: 317,
-              height: 57,
-              child: TextField(
-                controller: _nameController,
-                textAlign: TextAlign.center,
-                obscureText: false,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  fillColor: const Color(0xFFFFFFFF),
-                  filled: true,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFFC1C1C1)),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFFC1C1C1)),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  labelText: '이름',
-                  labelStyle: const TextStyle(
-                    color: Color(0xFF000000),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.0,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+            // // 이름 필드와 작은 텍스트 필드 포함
+            // Container(
+            //   width: 317,
+            //   height: 57,
+            //   child: TextField(
+            //     controller: _nameController,
+            //     textAlign: TextAlign.center,
+            //     obscureText: false,
+            //     keyboardType: TextInputType.text,
+            //     decoration: InputDecoration(
+            //       fillColor: const Color(0xFFFFFFFF),
+            //       filled: true,
+            //       enabledBorder: OutlineInputBorder(
+            //         borderSide: const BorderSide(color: Color(0xFFC1C1C1)),
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       focusedBorder: OutlineInputBorder(
+            //         borderSide: const BorderSide(color: Color(0xFFC1C1C1)),
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       labelText: '이름',
+            //       labelStyle: const TextStyle(
+            //         color: Color(0xFF000000),
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 14.0,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
 
             // 생년월일 필드
+            Text("생년월일", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+            SizedBox(height: 6,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -199,7 +202,9 @@ class _ChangeProfileState extends State<ChangeProfile> {
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
+            Text("성별", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+            SizedBox(height: 6,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -243,7 +248,9 @@ class _ChangeProfileState extends State<ChangeProfile> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
+                Text("키", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                SizedBox(height: 6,),
 
                 // 키 선택 필드
                 Container(
@@ -279,7 +286,9 @@ class _ChangeProfileState extends State<ChangeProfile> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
+                Text("몸무게", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                SizedBox(height: 6,),
 
                 // 몸무게 선택 필드
                 Container(
@@ -318,7 +327,7 @@ class _ChangeProfileState extends State<ChangeProfile> {
               ],
             ),
 
-            const SizedBox(height: 150),
+            const SizedBox(height: 120),
             // 저장 버튼
             ElevatedButton(
               onPressed: () async {
@@ -346,7 +355,7 @@ class _ChangeProfileState extends State<ChangeProfile> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                backgroundColor: const Color(0xFFFF6B6B),
+                backgroundColor: Colors.pink,
                 foregroundColor: Colors.white,
               ),
               child: const Text(

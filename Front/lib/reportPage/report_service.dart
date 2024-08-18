@@ -191,7 +191,7 @@ class MemoService {
 
         ScaffoldMessenger.of(context).showSnackBar(
           //SnackBar(content: Text('PDF 파일이 다운로드되었습니다')),
-          SnackBar(content: Text('PDF 파일이 다운로드되었습니다: $filePath')),
+          SnackBar(content: Text('PDF 파일이 다운로드되었습니다')),
 
         );
 

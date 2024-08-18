@@ -1,12 +1,8 @@
-// 앱 수준 build.gradle (Module level)
-
-// 이 모듈에 적용할 플러그인들
 plugins {
-    id "com.android.application" //★
+    id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
-    id "com.google.gms.google-services" //★ 2번 추가 = apply plugin: 'com.google.gms.google-services' //★
+    id "com.google.gms.google-services" // 추가된 것 -> FCM★ 2번 추가
 }
 
 def localProperties = new Properties()
@@ -27,13 +23,15 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
-
-// android 에 대한 구체적인 빌드 옵션
+ //추가된 것 -> 소셜로그인
 def googleMapApiKey = localProperties.getProperty('google.map.Key')
 def kakaonativeappKey = localProperties.getProperty('kakao.native.app.Key')
 
+// Kotlin 버전 변수 설정
+ext.kotlin_version = '1.9.0'
+
 android {
-    namespace = "com.example.front" //Android 패키지 이름
+    namespace = "com.example.front"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -42,27 +40,22 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    // -> defaultConfig에 대한것들은 flavor에서 따로 override할 수 있다는듯.
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.front"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
         minSdk = 21
         targetSdk = 34
-        manifestPlaceholders += [appAuthRedirectScheme: 'com.example.front', googleMapApiKey:googleMapApiKey, kakaoNativeAppKey:kakaonativeappKey]
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+        // 추가된것 -> 구글, 카카오 소셜 로그인
+        manifestPlaceholders += [
+                appAuthRedirectScheme: 'com.example.front',
+                googleMapApiKey: googleMapApiKey,
+                kakaoNativeAppKey: kakaonativeappKey
+        ]
     }
 
-    // 다양한 빌드 타입을 구성, 보통 debug, release를 둔다.
-    // debug는 따로 작성안해도 알아서 암시적으로 돌아간다는듯함.
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
         }
     }
@@ -72,17 +65,10 @@ flutter {
     source = "../.."
 }
 
-// 모듈 수준 빌드에 적용될 디펜던시
+// 추가된것
 dependencies {
-    // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:33.1.2') //★ 2번 추가
-
-    // Add Firebase Messaging
     implementation 'com.google.firebase:firebase-messaging'
-
-    // Add other Firebase products as needed
     implementation 'com.google.firebase:firebase-analytics' //★ 2번 추가
-    // Firebase 관련 종속성들
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

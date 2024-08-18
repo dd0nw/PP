@@ -31,7 +31,7 @@ router.use("/", hospitalRoutes);
 // 알림 dush PAGE
 router.get("/push_send", function (req, res, next) {
   let target_token =
-    "fs8n1QmvQNCLReyHBVBDCq:APA91bGbU0Lqh58Lysb8Hv3Md1Fg7LRtVXl23h6R3C39lyMADtKZDqVk6beS9QtpO9x_AKbESpzhWk2BGeaJYoGjibAo5mmeITwv_MBZDjDmo0TmVLee1lhu3pJbnqEBeaufVH3cSL_5";
+    "fQAKRZ1lT023AhuHA7hDuX:APA91bGr79JINlpSJxrFIBTZJwcJjZq66hgxVgImf3bdfYqCWPtWMoMvauKLPfXLIXQ1fKX4O8X2ke4FBF2ZP7WaFdV_q3rElkKh_GAWPe_3BHL4Fl9au8aT01Fhk2q35i_gpl9cXPIp";
   //target_token은 푸시 메시지를 받을 디바이스의 토큰값입니다
 
   let message = {

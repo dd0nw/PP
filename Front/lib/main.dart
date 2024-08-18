@@ -1,33 +1,30 @@
 import 'package:firebase_messaging/firebase_messaging.dart'; // 알림★
 import 'package:flutter/material.dart';
 import 'package:front/dart2Page.dart';
-import 'package:front/passwordchange.dart';
 import 'package:front/push%20notification/home_screen.dart';
-import 'package:front/push%20notification/notification_screen.dart';
+
 import 'package:front/reportPage/reportPage.dart';
-import 'package:front/setting.dart';
+import 'package:front/sensorattach.dart';
+import 'package:front/sensorinfo.dart';
 import 'package:front/setting2.dart';
+import 'package:front/settings_alarm.dart';
 import 'package:front/userinfo_birth.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'FCM Token.dart';
-import 'LoginPage.dart';
-import 'LoginPage.dart';
+import 'alarmtest.dart';
+import 'sociallogin/LastSocial.dart';
 import 'alarm.dart';
 import 'api_service.dart'; // ApiService 정의된 파일 import
 import 'bottomPage.dart';
-import 'bt.dart';
+import 'cardiainfoPage.dart';
 import 'dashPage.dart';
-import 'ecg_chart.dart';
 import 'ecg_graph.dart';
-
-import 'ex.dart';
 import 'ex01_login.dart';
 import 'push notification/home_page.dart';
-import 'hosipitalmap.dart';
-import 'join.dart';
+import 'map/hosipitalmap.dart';
 import 'joinPage.dart';
 import 'memo2page/memo2Page.dart';
 import 'package:firebase_core/firebase_core.dart'; // 알림★
@@ -84,6 +81,8 @@ void main() async {
   runApp(const MyApp());
 }
 
+
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print("_firebaseMessagingBackgroundHandler : $message");
@@ -97,14 +96,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home: BottomPage(),
-      // routes: {
-      //   '/notification': (context) => NotificationScreen(),
-      // navigatorKey: navigatorKey,
-      // routes: {
-      //   '/': (context) => const EmptyPage(), // 기본페이지
-      //   '/push-page': (context) => const HomePage(), // 푸시 알림을 클릭했을때 이동할 페이지
-     // },
+      navigatorKey: navigatorKey,
+      home: LoginScreen(),
+      routes: {
+        //'/push-page': (context) => PushPage(), // 추가한 라우트
+        '/notification': (context) => NotificationScreen(), // 추가한 라우트
+      },
     );
   }
 }
@@ -173,8 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //
 //
 // import 'package:flutter/material.dart';
-// import 'authservice.dart';
-//
 // void main() => runApp(MyApp());
 //
 // class MyApp extends StatelessWidget {
@@ -226,7 +221,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //
 //
 // import 'package:flutter/material.dart';
-// import 'authservice.dart';
 //
 // void main() => runApp(MyApp());
 //

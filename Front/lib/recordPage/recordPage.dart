@@ -1,3 +1,4 @@
+// 기록 화면 (날짜 조회)
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
@@ -18,8 +19,16 @@ class _recordPageState extends State<recordPage> {
   String _selectedDate = DateFormat('yyyy.MM.dd').format(DateTime.now());
   MemoService memoService = MemoService(); // record_service
 
-  //데이터를 리스트로 저장 - record_service
+  //데이터를 리스트로 저장 -> record_service
   List<Map<String, dynamic>>? _analysisResults;
+
+  // 화면이 로드될때 자동으로 오늘날짜 기록 가져오기!
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = DateFormat('yyyy.MM.dd').format(DateTime.now());
+    fetchAnalysis(DateFormat('yyyy/MM/dd').format(DateTime.now()));
+  }
 
   Future<void> fetchAnalysis(String selectedDate) async { // 달력에 선택한날짜로 가져옴
     try {
@@ -120,7 +129,7 @@ class _recordPageState extends State<recordPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(10, 35),
+                          minimumSize: Size(30, 35),
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
@@ -131,7 +140,7 @@ class _recordPageState extends State<recordPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_selectedDate, style: TextStyle(fontSize: 20),),
+                            Text(_selectedDate, style: TextStyle(fontSize: 21),),
                             SizedBox(width: 5,),
                             Icon(Icons.calendar_month),
                           ],
@@ -141,7 +150,7 @@ class _recordPageState extends State<recordPage> {
                   ),
                   SizedBox(height: 0,),
                   Center(
-                    child: Text( "부정맥발생횟수: ${_analysisResults?.length ?? 0}회",
+                    child: Text( "부정맥 발생횟수: ${_analysisResults?.length ?? 0}회",
                       style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
                   ),
                   SizedBox(height: 5,),
@@ -176,11 +185,11 @@ class _recordPageState extends State<recordPage> {
                                   side: BorderSide(color: Colors.black12),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(3.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     children: [
                                       ListTile(
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
                                         visualDensity: VisualDensity(vertical: -4), // 시각적 밀도 설정
                                         minVerticalPadding: 0, // 최소 수직 패딩 설정
                                         title: Text(
@@ -209,7 +218,7 @@ class _recordPageState extends State<recordPage> {
                                         decoration: BoxDecoration(
                                           color: Colors.white
                                         ),
-                                        height: 70,
+                                        height: 63,
                                         width: MediaQuery.of(context).size.width,
                                         child: Center(
                                           child: _buildEcgGraph(analysisResult),
