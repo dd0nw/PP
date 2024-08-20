@@ -23,39 +23,52 @@
 ## ⛏ 기술스택
 <table>
    <tr>
-    <th>구분</th>
-    <th>내용</th>
- </tr>
- <tr>
-    <td>사용언어</td>
-    <td>
-
-    </td>
-<tr>
-    <td>개발도구</td>
-    <td>
-
-    </td>
-</tr>
-<tr>
-     <td>서버환경</td>
-     <td>
-
-     </td>
-</tr>
-<tr>
-    <td>데이터베이스</td>
-    <td>
-
-    </td>
-</tr>
-<tr>
-    <td>협업도구</Td>
-    <td>
-
-    </td>
-</tr>
-</tr> 
+      <th>구분</th>
+      <th>내용</th>
+   </tr>
+    <tr>
+        <td>사용언어</td>
+        <td>
+  
+        </td>
+    </tr>
+     <tr>
+        <td>프레임워크</td>
+        <td>
+  
+        </td>
+    </tr>
+    <tr>
+        <td>인프라구조</td>
+        <td>
+  
+        </td>
+    </tr>
+    <tr>
+        <td>개발도구</td>
+        <td>
+    
+        </td>
+    </tr>
+    <tr>
+         <td>서버환경</td>
+         <td>
+    
+         </td>
+    </tr>
+    <tr>
+        <td>데이터베이스</td>
+        <td>
+    
+        </td>
+    </tr>
+    <tr>
+        <td>협업도구</Td>
+        <td>
+    
+        </td>
+    </tr>
+    </tr> 
 </table>
 
 <br>
