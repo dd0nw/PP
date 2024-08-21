@@ -92,7 +92,8 @@
 <br>
 
 ## 📌 SW유스케이스 
-![image]()
+![image](https://github.com/user-attachments/assets/a240d7a7-499a-4828-b8cb-4db759bbc2ab)
+
 
 ## 📌 서비스 흐름도 
 ![imgae](https://github.com/user-attachments/assets/988fc53f-30b7-40be-9cba-bd5ad1a201fb)
