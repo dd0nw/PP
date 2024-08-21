@@ -88,14 +88,15 @@
 <br>
 
 ## ⚙ 시스템 아키텍처(구조) 예시 
-![서비스 아키텍처]()
+![시스템 아키텍처](https://github.com/user-attachments/assets/5c7f0496-4c45-481c-80f2-3e4158d669e7)
 <br>
 
 ## 📌 SW유스케이스 
 ![image]()
 
 ## 📌 서비스 흐름도 
-![imgae]()
+![imgae](https://github.com/user-attachments/assets/988fc53f-30b7-40be-9cba-bd5ad1a201fb)
+
 <br>
 
 ##  📌 ER다이어그램
