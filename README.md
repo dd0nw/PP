@@ -58,6 +58,12 @@
             <img src="https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white">
          </td>
     </tr>
+  <tr>
+         <td>인프라구조</td>
+         <td>
+            <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
+         </td>
+    </tr>
     <tr>
         <td>데이터베이스</td>
         <td>
