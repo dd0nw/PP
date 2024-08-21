@@ -29,20 +29,15 @@
   <tr>
       <td>사용언어</td>
       <td>
-  
+          <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"/> 
       </td>
    </tr>
    <tr>
       <td>프레임워크</td>
       <td>
+          <img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/> 
           <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=Flask&logoColor=white"/> 
           <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=Socket.io&logoColor=white">
-      </td>
-   </tr>
-   <tr>
-      <td>인프라구조</td>
-      <td>
-  
       </td>
    </tr>
    <tr>
