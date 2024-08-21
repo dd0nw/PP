@@ -22,37 +22,37 @@
 
 ## ⛏ 기술스택
 <table>
-   <tr>
+  <tr>
       <th>구분</th>
       <th>내용</th>
+  </tr>
+  <tr>
+      <td>사용언어</td>
+      <td>
+  
+      </td>
    </tr>
-    <tr>
-        <td>사용언어</td>
-        <td>
+   <tr>
+      <td>프레임워크</td>
+      <td>
   
-        </td>
-    </tr>
-     <tr>
-        <td>프레임워크</td>
-        <td>
+      </td>
+   </tr>
+   <tr>
+      <td>인프라구조</td>
+      <td>
   
-        </td>
-    </tr>
-    <tr>
-        <td>인프라구조</td>
-        <td>
-  
-        </td>
-    </tr>
-    <tr>
+      </td>
+   </tr>
+   <tr>
         <td>개발도구</td>
         <td>
             <img src="https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white"/> 
             <img src="https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white"/>
             <img src="https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=Jupyter&logoColor=white"/>
         </td>
-    </tr>
-    <tr>
+   </tr>
+   <tr>
          <td>서버환경</td>
          <td>
             <img src="https://img.shields.io/badge/AWS S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
@@ -104,10 +104,21 @@
 
 ## 🖥 화면 구성
 
-### 로그인/회원가입/회원괸리/회원수정/회원탈퇴
+### 로그인/회원가입/비밀번호 찾기
 ![image]()
 <br>
-
+### 설정
+![image]()
+<br>
+### 기록
+![image]()
+<br>
+### 부정맥 분석결과/메모/분석결과 다운로드/ 가까운 병원 찾아보기
+![image]()
+<br>
+### 앱 밖 알림
+![image]()
+<br>
 
 ## 👨‍👩‍👦‍👦 팀원 역할
 <table>
