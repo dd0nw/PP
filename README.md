@@ -162,8 +162,8 @@
     <td align="center"><b>Frontend</b></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/seongffm" target='_blank'>github</a></td>
     <td align="center"><a href="https://github.com/yeon820" target='_blank'>github</a></td>
+    <td align="center"><a href="https://github.com/seongffm" target='_blank'>github</a></td>
     <td align="center"><a href="https://github.com/DOAAAAAAAAAA" target='_blank'>github</a></td>
     <td align="center"><a href="https://github.com/dd0nw" target='_blank'>github</a></td>
     <td align="center"><a href="https://github.com/taeeun-park" target='_blank'>github</a></td>
