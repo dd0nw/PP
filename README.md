@@ -47,27 +47,44 @@
     <tr>
         <td>개발도구</td>
         <td>
-    
+            <img src="https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white"/> 
+            <img src="https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white"/>
+            <img src="https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=Jupyter&logoColor=white"/>
+            <img src="https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=Jupyter&logoColor=white"/>
         </td>
     </tr>
     <tr>
          <td>서버환경</td>
          <td>
-    
+            <img src="https://img.shields.io/badge/AWS S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
          </td>
     </tr>
     <tr>
         <td>데이터베이스</td>
         <td>
-    
+            <img src="https://img.shields.io/badge/Oracle 11g-F80000?style=for-the-badge&logo=Oracle&logoColor=white"/> 
         </td>
     </tr>
     <tr>
         <td>협업도구</Td>
         <td>
-    
+            <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/> 
+            <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
         </td>
     </tr>
+    <tr>
+        <td>디자인</td>
+        <td>
+            <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/>
+        </td>
+    </tr>
+    <tr>
+        <td>라이브러리</td>
+        <td>
+
+        </td>
+    </tr>
+    
     </tr> 
 </table>
 
@@ -112,8 +129,8 @@
     <td align="center"><strong>박태은</strong></td>
   </tr>
   <tr>
-    <td align="center"><b>Backend</b></td>
-    <td align="center"><b>Backend</b></td>
+    <td align="center"><b>PM, Backend, Hardware</b></td>
+    <td align="center"><b>Backend, Hardware</b></td>
     <td align="center"><b>Frontend</b></td>
     <td align="center"><b>Data Analysis, Modeling</b></td>
     <td align="center"><b>Frontend</b></td>
