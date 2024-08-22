@@ -7,6 +7,9 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const session = require("express-session");
 const passportConfig = require("./passport/passportConfig");
+const path = require("path");
+const publicDirectoryPath = path.join(__dirname, "./routes");
+
 const app = express();
 const port = 3000;
 
@@ -35,7 +38,12 @@ const router = require("./routes/router");
 
 // 알림
 app.use("/", router); // / -> /api로 바꿈
+app.use(express.static(publicDirectoryPath));
+// 루트 경로로 접근 시 test.html 제공
+app.get("/", (req, res) => {
+  res.sendFile(path.join(publicDirectoryPath, "test.html"));
+});
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running at http://192.168.27.113:${port}`);
 });

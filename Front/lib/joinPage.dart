@@ -1,6 +1,6 @@
 //회원가입페이지
 import 'package:flutter/material.dart';
-import 'package:front/userinfo_birth.dart';
+import 'package:front/userinfo/userinfo_birth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -37,7 +37,8 @@ class _JoinPageState extends State<JoinPage> {
     print("요청보낸이메일: $email");
 
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/user/checkId'),
+      //Uri.parse('http://10.0.2.2:3000/user/checkId'),
+      Uri.parse('http://192.168.219.228:3000/user/checkId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -78,7 +79,8 @@ class _JoinPageState extends State<JoinPage> {
     final String email = emailCon.text;
 
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/user/verifyCode'),
+      //Uri.parse('http://10.0.2.2:3000/user/verifyCode'),
+      Uri.parse('http://192.168.219.228:3000/user/verifyCode'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -122,7 +124,8 @@ class _JoinPageState extends State<JoinPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/user/register'),
+      //Uri.parse('http://10.0.2.2:3000/user/register'),
+      Uri.parse('http://192.168.27.113/user/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -189,6 +192,9 @@ class _JoinPageState extends State<JoinPage> {
             SnackBar(content: Text('비밀번호는 8자리 이상이어야 합니다.')),
           );
         } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('비밀번호가 일치합니다.')),
+          );
           setState(() => currentStep += 1);
         }
       } else {
@@ -323,7 +329,7 @@ class _JoinPageState extends State<JoinPage> {
                   _checkId();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                    backgroundColor: Colors.white,
                     minimumSize: Size(45, 36),
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     textStyle: TextStyle(fontSize: 14),
@@ -351,7 +357,7 @@ class _JoinPageState extends State<JoinPage> {
                       borderSide: BorderSide(color: Colors.red, width: 2.0),
                     ),
                   ),
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   controller: authnumCon,
                 ),
               ),

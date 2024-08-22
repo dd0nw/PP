@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../setting2.dart';
+import '../setting/setting2.dart';
 import 'profile_service.dart';
 
 class ChangeProfile extends StatefulWidget {

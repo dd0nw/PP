@@ -53,9 +53,9 @@ class _dashPageState extends State<dashPage> {
     int randomValue = Random().nextInt(100);
     if (randomValue < 15) {
       return Random().nextInt(12) + 59; // 59~70
-    } else if (randomValue < 70) {
+    } else if (randomValue < 89) {
       return Random().nextInt(20) + 71; // 71~90
-    } else if (randomValue < 85) {
+    } else if (randomValue < 95) {
       return Random().nextInt(30) + 91; // 91~120
     } else {
       return Random().nextInt(20) + 120; // 120~140
@@ -203,6 +203,10 @@ class _dashPageState extends State<dashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: Color(0xFFFFF8F9),
+      //   leading: Image.asset("img/logo33.png"),
+      // ),
       body: SafeArea(
         child: Container(
           color: Color(0xFFFFF8F9),
@@ -214,7 +218,7 @@ class _dashPageState extends State<dashPage> {
                 children: [
                   SizedBox(height: 15,),
                   Container(
-                      child: Text('실시간 데이터', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
+                      child: Text('실시간', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
                   ),
                   SizedBox(height: 20,),
                   Row(
@@ -285,7 +289,7 @@ class _dashPageState extends State<dashPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 40,),
+                  SizedBox(height: 33,),
                   ClipRect(
                     child: Container(//////////////////////////////////////////////////실시간그래프
                       child: Column(
@@ -368,7 +372,7 @@ class _dashPageState extends State<dashPage> {
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
-                              side: BorderSide(color: Colors.white)
+                              side: BorderSide(color: Colors.black12)
                           )
                       ),
                     ),

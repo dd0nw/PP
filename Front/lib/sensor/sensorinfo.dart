@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'bottomPage.dart';
+import '../bottomPage.dart';
 
 class Sensorinfo extends StatelessWidget {
   const Sensorinfo({super.key});

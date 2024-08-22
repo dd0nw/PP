@@ -40,7 +40,7 @@ class cardiainfoPage extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            width: 360, height: 270,
+                            width: 360, height: 315,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -48,7 +48,7 @@ class cardiainfoPage extends StatelessWidget {
                                 Image.asset("img/F.png", width: 300,),
                                 Padding(
                                   padding: const EdgeInsets.all(11.0),
-                                  child: Text("우심실로 전도되는 신호가 지연되어 발생하는 심전도 패턴입니다. 추가 검사 없이 지켜보면 됩니다. ",
+                                  child: Text("심장의 우측 전기 신호 전달 경로가 차단되어 심실의 수축이 지연되는 상태를 말합니다. 일반적으로 큰 위험을 초래하지 않지만, 다른 심장 질환과 연관될 수 있으므로 주의가 필요합니다. ",
                                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                                 ),
                               ],
@@ -74,7 +74,7 @@ class cardiainfoPage extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            width: 360, height: 310,
+                            width: 360, height: 300,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -82,7 +82,7 @@ class cardiainfoPage extends StatelessWidget {
                                 Image.asset("img/S.png", width: 300,),
                                 Padding(
                                   padding: const EdgeInsets.all(11.0),
-                                  child: Text("좌심실로 전도되는 신호가 지연되어 발생하는 심전도 패턴입니다. 고혈압이나 관상동맥질환, 심장판막질환 등 동반된 심장질환이 있는지 확인하기 위해 심초음파 등 정밀검사를 권합니다.",
+                                  child: Text("심장의 좌측 전기 신호 전달 경로가 차단되어 심실의 수축이 지연되는 상태입니다. 심장 질환의 징후일 수 있으며, 특히 심근경색과 같은 심각한 상태와 관련이 있을 수 있습니다.",
                                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                                 ),
                               ],
@@ -112,7 +112,7 @@ class cardiainfoPage extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            width: 360, height: 290,
+                            width: 360, height: 315,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children:
@@ -120,7 +120,7 @@ class cardiainfoPage extends StatelessWidget {
                                 Image.asset("img/V.png", width: 300,),
                                 Padding(
                                   padding: const EdgeInsets.all(11.0),
-                                  child: Text("심실의 정상 수축이 나타나기 전에 심실 수축이 먼저 일어나는 심전도 패턴입니다. 심한 경우 가슴 두근거림, 불안, 어지러움 또는 흉통을 경험할 수 있습니다.",
+                                  child: Text("심실에서 정상적인 심장박동보다 빨리 발생하는 추가적인 수축을 의미합니다. 이로 인해 가슴이 두근거리거나 불규칙한 박동을 느낄 수 있습니다. 반복적으로 발생하거나 증상이 심할 경우 추가 검사가 필요할 수 있습니다.",
                                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                                 ),
                               ],
@@ -150,7 +150,7 @@ class cardiainfoPage extends StatelessWidget {
                                 ),
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              width: 360, height: 280,
+                              width: 360, height: 300,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -158,7 +158,7 @@ class cardiainfoPage extends StatelessWidget {
                                   Image.asset("img/Q.png", width: 300,),
                                   Padding(
                                     padding: const EdgeInsets.all(11.0),
-                                    child: Text("인공 심박 조율기에 의해 발생하는 박동을 나타냅니다. 심장에 삽입된 인공 심박 조율기가 생성하는 신호입니다.",
+                                    child: Text("심장이 규칙적으로 뛰도록 전기 신호를 보내는 기기입니다. 심전도에서 인공 심박 조율기의 전기 자극에 의해 발생하는 특이한 패턴이 나타납니다.",
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                                   ),
                                   // SizedBox(height: 10,),

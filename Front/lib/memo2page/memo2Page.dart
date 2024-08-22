@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 // import 'memo2Page/memo.dart';
 // import 'memoPage/memo_service.dart';
+import 'AnalysisInfo.dart';
 import 'memo2_service.dart';
 import 'memo2.dart';
 
 class MemoPage extends StatefulWidget {
-  const MemoPage({super.key});
+  final AnalysisInfo analysisInfo;
+  const MemoPage({super.key, required this.analysisInfo});
 
   @override
   _MemoPageState createState() => _MemoPageState();
@@ -34,9 +36,12 @@ class _MemoPageState extends State<MemoPage> {
   }
 
   Future<void> _saveMemo() async {
-    Memo newMemo = Memo(content: _controller.text);
+    Memo newMemo = Memo(
+        content: _controller.text,
+      analysisId: widget.analysisInfo.analysisId, // 분석 ID 포함
+    );
     try {
-      await _memoService.createMemo(newMemo);
+      await _memoService.createMemo(newMemo,widget.analysisInfo);
       print('Memo saved successfully!');
     } catch (e) {
       print('Failed to save memo: $e');

@@ -85,7 +85,7 @@ class _recordPageState extends State<recordPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(height: 15,),
                   Text("  기록", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
                   SizedBox(height: 2,),
                   Center(
@@ -169,7 +169,7 @@ class _recordPageState extends State<recordPage> {
                             if (_analysisResults != null && _analysisResults!.isNotEmpty) {
                               Navigator.push(context,
                                 MaterialPageRoute(
-                                  builder: (_) => reportPage(analysisResult: _analysisResults![index]), //선택한것으로이동
+                                  builder: (_) =>  ReportPage(analysisResult: _analysisResults![index]), //선택한것으로이동
                                 ),
                               );
                             }

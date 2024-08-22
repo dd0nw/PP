@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 
 class MemoService {
-  // final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
-  final String baseUrl = 'http://192.168.219.228:3000';
+  //final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
+  final String baseUrl = 'http://192.168.27.113:3000';
   final storage = FlutterSecureStorage();
 
   Future<String> getToken() async {

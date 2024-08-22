@@ -1,5 +1,6 @@
 // 로그인(첫)페이지
 import 'package:flutter/material.dart';
+import 'package:front/sensor/sensorattach.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'bottomPage.dart';
@@ -19,8 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // 일반 로그인
   Future<void> _login() async {
-    final String url = 'http://10.0.2.2:3000/user/login';
-    // final String url = 'http://192.168.219.228:3000/user/login';
+    //final String url = 'http://10.0.2.2:3000/user/login';
+    final String url = 'http://192.168.27.113:3000/user/login';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -36,9 +37,19 @@ class _LoginScreenState extends State<LoginScreen> {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       final String token = responseData['token'];
       print("Login successful, token: $token");
+
+      // 로그인 성공 메시지를 Snackbar로 표시
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("로그인에 성공하셨습니다!"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomPage()),
+        MaterialPageRoute(builder: (context) => Sensorattach()),
       );
     } else {
       print("Login failed: ${response.statusCode}");
@@ -63,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 Image.asset('img/logo.png', width: 220, height: 200),
-                SizedBox(height: 40),
+                SizedBox(height: 45),
                 Container(
                   width: 290,
                   child: TextField(
@@ -96,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 45),
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
@@ -185,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 5),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

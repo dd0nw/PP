@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:app_links/app_links.dart';
-import 'package:front/userinfo_social.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 // Import for Android features.
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 // Import for iOS features.
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-import 'package:url_launcher/url_launcher.dart'; // url_launcher 패키지 추가
+import 'package:url_launcher/url_launcher.dart';
 
 class OAuthWebView extends StatefulWidget {
   final String oauthProvider; // 'kakao' 또는 'google'
@@ -68,29 +68,19 @@ Page resource error:
           },
           onNavigationRequest: (NavigationRequest request) async {
             if (widget.oauthProvider == 'google' &&
-                request.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth')) {
-              await _launchURL(request.url);
+                request.url.startsWith('http://192.168.27.113:3000/auth/google/callback')) {
+              // 구글 로그인 완료 후 리디렉션
+              final String rootUrl = 'http://192.168.219.161:3000/';
+              _controller.loadRequest(Uri.parse(rootUrl)); // 메인 페이지로 이동
               return NavigationDecision.prevent;
             }
 
             if (widget.oauthProvider == 'kakao' &&
-                request.url.startsWith('http://192.168.219.161:3000/auth/kakao/callback')) {
-              final Uri uri = Uri.parse(request.url);
-              final String? code = uri.queryParameters['code'];
-              print('랄라랄라라랄 : $code');
-
-              if (code != null) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UserinfoSocial(),
-                  ),
-                );
-                return NavigationDecision.prevent;
-              } else {
-                print('Error: No code found in redirect URL');
-                return NavigationDecision.navigate;
-              }
+                request.url.startsWith('http://192.168.27.113:3000/auth/kakao/callback')) {
+              // 카카오 로그인 완료 후 리디렉션
+              final String rootUrl = 'http://192.168.27.113:3000/';
+              _controller.loadRequest(Uri.parse(rootUrl)); // 메인 페이지로 이동
+              return NavigationDecision.prevent;
             }
 
             return NavigationDecision.navigate;
@@ -107,15 +97,16 @@ Page resource error:
     _controller = controller;
 
     if (widget.oauthProvider == 'kakao') {
-      final String initialUrl = 'http://192.168.219.161:3000/auth/kakao';
+      final String initialUrl = 'http://192.168.27.113:3000/auth/kakao';
       _controller.loadRequest(Uri.parse(initialUrl));
     } else if (widget.oauthProvider == 'google') {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        //가연이가 컴 꺼버리면 다시 ngrok에서 받아야함
         final String initialUrl = 'https://9cc8-106-252-44-73.ngrok-free.app/auth/google';
         await _launchURL(initialUrl); // Google OAuth URL을 기본 브라우저에서 열기
       });
     } else {
-      final String initialUrl = 'http://192.168.219.161:3000/';
+      final String initialUrl = 'http://192.168.27.113:3000/';
       _controller.loadRequest(Uri.parse(initialUrl));
     }
   }
@@ -125,17 +116,6 @@ Page resource error:
 
     _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
       debugPrint('onAppLink: $uri');
-      if (uri != null && uri.scheme == "myapp") {
-        final String? code = uri.queryParameters['code'];
-        if (code != null) {
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => TokenDisplayScreen(token: code),
-          //   ),
-          // );
-        }
-      }
     });
   }
 

@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart'; // 추가된 패키지
+import 'AnalysisInfo.dart';
 import 'memo2.dart';
 
 class MemoService {
-  final String baseUrl = 'http://10.0.2.2:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
+  final String baseUrl = 'http://192.168.27.113:3000'; // 에뮬레이터에서 로컬 서버에 접속하기 위한 주소
   // final String baseUrl = 'http://192.168.1.100:3000'; // Replace with your local machine's IP address
   final storage = FlutterSecureStorage();
 
@@ -67,8 +68,8 @@ class MemoService {
       print('Token found and valid: $token');
     }
 
-    final response = await http.get(
-      Uri.parse('$baseUrl/memo'),
+    final response = await http.post(
+      Uri.parse('$baseUrl/result'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json; charset=UTF-8',
@@ -88,7 +89,7 @@ class MemoService {
     }
   }
 
-  Future<void> createMemo(Memo memo) async {
+  Future<void> createMemo(Memo memo, AnalysisInfo analysisInfo) async {
     String? token = await storage.read(key: 'jwtToken');
 
     // 토큰이 없거나 유효하지 않으면 새로운 토큰을 요청
@@ -99,7 +100,10 @@ class MemoService {
       print('Token found and valid: $token');
     }
 
-    final jsonBody = jsonEncode(memo.toJson());
+    final jsonBody = json.encode({
+      'ANALISYS_ETC': memo.content,
+      'ANALYSIS_IDX': analysisInfo.analysisId,
+    });
     print('Sending memo to server: $jsonBody'); // 로그 추가
 
     final response = await http.post(

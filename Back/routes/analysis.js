@@ -97,8 +97,8 @@ function getMaxValueFromResult(resultString) {
 
   const messages = {
     N: `정상 심박수`,
-    R: `심방세동`,
-    L: `심실빈맥:`,
+    R: `우각차단`,
+    L: `좌각차단`,
     V: `심실 조기 수축`,
     "/": `인공 심박 조율기 박동`,
   };

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class PasswordService {
-  final String baseUrl = 'http://10.0.2.2:3000'; // 서버의 기본 URL
+  final String baseUrl = 'http://192.168.27.113:3000'; // 서버의 기본 URL
   final storage = FlutterSecureStorage();
 
   // 서버에서 토큰을 받아오는 메서드

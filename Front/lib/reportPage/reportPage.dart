@@ -1,42 +1,51 @@
-// 보고서 화면
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../cardiainfoPage.dart';
+import '../userinfo/cardiainfoPage.dart';
 import '../map/map.dart';
+import '../memo2page/AnalysisInfo.dart';
 import '../memo2page/memo2.dart';
 import '../memo2page/memo2Page.dart';
 import 'report_service.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class reportPage extends StatefulWidget {
+class ReportPage extends StatefulWidget {
   final Map<String, dynamic>? analysisResult;
 
-  const reportPage({super.key, this.analysisResult});
+  const ReportPage({super.key, this.analysisResult});
 
   @override
   _ReportPageState createState() => _ReportPageState();
 }
 
-class _ReportPageState extends State<reportPage> {
+class _ReportPageState extends State<ReportPage> {
   final MemoService _memoService = MemoService();
   final TextEditingController memoCon = TextEditingController();
+  final FocusNode _focusNode = FocusNode(); // FocusNode 추가
   bool isLoading = false;
   String? errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadMemos();
+    _loadMemos(); // 초기화 시 메모 데이터 로드
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        // 자판이 내려가면 호출됨
+        FocusScope.of(context).unfocus();
+      }
+    });
   }
 
   Future<void> _loadMemos() async {
     try {
       List<Memo> memos = await _memoService.fetchMemos();
       if (memos.isNotEmpty) {
-        memoCon.text = memos.first.content;
+        setState(() {
+          memoCon.text = memos.first.content;
+        });
       }
     } catch (e) {
       setState(() {
@@ -46,12 +55,22 @@ class _ReportPageState extends State<reportPage> {
   }
 
   Future<void> _saveMemo() async {
-    Memo newMemo = Memo(content: memoCon.text);
+    FocusScope.of(context).unfocus(); // 자판 내리기
+    AnalysisInfo analysisInfo = AnalysisInfo(
+      analysisId: widget.analysisResult?['ANALYSIS_IDX']?.toString() ?? 'default_id',
+    );
+    Memo newMemo = Memo(
+      content: memoCon.text,
+      analysisId: analysisInfo.analysisId,
+    ); // 분석 ID 포함
+
     try {
       await _memoService.createMemo(newMemo);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('메모가 저장되었습니다')),
       );
+      // Fetch updated memos
+      await _loadMemos();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to save memo: $e')),
@@ -99,7 +118,7 @@ class _ReportPageState extends State<reportPage> {
             spots: ecgPoints,
             isCurved: false, // 직선으로 연결
             color: Colors.red,
-            barWidth: 0.8,
+            barWidth: 1,
             isStrokeCapRound: false,
             dotData: FlDotData(show: false), // 점을 비활성화
           ),
@@ -128,7 +147,7 @@ class _ReportPageState extends State<reportPage> {
           icon: Icon(Icons.chevron_left, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
-          }, // 전페이지로 이동
+          },
         ),
         backgroundColor: Color(0xFFFFF8F9),
         elevation: 0,
@@ -155,20 +174,22 @@ class _ReportPageState extends State<reportPage> {
                   ),
                   Divider(color: Colors.pink, thickness: 2,),
                   SizedBox(height: 5,),
-                  Container(
-                    color: Colors.black,
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: _buildEcgGraph(),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Container(
+                      color: Colors.black,
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: _buildEcgGraph(),
+                      ),
                     ),
                   ),
                   SizedBox(height: 10),
                   Divider(color: Colors.pink, thickness: 2,),
                   Text(
                     '상위 분석 결과',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   SizedBox(height: 8),
                   SizedBox(
@@ -192,8 +213,8 @@ class _ReportPageState extends State<reportPage> {
                                 ),
                                 IconButton(onPressed: (){
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => cardiainfoPage()),
+                                    context,
+                                    MaterialPageRoute(builder: (context) => cardiainfoPage()),
                                   );
                                 }, // 버튼 클릭 시 호출될 함수 또는 메서드
                                   icon: Icon(
@@ -242,7 +263,7 @@ class _ReportPageState extends State<reportPage> {
                                     ),
                                   ),
                                   Text(
-                                    '${widget.analysisResult?['ecg']?.toString() ?? '80%'}',
+                                    '${widget.analysisResult?['ecg']?.toString() ?? '90%'}',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -266,7 +287,9 @@ class _ReportPageState extends State<reportPage> {
                                     ),
                                   ),
                                   Text(
-                                    '${widget.analysisResult?['RR_MIN']?.toString() ?? '91.5 ms'}ms',
+                                    // '${widget.analysisResult?['RR_MIN']?.toString() ?? '91.5 ms'} ms',
+                                    '${((double.tryParse(widget.analysisResult?['RR_AVG']?.toString() ?? '146.6') ?? 146.6)
+                                        - (double.tryParse(widget.analysisResult?['RR_STD']?.toString() ?? '2.0') ?? 2.0)).toStringAsFixed(0)} ms',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -290,7 +313,7 @@ class _ReportPageState extends State<reportPage> {
                                     ),
                                   ),
                                   Text(
-                                    '${widget.analysisResult?['RR_MAX']?.toString() ?? '1.2 ms'}ms',
+                                    '${widget.analysisResult?['RR_MAX']?.toString() ?? '1.2 ms'} ms',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -314,7 +337,7 @@ class _ReportPageState extends State<reportPage> {
                                     ),
                                   ),
                                   Text(
-                                    '${widget.analysisResult?['RR_AVG']?.toString() ?? '146.6 ms'}ms',
+                                    '${widget.analysisResult?['RR_AVG']?.toString() ?? '146.6 ms'} ms',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -338,7 +361,7 @@ class _ReportPageState extends State<reportPage> {
                                     ),
                                   ),
                                   Text(
-                                    '${widget.analysisResult?['RR_STD']?.toString() ?? '2.0 ms'}ms',
+                                    '${widget.analysisResult?['RR_STD']?.toString() ?? '2.0 ms'} ms',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -372,11 +395,16 @@ class _ReportPageState extends State<reportPage> {
                   ),
                   SizedBox(height: 0),
                   Container(
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black12),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     width: MediaQuery.of(context).size.width, // 가로 길이를 화면 전체로 설정
                     height: 90,
                     child: TextField(
                       controller: memoCon,
+                      focusNode: _focusNode, // FocusNode 설정
                       maxLines: null,
                       expands: true,
                       textAlignVertical: TextAlignVertical.top,
@@ -384,7 +412,7 @@ class _ReportPageState extends State<reportPage> {
                         hintText: "메모를 입력하세요",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(color: Colors.transparent), // 기본 테두리 제거
+                          borderSide: BorderSide(color: Colors.black12), // 기본 테두리 제거
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -447,22 +475,22 @@ class _ReportPageState extends State<reportPage> {
                                       ),
                                     );
                                   },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.search),
-                                    Text('가까운 병원 찾아보기'),
-                                  ],
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.search),
+                                      Text('가까운 병원 찾아보기'),
+                                    ],
                                   ),
-                                  backgroundColor: Colors.pink,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: Size(250, 35),
-                                ),
-                              )
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    backgroundColor: Colors.pink,
+                                    foregroundColor: Colors.white,
+                                    minimumSize: Size(250, 35),
+                                  ),
+                                )
                             ),
                           ],
                         ),

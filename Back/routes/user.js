@@ -547,6 +547,7 @@ router.post("/infoUpdateSocial", AuthToken, async (req, res) => {
 router.get("/profile", AuthToken, async (req, res) => {
   const id = req.user.id;
   const connection = await connectToOracle();
+  //console.log(req.body);
   if (connection) {
     try {
       const result = await connection.execute(
@@ -556,8 +557,9 @@ router.get("/profile", AuthToken, async (req, res) => {
 
       if (result.rows.length > 0) {
         const ID = result.rows[0][0];
-        console.log(ID);
+        console.log("T", ID);
         const NAME = result.rows[0][1];
+        console.log(NAME);
         res.status(200).json({ id: ID, name: NAME });
       } else {
         res.status(404).json({ message: "User not found" });

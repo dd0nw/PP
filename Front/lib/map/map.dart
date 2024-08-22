@@ -117,7 +117,7 @@ class _MapPageState extends State<MapPage> {
 
   // 병원 목록을 가져오는 함수 추가
   Future<void> _getNearbyHospitals() async {
-    final String url = 'http://192.168.219.161:3000/hospitals'
+    final String url = 'http://192.168.27.113:3000/hospitals'
         '?latitude=${_initialPosition.latitude}&longitude=${_initialPosition.longitude}';
 
     try {

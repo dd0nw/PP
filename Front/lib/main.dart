@@ -1,25 +1,24 @@
 import 'package:firebase_messaging/firebase_messaging.dart'; // 알림★
 import 'package:flutter/material.dart';
 import 'package:front/dart2Page.dart';
+import 'package:front/memo2page/AnalysisInfo.dart';
 import 'package:front/push%20notification/home_screen.dart';
 
 import 'package:front/reportPage/reportPage.dart';
-import 'package:front/sensorattach.dart';
-import 'package:front/sensorinfo.dart';
-import 'package:front/setting2.dart';
-import 'package:front/settings_alarm.dart';
-import 'package:front/userinfo_birth.dart';
+import 'package:front/sensor/sensorattach.dart';
+import 'package:front/sensor/sensorinfo.dart';
+import 'package:front/setting/setting2.dart';
+import 'package:front/setting/settings_alarm.dart';
+import 'package:front/userinfo/userinfo_birth.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import 'FCM Token.dart';
-import 'alarmtest.dart';
+import 'push notification/FCM Token.dart';
+import 'push notification/alarmtest.dart';
 import 'sociallogin/LastSocial.dart';
-import 'alarm.dart';
-import 'api_service.dart'; // ApiService 정의된 파일 import
 import 'bottomPage.dart';
-import 'cardiainfoPage.dart';
+import 'userinfo/cardiainfoPage.dart';
 import 'dashPage.dart';
 import 'ecg_graph.dart';
 import 'ex01_login.dart';
@@ -91,6 +90,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -98,10 +98,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       home: LoginScreen(),
-      routes: {
-        //'/push-page': (context) => PushPage(), // 추가한 라우트
-        '/notification': (context) => NotificationScreen(), // 추가한 라우트
-      },
     );
   }
 }
@@ -116,7 +112,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final ApiService apiService = ApiService();
   String _text = '변경되기 전!';
   int _counter = 0;
 
@@ -125,18 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
-
-  // Future<void> _fetchData() async {
-  //   try {
-  //     // Assuming fetchData is a method in ApiService that fetches some data
-  //     String data = await apiService.fetchData();
-  //     setState(() {
-  //       _text = data;
-  //     });
-  //   } catch (e) {
-  //     print('Failed to fetch data: $e');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -165,106 +148,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
-//
-//
-// import 'package:flutter/material.dart';
-// void main() => runApp(MyApp());
-//
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Login Demo',
-//       home: LoginPage(),
-//     );
-//   }
-// }
-//
-// class LoginPage extends StatelessWidget {
-//   final AuthService _authService = AuthService();
-//
-//   void _loginWithKakao(BuildContext context) {
-//     _authService.loginWithKakao();
-//   }
-//
-//   void _loginWithGoogle(BuildContext context) {
-//     _authService.loginWithGoogle();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Login Demo')),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             ElevatedButton(
-//               onPressed: () => _loginWithKakao(context),
-//               child: Text('Login with Kakao'),
-//             ),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () => _loginWithGoogle(context),
-//               child: Text('Login with Google'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-//
-//
-// import 'package:flutter/material.dart';
-//
-// void main() => runApp(MyApp());
-//
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Login Demo',
-//       home: LoginPage(),
-//     );
-//   }
-// }
-//
-// class LoginPage extends StatelessWidget {
-//   final AuthService _authService = AuthService();
-//
-//   void _loginWithKakao(BuildContext context) {
-//     _authService.loginWithKakao();
-//   }
-//
-//   void _loginWithGoogle(BuildContext context) {
-//     _authService.loginWithGoogle();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Login Demo')),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             ElevatedButton(
-//               onPressed: () => _loginWithKakao(context),
-//               child: Text('Login with Kakao'),
-//             ),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () => _loginWithGoogle(context),
-//               child: Text('Login with Google'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
