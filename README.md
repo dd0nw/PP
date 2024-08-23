@@ -176,7 +176,7 @@
 ![image](https://github.com/user-attachments/assets/064416f7-3207-458b-99ae-e940c97f6564)
 <br>
 
-### 앱 밖 알림/ 알림 설정
+### 알림/ 알림 설정
 ![image](https://github.com/user-attachments/assets/34abf8bb-6fa4-49c1-80b0-2801f4aa3996)
 <br>
 
