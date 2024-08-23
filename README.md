@@ -1,6 +1,5 @@
 # 📎 PULSE PULSE(팀명: 모찌나가요)
-![README.img](https://github.com/user-attachments/assets/56497158-e7a8-47d4-bdd0-778dcc4fed46)
-
+![README.img](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/b9f3c4edee791900a420c2b909226309f238164d/image/%EB%A1%9C%EA%B3%A0.png)
 ## 👀 서비스 소개 
 * 서비스명: 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스 
 * 서비스 설명: 심혈관계 질환 의심 환자가 병원 외부에서 심장의 이상 징후를 모니터링하고,
