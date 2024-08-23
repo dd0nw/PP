@@ -16,31 +16,58 @@
 - Flutter
 - Node.js v20.12.0
 
-## IoT Device 스펙
-- <b>EXP32 C3</b>
-  - Wifi 및 BLE 기능을 갖춘 초저전력 마이크로컨트롤러 모듈
-  - 전압 : 3.3V
-  - 전류 : 500mA (최대)
-  - 32비트 RISC-V 단일 코어 프로세서
-  - 메모리 : 400KB SRAM
-
-- <b>ADS1292R</b>
-  - 고정밀 ECG 센서
-  - 전압 : 3.0V-3.6V
-  - 전류
-    - 1mA(대기 모드)
-    - 250µA(측정 중)
-  - 데이터 전송 속도 : 최대 32kSPS
- 
-- <b>MAX30102</b>
-  - 심박수 및 산소포화도 측정 PPG 센서
-  - 전압 : 1.8V 및 3.3V
-  - 전류
-    - 600µA(측정중)
-    - 0.7µA(대기 모드)
-  - 측정 범위
-    - 심박수 30-240 BPM
-    - 산소포화도 70-100% 
+## 🧱 IoT Device 스펙
+<table>
+  <tr>
+    <td align="center">
+      <b>EXP32 C3</b>
+    </td>
+    <td align="center">
+      <b>ADS1292R</b>
+    </td>
+    <td align="center">
+      <b>MAX30102</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/1b12203d4472a467474b219e9bd2be8a53cb113e/image/esp32%20c3.png"/>
+    </td>
+    <td align="center">
+      <img src="https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/1b12203d4472a467474b219e9bd2be8a53cb113e/image/ads1292r.png"/>
+    </td>
+    <td align="center">
+      <img src="https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/1b12203d4472a467474b219e9bd2be8a53cb113e/image/max30102.png"/>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Wifi 및 BLE 기능을 갖춘 초저전력 마이크로컨트롤러 모듈<br>
+      전압 : 3.3V<br>
+      전류 : 500mA (최대)<Br>
+      32비트 RISC-V 단일 코어 프로세서<br>
+      메모리 : 400KB SRAM
+    </td>
+    <td>
+      고정밀 ECG 센서<br>
+      전압 : 3.0V-3.6V<br>
+      전류 :<br>
+      - 1mA(대기 모드)<br>
+      - 250µA(측정 중)<br>
+      데이터 전송 속도 : 최대 32kSPS
+    </td>
+    <td>
+       심박수 및 산소포화도 측정 PPG 센서<br>
+       전압 : 1.8V 및 3.3V<br>
+       전류 :<br>
+      - 600µA(측정중)<br>
+      - 0.7µA(대기 모드)<br>
+       측정 범위 :<br>
+      - 심박수 30-240 BPM<br>
+      - 산소포화도 70-100% 
+    </td>
+  </tr>
+</table>
 
 ##  ⭐ 주요 기능 
 * ECG,PPG 데이터 수집
