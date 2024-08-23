@@ -181,20 +181,20 @@
 <br>
 
 ### 실시간 모니터링
-![image](https://github.com/user-attachments/assets/f4723815-323b-49ec-b465-e788cc3b9a04)
+![image](https://github.com/user-attachments/assets/f7e07638-faf8-48bc-b5d5-49d7e08d7318)
 <br>
 
 ### 기록
-![image](https://github.com/user-attachments/assets/8aa9861d-a897-4421-b8f8-b0c20807a72b)
+![image](https://github.com/user-attachments/assets/a3227c01-264c-425f-bd54-d9b1446992b0)
 <br>
 
 ### 부정맥 분석결과/메모/분석결과 다운로드/위치정보 허용/ 가까운 병원 찾아보기
 ![image](https://github.com/user-attachments/assets/9de34a45-bfeb-453d-b927-5b565f389f83)
-![image](https://github.com/user-attachments/assets/ec48faa5-70fd-4680-84ae-32df54118537)
+![image](https://github.com/user-attachments/assets/2f52f68c-9211-4bb2-ab1f-768eace9afbc)
 <br>
 
 ### 부정맥 종류 정보
-![image](https://github.com/user-attachments/assets/c4756af8-6d3a-48f1-bbc9-83a58f21c317)
+![image](https://github.com/user-attachments/assets/9979be46-56db-4c3b-9e4a-a55d3e626631)
 <br>
 
 
