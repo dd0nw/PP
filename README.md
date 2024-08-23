@@ -1,4 +1,4 @@
-# 📎 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스(팀명: 모찌나가요)
+![image](https://github.com/user-attachments/assets/149aa1bf-cb06-4185-b106-c2f5f2a656af)# 📎 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스(팀명: 모찌나가요)
 ![README.img](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/b9f3c4edee791900a420c2b909226309f238164d/image/%EB%A1%9C%EA%B3%A0.png)
 <br>
 
@@ -177,24 +177,24 @@
 <br>
 
 ### 앱 밖 알림/ 알림 설정
-![image](https://github.com/user-attachments/assets/b9946056-1bf4-4429-9f50-035c6e047f3e)
+![image](https://github.com/user-attachments/assets/34abf8bb-6fa4-49c1-80b0-2801f4aa3996)
 <br>
 
 ### 실시간 모니터링
-![image](https://github.com/user-attachments/assets/bd9b5b31-820c-4ec4-9dba-c2bccd42a338)
+![image](https://github.com/user-attachments/assets/866f15ee-e04f-41c9-84e8-07bef8ee78ba)
 <br>
 
 ### 기록
-![image](https://github.com/user-attachments/assets/18dcfd75-4598-438d-9882-fdbea7cd2933)
+![image](https://github.com/user-attachments/assets/8aa9861d-a897-4421-b8f8-b0c20807a72b)
 <br>
 
 ### 부정맥 분석결과/메모/분석결과 다운로드/위치정보 허용/ 가까운 병원 찾아보기
-![image](https://github.com/user-attachments/assets/7929b659-3649-4461-8063-be34d8627396)
-![image](https://github.com/user-attachments/assets/5e4eb0df-7094-4d90-9c00-fa2ff1e7f749)
+![image](https://github.com/user-attachments/assets/9de34a45-bfeb-453d-b927-5b565f389f83)
+![image](https://github.com/user-attachments/assets/ec48faa5-70fd-4680-84ae-32df54118537)
 <br>
 
 ### 부정맥 종류 정보
-![image](https://github.com/user-attachments/assets/bef2af39-4e29-4c9d-b8bc-891e4e17bfed)
+![image](https://github.com/user-attachments/assets/c4756af8-6d3a-48f1-bbc9-83a58f21c317)
 <br>
 
 
