@@ -145,7 +145,7 @@
     <td align="center"><b>PM, Backend, Hardware</b></td>
     <td align="center"><b>Backend, Hardware</b></td>
     <td align="center"><b>Frontend</b></td>
-    <td align="center"><b>Data Analysis, Modeling</b></td>
+    <td align="center"><b>AI</b></td>
     <td align="center"><b>Frontend</b></td>
   </tr>
   <tr>
