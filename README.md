@@ -173,26 +173,23 @@
 ## 🖥 화면 구성
 
 ### 회원가입/로그인/센서부착 설명/추가입력정보
-![image](https://github.com/user-attachments/assets/5a709ece-ed03-458b-ac0b-fc2f101fbc1c)
-![image](https://github.com/user-attachments/assets/64ab37e5-7601-4f5d-8e0a-3d6d1375506f)
-![image](https://github.com/user-attachments/assets/43d80dbd-84a7-40d1-ad53-0fefbedaccca)
-![image](https://github.com/user-attachments/assets/89761494-5c2a-42c0-ad2f-85d06d14007f)
+
 <br>
 
 ### 앱 밖 알림
-![image](https://github.com/user-attachments/assets/f62be182-6557-4396-84f0-dc07bb71d310)
+
 <br>
 
 ### 실시간 모니터링
-![image](https://github.com/user-attachments/assets/f021be4d-8cc4-4f75-a422-4db507364dc8)
+
 <br>
 
 ### 기록
-![image](https://github.com/user-attachments/assets/1c65764e-f361-45e9-b946-9f8b617f06cd)
+
 <br>
 
 ### 부정맥 분석결과/메모/분석결과 다운로드/ 가까운 병원 찾아보기
-![image](https://github.com/user-attachments/assets/68b4c6e2-cde9-4744-bd52-03b67fe479a8)
+
 
 <br>
 
