@@ -78,12 +78,12 @@
 ![ppg회로](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/0461ff84291e84aa56c14bd528b935497b8edde9/image/simple_ppg_cirkit-removebg-preview.png)
 
 ##  ⭐ 주요 기능 
-* ECG,PPG 데이터 수집
-* 실시간 부정맥 검출
-* 부정맥 검출시 사용자에게 알림
+* ECG, PPG 센서 데이터 수집
+* 실시간 부정맥 검출 서비스
+* 부정맥 검출 시 사용자에게 알림 기능
 * 사용자 맞춤형 건강 분석 및 통계 제공
 * 데이터 시각화 및 보고서 생성
-* 주변 병원 위치 안내
+* 주변 병원 위치 안내 기능
 * 부정맥 측정 시 메모 기능 
 <br>
 
