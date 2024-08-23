@@ -1,9 +1,7 @@
-# 📎 PULSE PULSE(팀명: 모찌나가요)
+# 📎 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스(팀명: 모찌나가요)
 ![README.img](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/b9f3c4edee791900a420c2b909226309f238164d/image/%EB%A1%9C%EA%B3%A0.png)
 ## 👀 서비스 소개 
-* 서비스명: 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스 
-* 서비스 설명: 심혈관계 질환 의심 환자가 병원 외부에서 심장의 이상 징후를 모니터링하고,
-              부정맥을 조기에 검출하여 건강 관리와 예방에 기여하는 종합 플랫폼 제공
+* 심혈관계 의심 환자가 병원 밖의 가정이나 직장에서 웨어러블을 통해 심전도 신호를 실시간으로 수집하면서, 동시에 심장 관련 지표를 기반으로 심혈관계 질환을 모니터링 함으로써 편리하고 정확한 심장질환 중 부정맥을 검출하기 위한 서비스 
 <br>
 
 ## 📅 프로젝트 기간 
@@ -11,13 +9,13 @@
 <br>
 
 ##  ⭐ 주요 기능 
-* 기능1: ECG,PPG 데이터 수집
-* 기능2: 실시간 모니터링 
-* 기능3: 부정맥 검출
-* 기능4: 기기 휴대성
-* 기능5: 주변 병원 위치 안내
-* 기능6: 부정맥 측정 시 알림 서비스
-* 기능7: 부정맥 측정 시 메모 기능 
+* ECG,PPG 데이터 수집
+* 실시간 부정맥 검출
+* 부정맥 검출시 사용자에게 알림
+* 사용자 맞춤형 건강 분석 및 통계 제공
+* 데이터 시각화 및 보고서 생성
+* 주변 병원 위치 안내
+* 부정맥 측정 시 메모 기능 
 <br>
 
 ## ⛏ 기술스택
@@ -29,50 +27,48 @@
   <tr>
       <td>사용언어</td>
       <td>
+          <img src="https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=C&logoColor=white"/> 
+          <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"/> 
           <img src="https://img.shields.io/badge/dart-0175C2?style=for-the-badge&logo=dart&logoColor=white"/> 
           <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"/> 
-          <img src="https://img.shields.io/badge/jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white"/> 
-          <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"/> 
-          <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/> 
-          <img src="https://img.shields.io/badge/cplusplus-00599C?style=for-the-badge&logo=cplusplus&logoColor=white"/> 
-      </td>
-   </tr>
-   <tr>
-      <td>프레임워크</td>
-      <td>
-          <img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/> 
-          <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=Flask&logoColor=white"/> 
-          <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=Socket.io&logoColor=white">
-          <img src="https://img.shields.io/badge/pytorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white">
       </td>
    </tr>
    <tr>
         <td>개발도구</td>
         <td>
             <img src="https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white"/> 
-            <img src="https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white"/>
             <img src="https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=Jupyter&logoColor=white"/>
             <img src="https://img.shields.io/badge/androidstudio-3DDC84?style=for-the-badge&logo=androidstudio&logoColor=white"/>
+            <img src="https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white"/>
+            <img src="https://img.shields.io/badge/SQL Developer-F80000?style=for-the-badge&logo=SQL Developer&logoColor=white"/>
         </td>
    </tr>
-   <tr>
-         <td>서버환경</td>
-         <td>
-            <img src="https://img.shields.io/badge/AWS S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
-            <img src="https://img.shields.io/badge/nodedotjs-5FA04E?style=for-the-badge&logo=nodedotjs&logoColor=white">
-            <img src="https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white">
-         </td>
-    </tr>
   <tr>
-         <td>인프라구조</td>
-         <td>
-            <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
-         </td>
-    </tr>
+      <td>서버 환경</td>
+      <td>
+          <img src="https://img.shields.io/badge/Node.js-5FA04E?style=for-the-badge&logo=Node.js&logoColor=white"/> 
+          <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white"/> 
+      </td>
+   </tr>
     <tr>
         <td>데이터베이스</td>
         <td>
             <img src="https://img.shields.io/badge/Oracle 11g-F80000?style=for-the-badge&logo=Oracle&logoColor=white"/> 
+        </td>
+    </tr>
+   <tr>
+      <td>프레임워크</td>
+      <td>
+          <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=Flask&logoColor=white"/> 
+          <img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/> 
+          <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=white"/> 
+      </td>
+   </tr>
+    <tr>
+        <td>라이브러리</td>
+        <td>
+            <img src="https://img.shields.io/badge/keras-D00000?style=for-the-badge&logo=keras&logoColor=white"/>
+            <img src="https://img.shields.io/badge/tensorflow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white"/>
         </td>
     </tr>
     <tr>
@@ -80,21 +76,8 @@
         <td>
             <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/> 
             <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
-        </td>
-    </tr>
-    <tr>
-        <td>디자인</td>
-        <td>
+            <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/>
             <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/>
-        </td>
-    </tr>
-    <tr>
-        <td>라이브러리</td>
-        <td>
-            <img src="https://img.shields.io/badge/numpy-013243?style=for-the-badge&logo=numpy&logoColor=white"/>
-            <img src="https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white"/>
-            <img src="https://img.shields.io/badge/keras-D00000?style=for-the-badge&logo=keras&logoColor=white"/>
-            <img src="https://img.shields.io/badge/tensorflow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white"/>
         </td>
     </tr>
 </table>
