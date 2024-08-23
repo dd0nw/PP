@@ -69,8 +69,10 @@
   </tr>
 </table>
 
-## 회로구성도
+## 🛠 회로구성도
+![ecg회로](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/0461ff84291e84aa56c14bd528b935497b8edde9/image/simpe_ecg_cirkit-removebg-preview.png)
 
+![ppg회로](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/0461ff84291e84aa56c14bd528b935497b8edde9/image/simple_ppg_cirkit-removebg-preview.png)
 
 ##  ⭐ 주요 기능 
 * ECG,PPG 데이터 수집
