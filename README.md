@@ -1,5 +1,7 @@
 # 📎 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스(팀명: 모찌나가요)
 ![README.img](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/b9f3c4edee791900a420c2b909226309f238164d/image/%EB%A1%9C%EA%B3%A0.png)
+<br>
+
 ## 👀 서비스 소개 
 * 심혈관계 의심 환자가 병원 밖의 가정이나 직장에서 웨어러블을 통해 심전도 신호를 실시간으로 수집하면서, 동시에 심장 관련 지표를 기반으로 심혈관계 질환을 모니터링 함으로써 편리하고 정확한 심장질환 중 부정맥을 검출하기 위한 서비스 
 <br>
@@ -7,6 +9,38 @@
 ## 📅 프로젝트 기간 
 2022.06.24 ~ 2024.08.22 (9주)
 <br>
+
+## ⚙ 개발 환경
+- Arduino
+- Python?
+- Flutter
+- Node.js v20.12.0
+
+## IoT Device 스펙
+- <b>EXP32 C3</b>
+  - Wifi 및 BLE 기능을 갖춘 초저전력 마이크로컨트롤러 모듈
+  - 전압 : 3.3V
+  - 전류 : 500mA (최대)
+  - 32비트 RISC-V 단일 코어 프로세서
+  - 메모리 : 400KB SRAM
+
+- <b>ADS1292R</b>
+  - 고정밀 ECG 센서
+  - 전압 : 3.0V-3.6V
+  - 전류
+    - 1mA(대기 모드)
+    - 250µA(측정 중)
+  - 데이터 전송 속도 : 최대 32kSPS
+ 
+- <b>MAX30102</b>
+  - 심박수 및 산소포화도 측정 PPG 센서
+  - 전압 : 1.8V 및 3.3V
+  - 전류
+    - 600µA(측정중)
+    - 0.7µA(대기 모드)
+  - 측정 범위
+    - 심박수 30-240 BPM
+    - 산소포화도 70-100% 
 
 ##  ⭐ 주요 기능 
 * ECG,PPG 데이터 수집
@@ -84,21 +118,21 @@
 
 <br>
 
-## ⚙ 시스템 아키텍처(구조) 예시 
-![시스템 아키텍처](https://github.com/user-attachments/assets/5c7f0496-4c45-481c-80f2-3e4158d669e7)
+## ⚙ 시스템 아키텍처(구조)
+![시스템 아키텍처](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/49ab5555f385f33b8fe30aeb77ab75f88caa6205/image/%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98.PNG)
 <br>
 
 ## 📌 SW유스케이스 
-![image](https://github.com/user-attachments/assets/a240d7a7-499a-4828-b8cb-4db759bbc2ab)
+![image](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/49ab5555f385f33b8fe30aeb77ab75f88caa6205/image/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4.PNG)
 
 
 ## 📌 서비스 흐름도 
-![imgae](https://github.com/user-attachments/assets/988fc53f-30b7-40be-9cba-bd5ad1a201fb)
+![imgae](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/49ab5555f385f33b8fe30aeb77ab75f88caa6205/image/%EC%84%9C%EB%B9%84%EC%8A%A4%20%ED%9D%90%EB%A6%84%EB%8F%84.png)
 
 <br>
 
 ##  📌 ER다이어그램
-![image]()
+![image](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/49ab5555f385f33b8fe30aeb77ab75f88caa6205/image/er%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.PNG)
 <br>
 
 ## 🖥 화면 구성
