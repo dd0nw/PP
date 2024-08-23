@@ -176,30 +176,27 @@
 ![image](https://github.com/user-attachments/assets/064416f7-3207-458b-99ae-e940c97f6564)
 <br>
 
-### 앱 밖 알림
-
+### 앱 밖 알림/ 알림 설정
+![image](https://github.com/user-attachments/assets/b9946056-1bf4-4429-9f50-035c6e047f3e)
 <br>
 
 ### 실시간 모니터링
-
+![image](https://github.com/user-attachments/assets/bd9b5b31-820c-4ec4-9dba-c2bccd42a338)
 <br>
 
 ### 기록
-
+![image](https://github.com/user-attachments/assets/18dcfd75-4598-438d-9882-fdbea7cd2933)
 <br>
 
-### 부정맥 분석결과/메모/분석결과 다운로드/ 가까운 병원 찾아보기
-
-
+### 부정맥 분석결과/메모/분석결과 다운로드/위치정보 허용/ 가까운 병원 찾아보기
+![image](https://github.com/user-attachments/assets/7929b659-3649-4461-8063-be34d8627396)
+![image](https://github.com/user-attachments/assets/5e4eb0df-7094-4d90-9c00-fa2ff1e7f749)
 <br>
 
 ### 부정맥 종류 정보
-![image]()
+![image](https://github.com/user-attachments/assets/bef2af39-4e29-4c9d-b8bc-891e4e17bfed)
 <br>
 
-### 설정
-![image]()
-<br>
 
 ## 👨‍👩‍👦‍👦 팀원 역할
 <table>
