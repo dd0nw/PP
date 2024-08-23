@@ -173,7 +173,7 @@
 ## 🖥 화면 구성
 
 ### 회원가입/로그인/센서부착 설명/추가입력정보
-![image](https://github.com/user-attachments/assets/819bbb55-0811-466a-8ed3-60407b4ec20b)
+![image](https://github.com/user-attachments/assets/064416f7-3207-458b-99ae-e940c97f6564)
 <br>
 
 ### 앱 밖 알림
