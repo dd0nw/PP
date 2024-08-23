@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/149aa1bf-cb06-4185-b106-c2f5f2a656af)# 📎 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스(팀명: 모찌나가요)
+# 📎 딥러닝 기반 생체신호 분석 및 부정맥 검출 서비스(팀명: 모찌나가요)
 ![README.img](https://github.com/2024-SMHRD-IS-IOT-3/PP/blob/b9f3c4edee791900a420c2b909226309f238164d/image/%EB%A1%9C%EA%B3%A0.png)
 <br>
 
