@@ -181,7 +181,7 @@
 <br>
 
 ### 실시간 모니터링
-![image](https://github.com/user-attachments/assets/866f15ee-e04f-41c9-84e8-07bef8ee78ba)
+![image](https://github.com/user-attachments/assets/f4723815-323b-49ec-b465-e788cc3b9a04)
 <br>
 
 ### 기록
